@@ -65,38 +65,26 @@ public class ColorPropertyEditor extends PropertyEditorSupport
     @Override
     public void setAsText(String text) throws IllegalArgumentException
     {
-        switch (text) {
-            case "Grey":
-                setValue(BlockTypes.HULL_COLOR_GREY_ID);
-                break;
-            case "Purple":
-                setValue(BlockTypes.HULL_COLOR_PURPLE_ID);
-                break;
-            case "Brown":
-                setValue(BlockTypes.HULL_COLOR_BROWN_ID);
-                break;
-            case "Black":
-                setValue(BlockTypes.HULL_COLOR_BLACK_ID);
-                break;
-            case "Red":
-                setValue(BlockTypes.HULL_COLOR_RED_ID);
-                break;
-            case "Blue":
-                setValue(BlockTypes.HULL_COLOR_BLUE_ID);
-                break;
-            case "Green":
-                setValue(BlockTypes.HULL_COLOR_GREEN_ID);
-                break;
-            case "Yellow":
-                setValue(BlockTypes.HULL_COLOR_YELLOW_ID);
-                break;
-            case "White":
-                setValue(BlockTypes.HULL_COLOR_WHITE_ID);
-                break;
-            default:
-                setValue(BlockTypes.HULL_COLOR_GREY_ID);
-                //System.out.println("Setting "+text+" -> "+getValue());
-                break;
-        }
+        if (text.equals("Grey"))
+            setValue(BlockTypes.HULL_COLOR_GREY_ID);
+        else if (text.equals("Purple"))
+            setValue(BlockTypes.HULL_COLOR_PURPLE_ID);
+        else if (text.equals("Brown"))
+            setValue(BlockTypes.HULL_COLOR_BROWN_ID);
+        else if (text.equals("Black"))
+            setValue(BlockTypes.HULL_COLOR_BLACK_ID);
+        else if (text.equals("Red"))
+            setValue(BlockTypes.HULL_COLOR_RED_ID);
+        else if (text.equals("Blue"))
+            setValue(BlockTypes.HULL_COLOR_BLUE_ID);
+        else if (text.equals("Green"))
+            setValue(BlockTypes.HULL_COLOR_GREEN_ID);
+        else if (text.equals("Yellow"))
+            setValue(BlockTypes.HULL_COLOR_YELLOW_ID);
+        else if (text.equals("White"))
+            setValue(BlockTypes.HULL_COLOR_WHITE_ID);
+        else
+            setValue(BlockTypes.HULL_COLOR_GREY_ID);
+        //System.out.println("Setting "+text+" -> "+getValue());
     }
 }
