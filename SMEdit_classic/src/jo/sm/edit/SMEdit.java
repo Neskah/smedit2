@@ -39,7 +39,7 @@ public class SMEdit
     public SMEdit(String[] args)
     {
         mArgs = args;
-        mWebRoot = "http://smedit2.googlecode.com/svn/trunk/"; //http://www.ocean-of-storms.com/vote4joe/
+        mWebRoot = "http://www.lazygamerz.org/smedit/"; //http://www.ocean-of-storms.com/vote4joe/,  http://www.smedit2.googlecode.com/svn/trunk/
         mTargets = new ArrayList<String[]>();
     }
     
