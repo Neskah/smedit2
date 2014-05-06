@@ -8,7 +8,7 @@ public class Boot {
 		.getLocation().getPath();
 		location = URLDecoder.decode(location, "UTF-8").replaceAll("\\\\", "/");
 		final String os = System.getProperty("os.name").toLowerCase();
-		final String flags = "-Xmx1g -Dsun.java2d.d3d=false";
+		final String flags = "-Xmx1326m -Dsun.java2d.d3d=false -Dsun.java2d.opengl=true";
 
 		if (os.contains("windows")) {
 			Runtime.getRuntime().exec(
