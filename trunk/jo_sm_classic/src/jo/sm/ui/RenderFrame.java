@@ -1,6 +1,28 @@
+/*
+ * 2014 SMEdit development team
+ * http://lazygamerz.org
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser Gereral Public Licence as published by the Free
+ * Software Foundation; either version 3 of the Licence, or (at your opinion) any
+ * later version.
+ *
+ * This library is distributed in the hope that it will be usefull, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of merchantability or fitness for a
+ * particular purpose. See the GNU Lesser General Public Licence for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public Licence along
+ * with this library; if not, write to the Free Software Foundation, Inc., 59
+ * Temple Place, Suite 330, Boston, Ma 02111-1307 USA.
+ *
+ * http://www.gnu.org/licenses/lgpl.html (English)
+ * http://gugs.sindominio.net/gnu-gpl/lgpl-es.html 
+ *
+ */
 package jo.sm.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Dialog;
 import java.awt.Image;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -8,7 +30,6 @@ import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.util.Properties;
 
-import javax.imageio.ImageIO;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -38,15 +59,17 @@ import jo.sm.ui.logic.MenuLogic;
 import jo.sm.ui.logic.ShipSpec;
 import jo.sm.ui.logic.ShipTreeLogic;
 import jo.sm.ui.lwjgl.LWJGLRenderPanel;
+import jo.util.GlobalConfiguration;
+import jo.util.SplashScreen;
 
 @SuppressWarnings("serial")
-public class RenderFrame extends JFrame implements WindowListener
-{
-    private String[]    mArgs;
-    private RenderPanel mClient;
+public class RenderFrame extends JFrame implements WindowListener {
 
-    public RenderFrame(String[] args)
-    {
+    private static String[] mArgs;
+    private RenderPanel mClient;
+ 
+
+    public RenderFrame(String[] args) {
         super("SMEdit");
         mArgs = args;
         // instantiate
@@ -55,10 +78,11 @@ public class RenderFrame extends JFrame implements WindowListener
         JMenu menuEdit = new JMenu("Edit");
         JMenu menuView = new JMenu("View");
         JMenu menuModify = new JMenu("Modify");
-        if ((mArgs.length > 0) && (mArgs[0].equals("-opengl")))
+        if ((mArgs.length > 0) && (mArgs[0].equals("-opengl"))) {
             mClient = new LWJGLRenderPanel();
-        else
+        } else {
             mClient = new AWTRenderPanel();
+        }
         // layout
         setJMenuBar(menuBar);
         menuBar.add(menuFile);
@@ -100,93 +124,75 @@ public class RenderFrame extends JFrame implements WindowListener
         this.addWindowListener(this);
         this.addWindowFocusListener(new WindowAdapter() {
             @Override
-            public void windowGainedFocus(WindowEvent e)
-            { mClient.requestFocusInWindow(); }
-         });
+            public void windowGainedFocus(WindowEvent e) {
+                mClient.requestFocusInWindow();
+            }
+        });
         setSize(1024, 768);
-        Image icon;
-		try
-		{
-			icon = ImageIO.read(getClass().getResourceAsStream("icon64.png"));
-	        setIconImage(icon);
-		} catch (IOException e1)
-		{
-			e1.printStackTrace();
-		}
-		if (mClient instanceof Runnable)
-		{
-		    Thread t = new Thread((Runnable)mClient);
-		    t.start();
-		}
+            setIconImage(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON));
+
+        if (mClient instanceof Runnable) {
+            Thread t = new Thread((Runnable) mClient);
+            t.start();
+        }
     }
 
-    public void windowClosing(WindowEvent evt)
-    {
+    public void windowClosing(WindowEvent evt) {
         this.setVisible(false);
         this.dispose();
         System.exit(0);
     }
 
-    public void windowOpened(WindowEvent evt)
-    {
+    public void windowOpened(WindowEvent evt) {
     }
 
-    public void windowClosed(WindowEvent evt)
-    {
+    public void windowClosed(WindowEvent evt) {
     }
 
-    public void windowIconified(WindowEvent evt)
-    {
+    public void windowIconified(WindowEvent evt) {
     }
 
-    public void windowDeiconified(WindowEvent evt)
-    {
+    public void windowDeiconified(WindowEvent evt) {
     }
 
-    public void windowActivated(WindowEvent evt)
-    {
+    public void windowActivated(WindowEvent evt) {
     }
 
-    public void windowDeactivated(WindowEvent evt)
-    {
+    public void windowDeactivated(WindowEvent evt) {
     }
- 
-    private void updatePopup(JMenu menu, int... subTypes)
-    {
+
+    private void updatePopup(JMenu menu, int... subTypes) {
         MenuLogic.clearPluginMenus(menu);
         ShipSpec spec = StarMadeLogic.getInstance().getCurrentModel();
-        if (spec == null)
+        if (spec == null) {
             return;
+        }
         int type = spec.getClassification();
         int lastModIndex = menu.getItemCount();
         int lastCount = 0;
-        for (int subType : subTypes)
-        {
-        	int thisCount = MenuLogic.addPlugins(mClient, menu, type, subType);
-        	if ((thisCount > 0) && (lastCount > 0))
-        	{
+        for (int subType : subTypes) {
+            int thisCount = MenuLogic.addPlugins(mClient, menu, type, subType);
+            if ((thisCount > 0) && (lastCount > 0)) {
                 JSeparator sep = new JSeparator();
                 sep.setName("plugin");
                 menu.add(sep, lastModIndex);
                 lastCount = 0;
-        	}
-        	lastCount += thisCount;
-        	lastModIndex = menu.getItemCount();
+            }
+            lastCount += thisCount;
+            lastModIndex = menu.getItemCount();
         }
     }
-    
-    private static void preLoad()
-    {
+
+    public static void preLoad() {
         Properties props = StarMadeLogic.getProps();
         String home = props.getProperty("starmade.home", "");
-        if (!StarMadeLogic.isStarMadeDirectory(home))
-        {
+        if (!StarMadeLogic.isStarMadeDirectory(home)) {
             home = System.getProperty("user.dir");
-            if (!StarMadeLogic.isStarMadeDirectory(home))
-            {
+            if (!StarMadeLogic.isStarMadeDirectory(home)) {
                 home = JOptionPane.showInputDialog(null, "Enter in the home directory for StarMade", home);
-                if (home == null)
+                if (home == null) {
                     System.exit(0);
+                }
             }
             props.put("starmade.home", home);
             StarMadeLogic.saveProps();
@@ -194,65 +200,60 @@ public class RenderFrame extends JFrame implements WindowListener
         StarMadeLogic.setBaseDir(home);
     }
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
+        SplashScreen splash = new SplashScreen(args);
         preLoad();
         final RenderFrame f = new RenderFrame(args);
         f.setVisible(true);
-        try
-        {
-            final ShipSpec spec = ShipTreeLogic.getBlueprintSpec("Isanth-VI", true);
-            if (spec != null)
-            {
-            	IRunnableWithProgress t = new IRunnableWithProgress() {				
-    				@Override
-    				public void run(IPluginCallback cb)
-    				{
-    				    StarMadeLogic.getInstance().setCurrentModel(spec);
-    		        	StarMadeLogic.setModel(ShipTreeLogic.loadShip(spec, cb));
-    				}
-    			};
-    			RunnableLogic.run(f, "Loading...", t);
+        if (!splash.error) {
+            splash.setModalityType(Dialog.ModalityType.MODELESS);
+            try {
+                final ShipSpec spec = ShipTreeLogic.getBlueprintSpec("Isanth-VI", true);
+                if (spec != null) {
+                    IRunnableWithProgress t = new IRunnableWithProgress() {
+                        @Override
+                        public void run(IPluginCallback cb) {
+                            StarMadeLogic.getInstance().setCurrentModel(spec);
+                            StarMadeLogic.setModel(ShipTreeLogic.loadShip(spec, cb));
+                        }
+                    };
+                    RunnableLogic.run(f, "Loading...", t);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        
+        SplashScreen.close();
     }
 
-    public RenderPanel getClient()
-    {
+    public RenderPanel getClient() {
         return mClient;
     }
 
-    public void setClient(RenderPanel client)
-    {
+    public void setClient(RenderPanel client) {
         mClient = client;
     }
-    
-    class PluginPopupListener implements MenuListener
-    {
-    	private int[] mTypes;
-    	
-    	public PluginPopupListener(int... types)
-    	{
-    		mTypes = types;
-    	}
 
-		@Override
-		public void menuCanceled(MenuEvent ev)
-		{
-		}
+    class PluginPopupListener implements MenuListener {
 
-		@Override
-		public void menuDeselected(MenuEvent ev)
-		{
-		}
-		@Override
-		public void menuSelected(MenuEvent ev)
-		{
-            updatePopup((JMenu)ev.getSource(), mTypes);
-		}
+        private int[] mTypes;
+
+        public PluginPopupListener(int... types) {
+            mTypes = types;
+        }
+
+        @Override
+        public void menuCanceled(MenuEvent ev) {
+        }
+
+        @Override
+        public void menuDeselected(MenuEvent ev) {
+        }
+
+        @Override
+        public void menuSelected(MenuEvent ev) {
+            updatePopup((JMenu) ev.getSource(), mTypes);
+        }
     }
 }
