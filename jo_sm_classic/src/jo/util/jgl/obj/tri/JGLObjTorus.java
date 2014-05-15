@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package jo.util.jgl.obj.tri;
 
 import java.nio.FloatBuffer;
@@ -30,16 +29,15 @@ import jo.vecmath.logic.Point3fLogic;
 /**
  * A vertex shaded cube.
  */
-public class JGLObjTorus extends JGLObj
-{
-    private float   mRadius1;
-    private float   mRadius2;
-    private int     mNSides;
-    private int     mNRings;
+public class JGLObjTorus extends JGLObj {
+
+    private float mRadius1;
+    private float mRadius2;
+    private int mNSides;
+    private int mNRings;
     private boolean mDirty;
-    
-    public JGLObjTorus(float r1, float r2, int nsides, int nrings)
-    {
+
+    public JGLObjTorus(float r1, float r2, int nsides, int nrings) {
         mRadius1 = r1;
         mRadius2 = r2;
         mNSides = nsides;
@@ -47,33 +45,29 @@ public class JGLObjTorus extends JGLObj
         mDirty = true;
         clean();
     }
-    
-    public JGLObjTorus(float r1, float r2)
-    {
+
+    public JGLObjTorus(float r1, float r2) {
         this(r1, r2, 15, 15);
     }
-    
-    public JGLObjTorus()
-    {
+
+    public JGLObjTorus() {
         this(1f, .5f, 15, 15);
     }
-    
-    private void clean()
-    {
-        if (!mDirty)
+
+    private void clean() {
+        if (!mDirty) {
             return;
-        List<Point3f> vertex = new ArrayList<Point3f>((mNRings+1)*(mNSides+1));
-        List<Short> index = new ArrayList<Short>();
-        List<Point3f> normal = new ArrayList<Point3f>((mNRings+1)*(mNSides+1));
-        List<Color3f> colors = new ArrayList<Color3f>((mNRings+1)*(mNSides+1));
-        float ringDelta = 2.0f * (float)Math.PI / mNRings;
-        float sideDelta = 2.0f * (float)Math.PI / mNSides;
+        }
+        List<Point3f> vertex = new ArrayList<>((mNRings + 1) * (mNSides + 1));
+        List<Short> index = new ArrayList<>();
+        List<Point3f> normal = new ArrayList<>((mNRings + 1) * (mNSides + 1));
+        List<Color3f> colors = new ArrayList<>((mNRings + 1) * (mNSides + 1));
+        float ringDelta = 2.0f * (float) Math.PI / mNRings;
+        float sideDelta = 2.0f * (float) Math.PI / mNSides;
         float ringAngle = 0;
-        for (int ring = 0; ring <= mNRings; ring++)
-        {
+        for (int ring = 0; ring <= mNRings; ring++) {
             float sideAngle = 0;
-            for (int side = 0; side <= mNSides; side++)
-            {
+            for (int side = 0; side <= mNSides; side++) {
                 Point3f v = new Point3f(mRadius1, 0, 0);
                 Point3fLogic.rotateBy(v, 0, sideAngle, 0);
                 v.x += mRadius2;
@@ -88,17 +82,15 @@ public class JGLObjTorus extends JGLObj
             }
             ringAngle += ringDelta;
         }
-        for (int i = 0; i < mNRings; i++)
-        {
-            for (int j = 0; j < mNSides; j++)
-            {
-                index.add((short)((i+0)*(mNSides+1) + (j+0)));
-                index.add((short)((i+1)*(mNSides+1) + (j+0)));
-                index.add((short)((i+0)*(mNSides+1) + (j+1)));
+        for (int i = 0; i < mNRings; i++) {
+            for (int j = 0; j < mNSides; j++) {
+                index.add((short) ((i + 0) * (mNSides + 1) + (j + 0)));
+                index.add((short) ((i + 1) * (mNSides + 1) + (j + 0)));
+                index.add((short) ((i + 0) * (mNSides + 1) + (j + 1)));
 
-                index.add((short)((i+1)*(mNSides+1) + (j+0)));
-                index.add((short)((i+1)*(mNSides+1) + (j+1)));
-                index.add((short)((i+0)*(mNSides+1) + (j+1)));
+                index.add((short) ((i + 1) * (mNSides + 1) + (j + 0)));
+                index.add((short) ((i + 1) * (mNSides + 1) + (j + 1)));
+                index.add((short) ((i + 0) * (mNSides + 1) + (j + 1)));
             }
         }
 
@@ -109,74 +101,62 @@ public class JGLObjTorus extends JGLObj
         mDirty = false;
     }
 
-    public float getRadius1()
-    {
+    public float getRadius1() {
         return mRadius1;
     }
 
-    public void setRadius1(float radius1)
-    {
+    public void setRadius1(float radius1) {
         mRadius1 = radius1;
         mDirty = true;
     }
 
-    public float getRadius2()
-    {
+    public float getRadius2() {
         return mRadius2;
     }
 
-    public void setRadius2(float radius2)
-    {
+    public void setRadius2(float radius2) {
         mRadius2 = radius2;
         mDirty = true;
     }
 
-    public int getNSides()
-    {
+    public int getNSides() {
         return mNSides;
     }
 
-    public void setNSides(int nSides)
-    {
+    public void setNSides(int nSides) {
         mNSides = nSides;
         mDirty = true;
     }
 
-    public int getNRings()
-    {
+    public int getNRings() {
         return mNRings;
     }
 
-    public void setNRings(int nRings)
-    {
+    public void setNRings(int nRings) {
         mNRings = nRings;
         mDirty = true;
     }
-    
+
     @Override
-    public FloatBuffer getVertexBuffer()
-    {
+    public FloatBuffer getVertexBuffer() {
         clean();
         return super.getVertexBuffer();
     }
-    
+
     @Override
-    public FloatBuffer getNormalBuffer()
-    {
+    public FloatBuffer getNormalBuffer() {
         clean();
         return super.getNormalBuffer();
     }
-    
+
     @Override
-    public ShortBuffer getIndexShortBuffer()
-    {
+    public ShortBuffer getIndexShortBuffer() {
         clean();
         return super.getIndexShortBuffer();
     }
-    
+
     @Override
-    public IntBuffer getIndexIntBuffer()
-    {
+    public IntBuffer getIndexIntBuffer() {
         clean();
         return super.getIndexIntBuffer();
     }

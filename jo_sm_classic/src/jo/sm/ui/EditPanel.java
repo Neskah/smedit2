@@ -54,32 +54,31 @@ import jo.sm.ui.act.plugin.BlocksPluginAction;
 import jo.vecmath.Point3i;
 
 @SuppressWarnings("serial")
-public class EditPanel extends JPanel
-{
-    private boolean             mPainting;
+public class EditPanel extends JPanel {
 
-    private RenderPanel         mRenderer;
+    private boolean mPainting;
 
-    private JLabel              mCurrent;
-    private JButton             mGrey;
-    private JButton             mBlack;
-    private JButton             mRed;
-    private JButton             mPurple;
-    private JButton             mBlue;
-    private JButton             mGreen;
-    private JButton             mBrown;
-    private JButton             mYellow;
-    private JButton             mWhite;
-    private JButton             mClear;
-    private JSpinner			mRadius;
-    private JButton             mAll;
-    private JButton             mPlugins;
-    private JCheckBox           mXSymmetry;
-    private JCheckBox           mYSymmetry;
-    private JCheckBox           mZSymmetry;
+    private final RenderPanel mRenderer;
 
-    public EditPanel(RenderPanel renderer)
-    {
+    private final JLabel mCurrent;
+    private final JButton mGrey;
+    private final JButton mBlack;
+    private final JButton mRed;
+    private final JButton mPurple;
+    private final JButton mBlue;
+    private final JButton mGreen;
+    private final JButton mBrown;
+    private final JButton mYellow;
+    private final JButton mWhite;
+    private final JButton mClear;
+    private final JSpinner mRadius;
+    private final JButton mAll;
+    private final JButton mPlugins;
+    private final JCheckBox mXSymmetry;
+    private final JCheckBox mYSymmetry;
+    private final JCheckBox mZSymmetry;
+
+    public EditPanel(RenderPanel renderer) {
         mRenderer = renderer;
         // instantiate
         mCurrent = new JLabel("blank");
@@ -129,72 +128,76 @@ public class EditPanel extends JPanel
         add(mPlugins);
         // link
         MouseAdapter ma = new MouseAdapter() {
-            public void mouseClicked(MouseEvent e)
-            {
+            @Override
+            public void mouseClicked(MouseEvent e) {
                 doMouseClick(e.getX(), e.getY());
             }
-            public void mousePressed(MouseEvent ev)
-            {
-                if (ev.getButton() == MouseEvent.BUTTON3)
+
+            @Override
+            public void mousePressed(MouseEvent ev) {
+                if (ev.getButton() == MouseEvent.BUTTON3) {
                     mPainting = true;
+                }
             }
-            public void mouseReleased(MouseEvent ev)
-            {
-                if (ev.getButton() == MouseEvent.BUTTON3)
+
+            @Override
+            public void mouseReleased(MouseEvent ev) {
+                if (ev.getButton() == MouseEvent.BUTTON3) {
                     mPainting = false;
+                }
             }
-            public void mouseDragged(MouseEvent ev)
-            {
-                if (mPainting)
+
+            @Override
+            public void mouseDragged(MouseEvent ev) {
+                if (mPainting) {
                     doMouseClick(ev.getX(), ev.getY());
+                }
             }
         };
         mRenderer.addMouseListener(ma);
         mRenderer.addMouseMotionListener(ma);
-        mClear.addActionListener(new ActionListener(){
+        mClear.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                doColorClick(null, (short)-1);
-            }});
-        mAll.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                doColorClick(null, (short) -1);
+            }
+        });
+        mAll.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e)
-            {
+            public void actionPerformed(ActionEvent e) {
                 doColorAll();
-            }});
-        mPlugins.addActionListener(new ActionListener(){
+            }
+        });
+        mPlugins.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e)
-            {
+            public void actionPerformed(ActionEvent e) {
                 doPlugin();
-            }});
+            }
+        });
     }
 
-    private JButton newButton(final short blockID)
-    {
+    private JButton newButton(final short blockID) {
         ImageIcon rawImage = BlockTypeColors.getBlockImage(blockID);
         Image image = rawImage.getImage().getScaledInstance(32, 32,
                 Image.SCALE_DEFAULT);
         final JButton btn = new JButton(new ImageIcon(image));
-        btn.addActionListener(new ActionListener(){
+        btn.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e)
-            {
+            public void actionPerformed(ActionEvent e) {
                 doColorClick(btn.getIcon(), blockID);
-            }});
+            }
+        });
         return btn;
     }
-    
-    private void doPlugin()
-    {
+
+    private void doPlugin() {
         int classification = StarMadeLogic.getInstance().getCurrentModel().getClassification();
         List<IBlocksPlugin> plugins = StarMadeLogic.getBlocksPlugins(classification, IBlocksPlugin.SUBTYPE_PAINT);
-        if (plugins.size() == 0)
+        if (plugins.isEmpty()) {
             return;
+        }
         JPopupMenu popup = new JPopupMenu();
-        for (IBlocksPlugin plugin : plugins)
-        {
+        for (IBlocksPlugin plugin : plugins) {
             BlocksPluginAction action = new BlocksPluginAction(mRenderer, plugin);
             JMenuItem men = new JMenuItem(action);
             popup.add(men);
@@ -202,94 +205,95 @@ public class EditPanel extends JPanel
         Dimension d = mPlugins.getSize();
         popup.show(mPlugins, d.width, d.height);
     }
-    
-    private void doColorClick(Icon color, short blockID)
-    {
+
+    private void doColorClick(Icon color, short blockID) {
         StarMadeLogic.getInstance().setSelectedBlockType(blockID);
-        if (StarMadeLogic.getInstance().getSelectedBlockType() == -1)
-        {
+        if (StarMadeLogic.getInstance().getSelectedBlockType() == -1) {
             mCurrent.setIcon(null);
             mCurrent.setText("blank");
-        }
-        else
-        {
+        } else {
             mCurrent.setIcon(color);
             mCurrent.setText("");
         }
     }
-    
-    private void doColorAll()
-    {
-        if (StarMadeLogic.getInstance().getSelectedBlockType() < 0)
+
+    private void doColorAll() {
+        if (StarMadeLogic.getInstance().getSelectedBlockType() < 0) {
             return;
+        }
         SparseMatrix<Block> grid = StarMadeLogic.getModel();
         Iterator<Point3i> i;
-        if ((StarMadeLogic.getInstance().getSelectedLower() != null) && (StarMadeLogic.getInstance().getSelectedUpper() != null))
-        	i = new CubeIterator(StarMadeLogic.getInstance().getSelectedLower(), StarMadeLogic.getInstance().getSelectedUpper());
-        else
-        	i = grid.iteratorNonNull();
+        if ((StarMadeLogic.getInstance().getSelectedLower() != null) && (StarMadeLogic.getInstance().getSelectedUpper() != null)) {
+            i = new CubeIterator(StarMadeLogic.getInstance().getSelectedLower(), StarMadeLogic.getInstance().getSelectedUpper());
+        } else {
+            i = grid.iteratorNonNull();
+        }
         colorByIterator(grid, i, false);
     }
 
-	private void colorByIterator(SparseMatrix<Block> grid, Iterator<Point3i> i, boolean symmetric)
-	{
-	    List<Point3i> coords = new ArrayList<Point3i>();
-		while (i.hasNext())
-        {
-		    coords.clear();
+    private void colorByIterator(SparseMatrix<Block> grid, Iterator<Point3i> i, boolean symmetric) {
+        List<Point3i> coords = new ArrayList<>();
+        while (i.hasNext()) {
+            coords.clear();
             coords.add(i.next());
-            if (symmetric)
-            {
-                if (mXSymmetry.isSelected())
-                    for (int j = coords.size() - 1; j >= 0; j--)
-                    {
+            if (symmetric) {
+                if (mXSymmetry.isSelected()) {
+                    for (int j = coords.size() - 1; j >= 0; j--) {
                         Point3i p1 = coords.get(j);
-                        if (p1.x != 8)
+                        if (p1.x != 8) {
                             coords.add(new Point3i(16 - p1.x, p1.y, p1.z));
+                        }
                     }
-                if (mYSymmetry.isSelected())
-                    for (int j = coords.size() - 1; j >= 0; j--)
-                    {
+                }
+                if (mYSymmetry.isSelected()) {
+                    for (int j = coords.size() - 1; j >= 0; j--) {
                         Point3i p1 = coords.get(j);
-                        if (p1.y != 8)
+                        if (p1.y != 8) {
                             coords.add(new Point3i(p1.x, 16 - p1.y, p1.z));
+                        }
                     }
-                if (mZSymmetry.isSelected())
-                    for (int j = coords.size() - 1; j >= 0; j--)
-                    {
+                }
+                if (mZSymmetry.isSelected()) {
+                    for (int j = coords.size() - 1; j >= 0; j--) {
                         Point3i p1 = coords.get(j);
-                        if (p1.z != 8)
+                        if (p1.z != 8) {
                             coords.add(new Point3i(p1.x, p1.y, 16 - p1.z));
+                        }
                     }
+                }
             }
-            for (Point3i c : coords)
+            for (Point3i c : coords) {
                 paintBlock(grid, c);
+            }
         }
         mRenderer.repaint();
-	}
-
-    private void paintBlock(SparseMatrix<Block> grid, Point3i coords)
-    {
-        Block block = grid.get(coords);
-        if (block == null)
-            return;
-        short newID = BlockTypes.getColoredBlock(block.getBlockID(), StarMadeLogic.getInstance().getSelectedBlockType());
-        if (newID != -1)
-            block.setBlockID(newID);
     }
 
-    private void doMouseClick(int x, int y)
-    {
-        if (StarMadeLogic.getInstance().getSelectedBlockType() < 0)
+    private void paintBlock(SparseMatrix<Block> grid, Point3i coords) {
+        Block block = grid.get(coords);
+        if (block == null) {
             return;
+        }
+        short newID = BlockTypes.getColoredBlock(block.getBlockID(), StarMadeLogic.getInstance().getSelectedBlockType());
+        if (newID != -1) {
+            block.setBlockID(newID);
+        }
+    }
+
+    private void doMouseClick(int x, int y) {
+        if (StarMadeLogic.getInstance().getSelectedBlockType() < 0) {
+            return;
+        }
         RenderPoly b = mRenderer.getTileAt(x, y);
-        if (b == null)
+        if (b == null) {
             return;
+        }
         SparseMatrix<Block> grid = StarMadeLogic.getModel();
         Point3i p = b.getPosition();
-        if (p == null)
+        if (p == null) {
             return;
-        int r = (Integer)mRadius.getValue() - 1;
+        }
+        int r = (Integer) mRadius.getValue() - 1;
         Point3i lower = new Point3i(p.x - r, p.y - r, p.z - r);
         Point3i upper = new Point3i(p.x + r, p.y + r, p.z + r);
         colorByIterator(grid, new CubeIterator(lower, upper), true);

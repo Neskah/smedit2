@@ -26,86 +26,76 @@ import java.util.List;
 
 import jo.vecmath.Color4f;
 
-public class JGLTextGroup
-{
+public class JGLTextGroup {
+
     private boolean mCull;
-    private String  mFace;
-    private int     mStyle;
-    private int     mSize;
+    private String mFace;
+    private int mStyle;
+    private int mSize;
     private Color4f mColor;
     private List<JGLText2D> mTexts;
-    
-    public JGLTextGroup()
-    {
-        mTexts = new ArrayList<JGLText2D>();
+
+    public JGLTextGroup() {
+        mTexts = new ArrayList<>();
     }
-    
-    public void add(JGLText2D text)
-    {
-        synchronized (this)
-        {
+
+    public void add(JGLText2D text) {
+        synchronized (this) {
             mTexts.add(text);
         }
     }
-    
-    public void remove(JGLText2D text)
-    {
-        synchronized (this)
-        {
+
+    public void remove(JGLText2D text) {
+        synchronized (this) {
             mTexts.remove(text);
         }
     }
-    
-    public String getFace()
-    {
+
+    public String getFace() {
         return mFace;
     }
-    public void setFace(String face)
-    {
+
+    public void setFace(String face) {
         mFace = face;
     }
-    public int getStyle()
-    {
+
+    public int getStyle() {
         return mStyle;
     }
-    public void setStyle(int style)
-    {
+
+    public void setStyle(int style) {
         mStyle = style;
     }
-    public int getSize()
-    {
+
+    public int getSize() {
         return mSize;
     }
-    public void setSize(int size)
-    {
+
+    public void setSize(int size) {
         mSize = size;
     }
-    public List<JGLText2D> getTexts()
-    {
+
+    public List<JGLText2D> getTexts() {
         return mTexts;
     }
-    public void setTexts(List<JGLText2D> texts)
-    {
+
+    public void setTexts(List<JGLText2D> texts) {
         mTexts = texts;
     }
 
-    public boolean isCull()
-    {
+    public boolean isCull() {
         return mCull;
     }
 
-    public void setCull(boolean cull)
-    {
+    public void setCull(boolean cull) {
         mCull = cull;
     }
 
-    public Color4f getColor()
-    {
+    public Color4f getColor() {
         return mColor;
     }
 
-    public void setColor(Color4f color)
-    {
+    public void setColor(Color4f color) {
         mColor = color;
     }
 

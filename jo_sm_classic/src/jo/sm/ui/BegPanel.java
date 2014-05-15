@@ -37,24 +37,23 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public class BegPanel extends JPanel
-{
+public class BegPanel extends JPanel {
+
     private static final int TICK = 200;
     private static final int CHOP = 120;
 
     public static final String THE_RAIDERS_LAMENT_AUDIO = "http://podiobooks.com/title/the-raiders-lament";
     public static final String THE_RAIDERS_LAMENT = "https://www.smashwords.com/books/view/347157";
     public static final String DOCUMENTATION = "http://www.starmadewiki.com/wiki/SMEdit";
-    
+
     private int mMessageOffset;
     private int mRepeats;
-    
-    private JLabel  mStatus;
-    private JButton mAudio;
-    private JButton mText;
-    
-    public BegPanel()
-    {
+
+    private final JLabel mStatus;
+    private final JButton mAudio;
+    private final JButton mText;
+
+    public BegPanel() {
         mRepeats = 3;
         // instantiate
         mStatus = new JLabel(MESSAGE.substring(0, CHOP));
@@ -73,68 +72,63 @@ public class BegPanel extends JPanel
         buttons.add(mText);
         add("East", buttons);
         // link
-        Thread t = new Thread("beg_ticker") { public void run() { doTicker(); } };
+        Thread t = new Thread("beg_ticker") {
+            @Override
+            public void run() {
+                doTicker();
+            }
+        };
         t.setDaemon(true);
         t.start();
-        mText.addActionListener(new ActionListener(){
+        mText.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent ev)
-            {
+            public void actionPerformed(ActionEvent ev) {
                 doGoto(THE_RAIDERS_LAMENT);
-            }            
+            }
         });
-        mText.addActionListener(new ActionListener(){
+        mText.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent ev)
-            {
+            public void actionPerformed(ActionEvent ev) {
                 doGoto(THE_RAIDERS_LAMENT_AUDIO);
-            }            
+            }
         });
     }
-    
-    private void doTicker()
-    {
-        try
-        {
+
+    private void doTicker() {
+        try {
             Thread.sleep(5000);
+        } catch (InterruptedException e) {
         }
-        catch (InterruptedException e)
-        {
-        }
-        for (;;)
-        {
-            try
-            {
+        for (;;) {
+            try {
                 Thread.sleep(TICK);
-            }
-            catch (InterruptedException e)
-            {
+            } catch (InterruptedException e) {
             }
             mMessageOffset++;
-            if (mMessageOffset == MESSAGE.length())
-            {
+            if (mMessageOffset == MESSAGE.length()) {
                 mMessageOffset = 0;
                 mRepeats--;
-                if (mRepeats < 0)
+                if (mRepeats < 0) {
                     return;
+                }
             }
             String msg = MESSAGE.substring(mMessageOffset) + MESSAGE.substring(0, mMessageOffset);
             msg = msg.substring(0, CHOP);
             mStatus.setText(msg);
         }
     }
-    
-    private void doGoto(String url)
-    {
+
+    private void doGoto(String url) {
         if (Desktop.isDesktopSupported()) {
             Desktop desktop = Desktop.getDesktop();
-            if (desktop.isSupported(Action.BROWSE))
+            if (desktop.isSupported(Action.BROWSE)) {
                 try {
                     desktop.browse(URI.create(url));
                     return;
                 } catch (IOException e) {
                     // handled below
                 }
+            }
         }
     }
 

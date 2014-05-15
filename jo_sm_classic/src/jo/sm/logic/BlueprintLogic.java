@@ -26,13 +26,11 @@ import jo.sm.ship.logic.ShipLogic;
 import jo.sm.ui.logic.ShipSpec;
 import jo.vecmath.Point3i;
 
-public class BlueprintLogic
-{
-    public static List<String> getBlueprintNames()
-    {
+public class BlueprintLogic {
+
+    public static List<String> getBlueprintNames() {
         StarMade sm = StarMadeLogic.getInstance();
-        if (sm.getBlueprints() == null)
-        {
+        if (sm.getBlueprints() == null) {
             sm.setBlueprints(new ArrayList<String>());
             File blueprintsDir = new File(sm.getBaseDir(), "blueprints");
             scanBlueprintsDir(blueprintsDir, sm.getBlueprints());
@@ -40,47 +38,42 @@ public class BlueprintLogic
         return sm.getBlueprints();
     }
 
-    private static void scanBlueprintsDir(File blueprintsDir, List<String> blueprints)
-    {
-        for (File f : blueprintsDir.listFiles())
-        {
-            if (isValidBlueprintDir(f))
+    private static void scanBlueprintsDir(File blueprintsDir, List<String> blueprints) {
+        for (File f : blueprintsDir.listFiles()) {
+            if (isValidBlueprintDir(f)) {
                 blueprints.add(f.getName());
+            }
         }
     }
-    
-    public static List<String> getDefaultBlueprintNames()
-    {
+
+    public static List<String> getDefaultBlueprintNames() {
         StarMade sm = StarMadeLogic.getInstance();
-        if (sm.getDefaultBlueprints() == null)
-        {
+        if (sm.getDefaultBlueprints() == null) {
             sm.setDefaultBlueprints(new ArrayList<String>());
             File blueprintsDir = new File(sm.getBaseDir(), "blueprints-default");
             scanBlueprintsDir(blueprintsDir, sm.getDefaultBlueprints());
         }
         return sm.getDefaultBlueprints();
     }
-    
-    private static boolean isValidBlueprintDir(File dir)
-    {
+
+    private static boolean isValidBlueprintDir(File dir) {
         File header = new File(dir, "header.smbph");
         return header.exists();
     }
 
-    public static Blueprint readBlueprint(String name, IPluginCallback cb) throws IOException
-    {
+    public static Blueprint readBlueprint(String name, IPluginCallback cb) throws IOException {
         File blueprintsDir = new File(StarMadeLogic.getInstance().getBaseDir(), "blueprints");
         File blueprintDir = new File(blueprintsDir, name);
         return readBlueprint(blueprintDir, cb);
     }
-    public static Blueprint readDefaultBlueprint(String name, IPluginCallback cb) throws IOException
-    {
+
+    public static Blueprint readDefaultBlueprint(String name, IPluginCallback cb) throws IOException {
         File blueprintsDir = new File(StarMadeLogic.getInstance().getBaseDir(), "blueprints-default");
         File blueprintDir = new File(blueprintsDir, name);
         return readBlueprint(blueprintDir, cb);
     }
-    public static Blueprint readBlueprint(File dir, IPluginCallback cb) throws IOException
-    {
+
+    public static Blueprint readBlueprint(File dir, IPluginCallback cb) throws IOException {
         Blueprint bp = new Blueprint();
         bp.setName(dir.getName());
         File header = new File(dir, "header.smbph");
@@ -96,20 +89,18 @@ public class BlueprintLogic
         bp.setData(DataLogic.readFiles(dataDir, bp.getName(), cb));
         return bp;
     }
-    
-    public static void saveBlueprint(SparseMatrix<Block> grid, ShipSpec spec, boolean def, IPluginCallback cb)
-    {
-        try
-        {
+
+    public static void saveBlueprint(SparseMatrix<Block> grid, ShipSpec spec, boolean def, IPluginCallback cb) {
+        try {
             Map<Point3i, Data> data = ShipLogic.getData(grid);
             File baseDir = spec.getFile();
-            if (!baseDir.exists())
-            {
+            if (!baseDir.exists()) {
                 baseDir.mkdir();
-                if (def)
+                if (def) {
                     StarMadeLogic.getInstance().setDefaultBlueprints(null);
-                else
+                } else {
                     StarMadeLogic.getInstance().setBlueprints(null);
+                }
             }
             // header file
             Header header = HeaderLogic.make(grid);
@@ -123,15 +114,13 @@ public class BlueprintLogic
             MetaLogic.writeFile(meta, new FileOutputStream(metaFile), true);
             // data file
             File dataDir = new File(baseDir, "DATA");
-            if (!dataDir.exists())
+            if (!dataDir.exists()) {
                 dataDir.mkdir();
+            }
             DataLogic.writeFiles(data, dataDir, spec.getName(), cb);
-        }
-        catch (IOException e1)
-        {
+        } catch (IOException e1) {
             e1.printStackTrace();
         }
     }
-
 
 }

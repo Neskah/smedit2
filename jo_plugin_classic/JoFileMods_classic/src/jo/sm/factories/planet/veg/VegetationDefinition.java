@@ -3,82 +3,69 @@ package jo.sm.factories.planet.veg;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VegetationDefinition
-{
-    private String  mAuthor;
-    private String  mTitle;
-    private String  mDescription;
-    private int     mPriority;
-    private float   mDensity;
+public class VegetationDefinition {
+
+    private String mAuthor;
+    private String mTitle;
+    private String mDescription;
+    private int mPriority;
+    private float mDensity;
     private List<VegetationEntry> mVegetation;
-    
-    public VegetationDefinition()
-    {
+
+    public VegetationDefinition() {
         mAuthor = "";
         mTitle = "";
         mDescription = "";
         mPriority = 50;
-        mDensity = 1/1000f;
-        mVegetation = new ArrayList<VegetationEntry>();
+        mDensity = 1 / 1000f;
+        mVegetation = new ArrayList<>();
     }
 
-    public String getAuthor()
-    {
+    public String getAuthor() {
         return mAuthor;
     }
 
-    public void setAuthor(String author)
-    {
+    public void setAuthor(String author) {
         mAuthor = author;
     }
 
-    public String getTitle()
-    {
+    public String getTitle() {
         return mTitle;
     }
 
-    public void setTitle(String title)
-    {
+    public void setTitle(String title) {
         mTitle = title;
     }
 
-    public String getDescription()
-    {
+    public String getDescription() {
         return mDescription;
     }
 
-    public void setDescription(String description)
-    {
+    public void setDescription(String description) {
         mDescription = description;
     }
 
-    public int getPriority()
-    {
+    public int getPriority() {
         return mPriority;
     }
 
-    public void setPriority(int priority)
-    {
+    public void setPriority(int priority) {
         mPriority = priority;
     }
 
-    public float getDensity()
-    {
+    public float getDensity() {
         return mDensity;
     }
 
-    public void setDensity(float density)
-    {
+    public void setDensity(float density) {
         mDensity = density;
     }
 
-    public List<VegetationEntry> getVegetation()
-    {
+    public List<VegetationEntry> getVegetation() {
         return mVegetation;
     }
 
-    public void setVegetation(List<VegetationEntry> vegetation)
-    {
+    public void setVegetation(List<VegetationEntry> vegetation) {
         mVegetation = vegetation;
     }
 }

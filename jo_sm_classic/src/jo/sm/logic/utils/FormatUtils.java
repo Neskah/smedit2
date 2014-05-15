@@ -15,131 +15,113 @@ import java.util.Date;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class FormatUtils
-{
-    public static int parseInt(Object asc)
-    {
+public class FormatUtils {
+
+    public static int parseInt(Object asc) {
         return parseInt(asc, 0);
     }
-    
-    public static int parseInt(Object asc, int def)
-    {
-        if (asc == null)
+
+    public static int parseInt(Object asc, int def) {
+        if (asc == null) {
             return def;
-        try
-        {
+        }
+        try {
             return Integer.parseInt(asc.toString().trim());
-        }
-        catch (NumberFormatException e)
-        {
+        } catch (NumberFormatException e) {
             return def;
         }
     }
-    
-    public static long parseLong(Object asc)
-    {
-        if (asc == null)
+
+    public static long parseLong(Object asc) {
+        if (asc == null) {
             return 0;
-        try
-        {
+        }
+        try {
             return Long.parseLong(asc.toString().trim());
-        }
-        catch (NumberFormatException e)
-        {
+        } catch (NumberFormatException e) {
             return 0;
         }
     }
-    
-    public static double parseDouble(Object asc)
-    {
-        if (asc == null)
+
+    public static double parseDouble(Object asc) {
+        if (asc == null) {
             return 0;
-        try
-        {
+        }
+        try {
             return Double.parseDouble(asc.toString().trim());
-        }
-        catch (NumberFormatException e)
-        {
+        } catch (NumberFormatException e) {
             return 0;
         }
     }
-    
-    public static String diceRoll(int n, int d, int m)
-    {
-        StringBuffer ret = new StringBuffer();
-        if (n > 0)
+
+    public static String diceRoll(int n, int d, int m) {
+        StringBuilder ret = new StringBuilder();
+        if (n > 0) {
             ret.append(n);
+        }
         ret.append("d");
         ret.append(d);
-        if (m > 0)
-        {
+        if (m > 0) {
             ret.append("+");
             ret.append(m);
-        }
-        else if (m < 0)
+        } else if (m < 0) {
             ret.append(m);
+        }
         return ret.toString();
     }
 
-    public static String formatDate(long ticks)
-    {
+    public static String formatDate(long ticks) {
         Date d = new Date(ticks);
         return d.toString();
     }
 
-    public static String formatDateShort(long ticks)
-    {
+    public static String formatDateShort(long ticks) {
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(ticks);
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(zeroPrefix(c.get(Calendar.DAY_OF_MONTH), 2));
         sb.append(" ");
         sb.append(monthShort(c.get(Calendar.MONTH)));
         sb.append(" ");
-        sb.append(zeroPrefix(c.get(Calendar.YEAR)%100, 2));
+        sb.append(zeroPrefix(c.get(Calendar.YEAR) % 100, 2));
         sb.append(" ");
-        sb.append(zeroPrefix(c.get(Calendar.HOUR_OF_DAY)%100, 2));
+        sb.append(zeroPrefix(c.get(Calendar.HOUR_OF_DAY) % 100, 2));
         sb.append(":");
-        sb.append(zeroPrefix(c.get(Calendar.MINUTE)%100, 2));
-        
+        sb.append(zeroPrefix(c.get(Calendar.MINUTE) % 100, 2));
+
         return sb.toString();
     }
-    
-    public static String prefix(String str, int width, String with)
-    {
-        StringBuffer ret = new StringBuffer(str);
-        while (ret.length() < width)
+
+    public static String prefix(String str, int width, String with) {
+        StringBuilder ret = new StringBuilder(str);
+        while (ret.length() < width) {
             ret.insert(0, with);
+        }
         return ret.toString();
     }
-    
-    public static String suffix(String str, int width, String with)
-    {
-        StringBuffer ret = new StringBuffer(str);
-        while (ret.length() < width)
+
+    public static String suffix(String str, int width, String with) {
+        StringBuilder ret = new StringBuilder(str);
+        while (ret.length() < width) {
             ret.append(with);
+        }
         return ret.toString();
     }
-    
-    public static String zeroPrefix(int val, int width)
-    {
+
+    public static String zeroPrefix(int val, int width) {
         return prefix(String.valueOf(val), width, "0");
     }
-    
-    public static String leftJustify(String str, int width)
-    {
+
+    public static String leftJustify(String str, int width) {
         return suffix(str, width, " ");
     }
-    
-    public static String rightJustify(String str, int width)
-    {
+
+    public static String rightJustify(String str, int width) {
         return prefix(str, width, " ");
     }
-    
-    public static String monthShort(int month)
-    {
-        switch (month)
-        {
+
+    public static String monthShort(int month) {
+        switch (month) {
             case Calendar.JANUARY:
                 return "Jan";
             case Calendar.FEBRUARY:
@@ -167,32 +149,31 @@ public class FormatUtils
         }
         return "???";
     }
-    
-    public static String formatPercent(double pc)
-    {
+
+    public static String formatPercent(double pc) {
         String ret = String.valueOf(pc);
         int i = ret.indexOf(".");
-        if (i < ret.length() - 2)
+        if (i < ret.length() - 2) {
             ret = ret.substring(0, i + 2);
+        }
         ret += "%";
         return ret;
     }
-    
-    public static String formatDouble(double v, int decimalPlaces)
-    {
+
+    public static String formatDouble(double v, int decimalPlaces) {
         String ret = String.valueOf(v);
         int i = ret.indexOf(".");
-        if (ret.length() > i + decimalPlaces + 1)
+        if (ret.length() > i + decimalPlaces + 1) {
             ret = ret.substring(0, i + decimalPlaces + 1);
-        else
+        } else {
             ret += "0000000000".substring(0, i + decimalPlaces + 1 - ret.length());
+        }
         return ret;
     }
-    
+
     public static final String CURRENCY_SYMBOL = "$";
-    
-    public static String formatMoney(int dosh)
-    {
+
+    public static String formatMoney(int dosh) {
         String ret = CURRENCY_SYMBOL + String.valueOf(dosh);
         return ret;
     }

@@ -41,14 +41,13 @@ import jo.sm.ui.logic.ShipSpec;
 import jo.sm.ui.logic.ShipTreeLogic;
 
 @SuppressWarnings("serial")
-public class ShipChooser extends JDialog
-{
+public class ShipChooser extends JDialog {
+
     private ShipSpec mSelected;
-    
-    private JTree  mTree;
-    
-    public ShipChooser(JFrame base)
-    {
+
+    private final JTree mTree;
+
+    public ShipChooser(JFrame base) {
         super(base, "Choose Ship", Dialog.ModalityType.DOCUMENT_MODAL);
         // instantiate
         mTree = new JTree(ShipTreeLogic.getShipTree());
@@ -66,48 +65,45 @@ public class ShipChooser extends JDialog
         buttonBar.add(ok);
         buttonBar.add(cancel);
         // link
-        ok.addActionListener(new ActionListener(){
+        ok.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent ev)
-            {
+            public void actionPerformed(ActionEvent ev) {
                 doOK();
-            }});
-        cancel.addActionListener(new ActionListener(){
+            }
+        });
+        cancel.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent ev)
-            {
+            public void actionPerformed(ActionEvent ev) {
                 doCancel();
-            }});
+            }
+        });
         setSize(640, 480);
         setLocationRelativeTo(base);
     }
-    
-    private void doOK()
-    {
+
+    private void doOK() {
         TreePath selectedPath = mTree.getSelectionPath();
-        DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode)selectedPath.getLastPathComponent();
-        if (selectedNode.getUserObject() instanceof ShipSpec)
-            mSelected = (ShipSpec)selectedNode.getUserObject();
-        else
+        DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) selectedPath.getLastPathComponent();
+        if (selectedNode.getUserObject() instanceof ShipSpec) {
+            mSelected = (ShipSpec) selectedNode.getUserObject();
+        } else {
             mSelected = null;
+        }
         setVisible(false);
         dispose();
     }
-    
-    private void doCancel()
-    {
+
+    private void doCancel() {
         mSelected = null;
         setVisible(false);
         dispose();
     }
 
-    public ShipSpec getSelected()
-    {
+    public ShipSpec getSelected() {
         return mSelected;
     }
 
-    public void setSelected(ShipSpec selected)
-    {
+    public void setSelected(ShipSpec selected) {
         mSelected = selected;
     }
 }

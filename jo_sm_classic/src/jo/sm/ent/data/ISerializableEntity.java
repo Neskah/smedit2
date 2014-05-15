@@ -6,8 +6,7 @@ package jo.sm.ent.data;
 
 import java.io.DataOutputStream;
 
-public interface ISerializableEntity
-{
+public interface ISerializableEntity {
 
     public abstract void writeToTag(DataOutputStream dataoutputstream);
 

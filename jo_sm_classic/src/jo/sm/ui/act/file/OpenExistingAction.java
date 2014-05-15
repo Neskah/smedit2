@@ -15,39 +15,36 @@ import jo.sm.ui.logic.ShipSpec;
 import jo.sm.ui.logic.ShipTreeLogic;
 
 @SuppressWarnings("serial")
-public class OpenExistingAction extends GenericAction
-{
-    private RenderFrame mFrame;
-    
-    public OpenExistingAction(RenderFrame frame)
-    {
+public class OpenExistingAction extends GenericAction {
+
+    private final RenderFrame mFrame;
+
+    public OpenExistingAction(RenderFrame frame) {
         mFrame = frame;
         setName("Open...");
         setToolTipText("Open an existing data object");
     }
 
     @Override
-    public void actionPerformed(ActionEvent ev)
-    {
+    public void actionPerformed(ActionEvent ev) {
         ShipChooser chooser = new ShipChooser(mFrame);
         chooser.setVisible(true);
         final ShipSpec spec = chooser.getSelected();
-        if (spec == null)
+        if (spec == null) {
             return;
-        IRunnableWithProgress t = new IRunnableWithProgress() {			
-			@Override
-			public void run(IPluginCallback cb)
-			{
-		        SparseMatrix<Block> grid = ShipTreeLogic.loadShip(spec, cb);
-		        if (grid != null)
-		        {
-		            StarMadeLogic.getInstance().setCurrentModel(spec);
-		            StarMadeLogic.setModel(grid);
-		            mFrame.getClient().getUndoer().clear();
-		        }
-			}
-		};
-		RunnableLogic.run(mFrame, "Open "+spec.getName(), t);
+        }
+        IRunnableWithProgress t = new IRunnableWithProgress() {
+            @Override
+            public void run(IPluginCallback cb) {
+                SparseMatrix<Block> grid = ShipTreeLogic.loadShip(spec, cb);
+                if (grid != null) {
+                    StarMadeLogic.getInstance().setCurrentModel(spec);
+                    StarMadeLogic.setModel(grid);
+                    mFrame.getClient().getUndoer().clear();
+                }
+            }
+        };
+        RunnableLogic.run(mFrame, "Open " + spec.getName(), t);
     }
 
 }

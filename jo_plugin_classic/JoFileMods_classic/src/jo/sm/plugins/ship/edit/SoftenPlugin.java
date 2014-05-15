@@ -7,57 +7,50 @@ import jo.sm.mods.IPluginCallback;
 import jo.sm.ship.data.Block;
 import jo.sm.ship.logic.HullLogic;
 
-public class SoftenPlugin implements IBlocksPlugin
-{
+public class SoftenPlugin implements IBlocksPlugin {
+
     public static final String NAME = "Soften";
     public static final String DESC = "Convert any powered hull blocks to unpowered.";
     public static final String AUTH = "Jo Jaquinta";
-    public static final int[][] CLASSIFICATIONS = 
-        {
-        { TYPE_SHIP, SUBTYPE_EDIT },
-        };
+    public static final int[][] CLASSIFICATIONS
+            = {
+                {TYPE_SHIP, SUBTYPE_EDIT},};
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return NAME;
     }
 
     @Override
-    public String getDescription()
-    {
+    public String getDescription() {
         return DESC;
     }
 
     @Override
-    public String getAuthor()
-    {
+    public String getAuthor() {
         return AUTH;
     }
 
     @Override
-    public Object newParameterBean()
-    {
+    public Object newParameterBean() {
         return null;
     }
-	@Override
-	public void initParameterBean(SparseMatrix<Block> original, Object params,
-			StarMade sm, IPluginCallback cb)
-	{
-	}
 
     @Override
-    public int[][] getClassifications()
-    {
+    public void initParameterBean(SparseMatrix<Block> original, Object params,
+            StarMade sm, IPluginCallback cb) {
+    }
+
+    @Override
+    public int[][] getClassifications() {
         return CLASSIFICATIONS;
     }
 
     @Override
     public SparseMatrix<Block> modify(SparseMatrix<Block> original,
-            Object p, StarMade sm, IPluginCallback cb)
-    {
-       SparseMatrix<Block> modified = new SparseMatrix<Block>(original);
-       HullLogic.unpower(modified);
+            Object p, StarMade sm, IPluginCallback cb) {
+        SparseMatrix<Block> modified = new SparseMatrix<>(original);
+        HullLogic.unpower(modified);
         return modified;
     }
 }

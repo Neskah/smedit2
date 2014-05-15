@@ -19,30 +19,28 @@ import java.util.List;
  +            2   int         Number of blocks in the group (I)
  +            6   short[3][I] Array of blocks positions for each of the I blocks 
  */
-public class Logic
-{
-    private int               mUnknown1;
+public class Logic {
+
+    private int mUnknown1;
     private List<ControllerEntry> mControllers;
-    
-    public Logic()
-    {
+
+    public Logic() {
         mControllers = new ArrayList<ControllerEntry>();
     }
-    
-    public int getUnknown1()
-    {
+
+    public int getUnknown1() {
         return mUnknown1;
     }
-    public void setUnknown1(int unknown1)
-    {
+
+    public void setUnknown1(int unknown1) {
         mUnknown1 = unknown1;
     }
-    public List<ControllerEntry> getControllers()
-    {
+
+    public List<ControllerEntry> getControllers() {
         return mControllers;
     }
-    public void setControllers(List<ControllerEntry> controllers)
-    {
+
+    public void setControllers(List<ControllerEntry> controllers) {
         mControllers = controllers;
     }
 }

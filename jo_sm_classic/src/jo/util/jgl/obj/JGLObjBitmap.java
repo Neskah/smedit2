@@ -23,16 +23,15 @@ package jo.util.jgl.obj;
 
 import jo.util.jgl.obj.tri.JGLObj;
 
-public class JGLObjBitmap extends JGLObj
-{
-    private int         mImageID;
-    private int         mLeft;
-    private int         mTop;
-    private int         mWidth;
-    private int         mHeight;
-    
-    public JGLObjBitmap(int imageID, int left, int top, int width, int height)
-    {
+public class JGLObjBitmap extends JGLObj {
+
+    private int mImageID;
+    private int mLeft;
+    private int mTop;
+    private int mWidth;
+    private int mHeight;
+
+    public JGLObjBitmap(int imageID, int left, int top, int width, int height) {
         mImageID = imageID;
         mLeft = left;
         mTop = top;
@@ -40,53 +39,43 @@ public class JGLObjBitmap extends JGLObj
         mHeight = height;
     }
 
-    public int getLeft()
-    {
+    public int getLeft() {
         return mLeft;
     }
 
-    public void setLeft(int left)
-    {
+    public void setLeft(int left) {
         mLeft = left;
     }
 
-    public int getTop()
-    {
+    public int getTop() {
         return mTop;
     }
 
-    public void setTop(int top)
-    {
+    public void setTop(int top) {
         mTop = top;
     }
 
-    public int getWidth()
-    {
+    public int getWidth() {
         return mWidth;
     }
 
-    public void setWidth(int width)
-    {
+    public void setWidth(int width) {
         mWidth = width;
     }
 
-    public int getHeight()
-    {
+    public int getHeight() {
         return mHeight;
     }
 
-    public void setHeight(int height)
-    {
+    public void setHeight(int height) {
         mHeight = height;
     }
 
-    public int getImageID()
-    {
+    public int getImageID() {
         return mImageID;
     }
 
-    public void setImageID(int imageID)
-    {
+    public void setImageID(int imageID) {
         mImageID = imageID;
     }
 }

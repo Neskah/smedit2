@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package jo.util.jgl.obj.tri;
 
 import jo.vecmath.Point3f;
@@ -22,62 +21,56 @@ import jo.vecmath.logic.Matrix4fLogic;
 /**
  * A vertex shaded cube.
  */
-public class JGLObjCube extends JGLObj
-{
-    public JGLObjCube()
-    {
+public class JGLObjCube extends JGLObj {
+
+    public JGLObjCube() {
         float radius = .5f;
         float vertices[] = {
-                -radius, -radius, -radius,
-                radius, -radius, -radius,
-                radius,  radius, -radius,
-                -radius,  radius, -radius,
-                -radius, -radius,  radius,
-                radius, -radius,  radius,
-                radius,  radius,  radius,
-                -radius,  radius,  radius,
-        };
+            -radius, -radius, -radius,
+            radius, -radius, -radius,
+            radius, radius, -radius,
+            -radius, radius, -radius,
+            -radius, -radius, radius,
+            radius, -radius, radius,
+            radius, radius, radius,
+            -radius, radius, radius,};
 
         float colors[] = {
-                0,    0,    0,  1,
-                1,    0,    0,  1,
-                1,  1,    0,  1,
-                0,  1,    0,  1,
-                0,    0,  1,  1,
-                1,    0,  1,  1,
-                1,  1,  1,  1,
-                0,  1,  1,  1,
-        };
+            0, 0, 0, 1,
+            1, 0, 0, 1,
+            1, 1, 0, 1,
+            0, 1, 0, 1,
+            0, 0, 1, 1,
+            1, 0, 1, 1,
+            1, 1, 1, 1,
+            0, 1, 1, 1,};
 
         short indices[] = {
-                0, 4, 5,    0, 5, 1,
-                1, 5, 6,    1, 6, 2,
-                2, 6, 7,    2, 7, 3,
-                3, 7, 4,    3, 4, 0,
-                4, 7, 6,    4, 6, 5,
-                3, 0, 1,    3, 1, 2
+            0, 4, 5, 0, 5, 1,
+            1, 5, 6, 1, 6, 2,
+            2, 6, 7, 2, 7, 3,
+            3, 7, 4, 3, 4, 0,
+            4, 7, 6, 4, 6, 5,
+            3, 0, 1, 3, 1, 2
         };
 
         setVertices(vertices);
         setColors(colors);
         setIndices(indices);
     }
-    
-    public JGLObjCube(Point3f size, Point3f center)
-    {
+
+    public JGLObjCube(Point3f size, Point3f center) {
         this();
         Matrix4fLogic.translate(getTransform(), center);
         Matrix4fLogic.scale(getTransform(), size);
     }
 
-    public void setFadeColor(float r1, float g1, float b1, float a1, float r2, float g2, float b2, float a2)
-    {
+    @Override
+    public void setFadeColor(float r1, float g1, float b1, float a1, float r2, float g2, float b2, float a2) {
         float colors1[] = {
-                r1, g1, b1, a1,
-        };
+            r1, g1, b1, a1,};
         float colors2[] = {
-                r2, g2, b2, a2,
-        };
+            r2, g2, b2, a2,};
         mColorBuffer.position(0);
         mColorBuffer.put(colors1);
         mColorBuffer.put(colors2);

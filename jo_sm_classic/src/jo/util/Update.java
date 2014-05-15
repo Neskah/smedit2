@@ -21,10 +21,9 @@
  */
 package jo.util;
 
-
 /**
  * Handles the lookup and download of the client jar files when updated
- * 
+ *
  * @Auther Robert Barefoot for SMEdit2 - version 1.0
  */
 import java.awt.Window;
@@ -36,51 +35,51 @@ import jo.sm.ui.UpdateGUI;
 
 public class Update {
 
-	public static int update = -1;
-	private final Window parent;
-	public static UpdateGUI download = null;
-	private static final byte[] buffer = new byte[1024];
+    public static int update = -1;
+    private final Window parent;
+    public static UpdateGUI download = null;
+    private static final byte[] buffer = new byte[1024];
 
-	private static int getLatestVersion() {
-			return -1;
-	}
+    private static int getLatestVersion() {
+        return -1;
+    }
 
-	public Update(final Window parent) {
-		this.parent = parent;
-	}
+    public Update(final Window parent) {
+        this.parent = parent;
+    }
 
-	public void checkUpdate(final boolean checkup) {
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (final ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
-		}
-		if (GlobalConfiguration.getVersion() >= getLatestVersion()) {
-			return;
-		}
-		if (getLatestVersion() > GlobalConfiguration.getVersion()) {
-			update = JOptionPane.showConfirmDialog(parent,
-					"A newer version of the application is available.\n\n"
-					+ "Do you wish to update?\n\n"
-					+ "Choosing not to update may result\n"
-					+ "in problems running the client...",
-					"Update Found", JOptionPane.YES_NO_OPTION);
-			if (update != 0) {
-				return;
-			}
-			try {
-				if (update == 0) {
-					updateApp();
-				}
-			} catch (final Exception e) {
-			}
-		}
-	}
+    public void checkUpdate(final boolean checkup) {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (final ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
+        }
+        if (GlobalConfiguration.getVersion() >= getLatestVersion()) {
+            return;
+        }
+        if (getLatestVersion() > GlobalConfiguration.getVersion()) {
+            update = JOptionPane.showConfirmDialog(parent,
+                    "A newer version of the application is available.\n\n"
+                    + "Do you wish to update?\n\n"
+                    + "Choosing not to update may result\n"
+                    + "in problems running the client...",
+                    "Update Found", JOptionPane.YES_NO_OPTION);
+            if (update != 0) {
+                return;
+            }
+            try {
+                if (update == 0) {
+                    updateApp();
+                }
+            } catch (final Exception e) {
+            }
+        }
+    }
 
-	public void download(final String address, final String localFileName) {
+    public void download(final String address, final String localFileName) {
 
-	}
+    }
 
-	public void updateApp() {
+    public void updateApp() {
 
-	}
+    }
 }

@@ -15,195 +15,175 @@ import java.util.Map;
 
 import jo.sm.logic.utils.StringUtils;
 
-public class DescribedBeanInfo
-{
-	private Object		mBean;
-	private Class<?>	mBeanClass;
-	private BeanInfo	mBeanInfo;
-	private Map<String,PropertyDescriptor>	mProps;
-	private List<PropertyDescriptor> mOrderedProps; 
-	private Map<String,Description>	mDescriptions;
-	private Map<String,PropertyEditor>	mEditors;
-	
-	public DescribedBeanInfo(Object bean)
-	{
-		mBean = bean;
-		mBeanClass = mBean.getClass();
-		init();
-	}
-	
-	public DescribedBeanInfo(Class<?> beanClass)
-	{
-		mBeanClass = beanClass;
-		init();
-	}
-	
-	private void init()
-	{
-        try
-        {
+public class DescribedBeanInfo {
+
+    private Object mBean;
+    private final Class<?> mBeanClass;
+    private BeanInfo mBeanInfo;
+    private Map<String, PropertyDescriptor> mProps;
+    private List<PropertyDescriptor> mOrderedProps;
+    private Map<String, Description> mDescriptions;
+    private Map<String, PropertyEditor> mEditors;
+
+    public DescribedBeanInfo(Object bean) {
+        mBean = bean;
+        mBeanClass = mBean.getClass();
+        init();
+    }
+
+    public DescribedBeanInfo(Class<?> beanClass) {
+        mBeanClass = beanClass;
+        init();
+    }
+
+    private void init() {
+        try {
             mBeanInfo = Introspector.getBeanInfo(mBeanClass);
-        }
-        catch (IntrospectionException e)
-        {
+        } catch (IntrospectionException e) {
             e.printStackTrace();
             return;
         }
         setupProps();
         sortProps();
         setupEditors();
-	}
-	
-	private void setupEditors()
-	{
-		mEditors = new HashMap<String, PropertyEditor>();
-        for (PropertyDescriptor prop : mOrderedProps)
-        {
+    }
+
+    private void setupEditors() {
+        mEditors = new HashMap<>();
+        for (PropertyDescriptor prop : mOrderedProps) {
             PropertyEditor editor = prop.createPropertyEditor(mBean);
-            if (editor == null)
-            	editor = new GenericPropertyEditor(mBean, prop);
+            if (editor == null) {
+                editor = new GenericPropertyEditor(mBean, prop);
+            }
             mEditors.put(prop.getName(), editor);
-        }		
-	}
+        }
+    }
 
-	private void sortProps()
-	{
-		Collections.sort(mOrderedProps, new Comparator<PropertyDescriptor>() {
-        	@Override
-        	public int compare(PropertyDescriptor o1, PropertyDescriptor o2)
-        	{
-        		int p1 = 50;
-        		if (mDescriptions.containsKey(o1.getName()))
-        			p1 = mDescriptions.get(o1.getName()).priority();
-        		int p2 = 50;
-        		if (mDescriptions.containsKey(o2.getName()))
-        			p2 = mDescriptions.get(o2.getName()).priority();
-        		if (p1 == p2)
-        			return o1.getName().compareTo(o2.getName());
-        		return (int)Math.signum(p1 - p2);
-        	}
-		});
-	}
+    private void sortProps() {
+        Collections.sort(mOrderedProps, new Comparator<PropertyDescriptor>() {
+            @Override
+            public int compare(PropertyDescriptor o1, PropertyDescriptor o2) {
+                int p1 = 50;
+                if (mDescriptions.containsKey(o1.getName())) {
+                    p1 = mDescriptions.get(o1.getName()).priority();
+                }
+                int p2 = 50;
+                if (mDescriptions.containsKey(o2.getName())) {
+                    p2 = mDescriptions.get(o2.getName()).priority();
+                }
+                if (p1 == p2) {
+                    return o1.getName().compareTo(o2.getName());
+                }
+                return (int) Math.signum(p1 - p2);
+            }
+        });
+    }
 
-	private void setupProps()
-	{
-		mProps = new HashMap<String, PropertyDescriptor>();
-        mDescriptions = new HashMap<String, Description>();
-        mOrderedProps = new ArrayList<PropertyDescriptor>();
-        for (PropertyDescriptor prop : mBeanInfo.getPropertyDescriptors())
-            if (prop.getReadMethod() == null || prop.getWriteMethod() == null)
-                continue;
-            else
-            {
-                try
-                {
+    private void setupProps() {
+        mProps = new HashMap<>();
+        mDescriptions = new HashMap<>();
+        mOrderedProps = new ArrayList<>();
+        for (PropertyDescriptor prop : mBeanInfo.getPropertyDescriptors()) {
+            if (prop.getReadMethod() == null || prop.getWriteMethod() == null) {
+            } else {
+                try {
                     Description d = findDescription(mBeanClass, prop);
-                    if (d != null)
-                    {
-                        if (StringUtils.nonTrivial(d.displayName()))
+                    if (d != null) {
+                        if (StringUtils.nonTrivial(d.displayName())) {
                             prop.setDisplayName(d.displayName());
-                        if (StringUtils.nonTrivial(d.shortDescription()))
+                        }
+                        if (StringUtils.nonTrivial(d.shortDescription())) {
                             prop.setShortDescription(d.shortDescription());
+                        }
                     }
                     mDescriptions.put(prop.getName(), d);
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 mOrderedProps.add(prop);
                 mProps.put(prop.getName(), prop);
             }
-	}
+        }
+    }
 
     private Description findDescription(Class<?> beanClass,
-            PropertyDescriptor prop)
-    {
+            PropertyDescriptor prop) {
         String propName = prop.getName();
-        Field match= null;
-        for (Field f : beanClass.getDeclaredFields())
-        {
+        Field match = null;
+        for (Field f : beanClass.getDeclaredFields()) {
             String fieldName = f.getName();
-            if (propName.equalsIgnoreCase(fieldName))
-            {
+            if (propName.equalsIgnoreCase(fieldName)) {
                 match = f;
                 break;
             }
-            if (fieldName.startsWith("m") && propName.equalsIgnoreCase(fieldName.substring(1)))
-            {
+            if (fieldName.startsWith("m") && propName.equalsIgnoreCase(fieldName.substring(1))) {
                 match = f;
                 break;
             }
         }
-        if (match == null)
+        if (match == null) {
             return null;
+        }
         return match.getAnnotation(Description.class);
     }
-    
-    public Object getValue(String propName)
-    {
-    	PropertyEditor editor = mEditors.get(propName);
-    	if (editor == null)
-    		return null;
-    	return editor.getValue();
-    }
-    
-    public String getAsText(String propName)
-    {
-    	PropertyEditor editor = mEditors.get(propName);
-    	if (editor == null)
-    		return null;
-    	return editor.getAsText();
-    }
-    
-    public void setAsText(String propName, String value)
-    {
-    	PropertyEditor editor = mEditors.get(propName);
-    	if (editor == null)
-    		return;
-    	editor.setAsText(value);
-    }
-    
-    public void setAsValue(String propName, Object value)
-    {
-    	PropertyEditor editor = mEditors.get(propName);
-    	if (editor == null)
-    		return;
-    	editor.setValue(value);
+
+    public Object getValue(String propName) {
+        PropertyEditor editor = mEditors.get(propName);
+        if (editor == null) {
+            return null;
+        }
+        return editor.getValue();
     }
 
-	public Object getBean()
-	{
-		return mBean;
-	}
+    public String getAsText(String propName) {
+        PropertyEditor editor = mEditors.get(propName);
+        if (editor == null) {
+            return null;
+        }
+        return editor.getAsText();
+    }
 
-	public Class<?> getBeanClass()
-	{
-		return mBeanClass;
-	}
+    public void setAsText(String propName, String value) {
+        PropertyEditor editor = mEditors.get(propName);
+        if (editor == null) {
+            return;
+        }
+        editor.setAsText(value);
+    }
 
-	public BeanInfo getBeanInfo()
-	{
-		return mBeanInfo;
-	}
+    public void setAsValue(String propName, Object value) {
+        PropertyEditor editor = mEditors.get(propName);
+        if (editor == null) {
+            return;
+        }
+        editor.setValue(value);
+    }
 
-	public Map<String, PropertyDescriptor> getProps()
-	{
-		return mProps;
-	}
+    public Object getBean() {
+        return mBean;
+    }
 
-	public List<PropertyDescriptor> getOrderedProps()
-	{
-		return mOrderedProps;
-	}
+    public Class<?> getBeanClass() {
+        return mBeanClass;
+    }
 
-	public Map<String, Description> getDescriptions()
-	{
-		return mDescriptions;
-	}
+    public BeanInfo getBeanInfo() {
+        return mBeanInfo;
+    }
 
-	public Map<String, PropertyEditor> getEditors()
-	{
-		return mEditors;
-	}
+    public Map<String, PropertyDescriptor> getProps() {
+        return mProps;
+    }
+
+    public List<PropertyDescriptor> getOrderedProps() {
+        return mOrderedProps;
+    }
+
+    public Map<String, Description> getDescriptions() {
+        return mDescriptions;
+    }
+
+    public Map<String, PropertyEditor> getEditors() {
+        return mEditors;
+    }
 }

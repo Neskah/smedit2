@@ -12,7 +12,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -26,195 +28,179 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
-public class SMEdit
-{
-    private String[]    mArgs;        
-    private String      mWebRoot;
-    private Calendar    mLocalDate;
-    private Calendar    mRemoteDate;
-    private List<String[]> mTargets;
-    private Properties	mProps;
-    private File		mStarMadeDir;
-    
-    public SMEdit(String[] args)
-    {
+public class SMEdit {
+
+    private final String[] mArgs;
+    private final String mWebRoot;
+    private Calendar mLocalDate;
+    private Calendar mRemoteDate;
+    private final List<String[]> mTargets;
+    private Properties mProps;
+    private File mStarMadeDir;
+
+    public SMEdit(String[] args) {
         mArgs = args;
         mWebRoot = "http://www.lazygamerz.org/smedit/"; //http://www.ocean-of-storms.com/vote4joe/,  http://www.smedit2.googlecode.com/svn/trunk/
-        mTargets = new ArrayList<String[]>();
+        mTargets = new ArrayList<>();
     }
-    
-    public void run()
-    {
-        if (!validateCurrentDirectory())
+
+    public void run() {
+        if (!validateCurrentDirectory()) {
             return;
+        }
         readLocalDate();
-        if (readRemoteFile())
-            if (doWeUpdate())
+        if (readRemoteFile()) {
+            if (doWeUpdate()) {
                 updateTargets();
-        runSMEdit();
-    }
-    
-    private void loadProps()
-    {
-        File home = new File(System.getProperty("user.home"));
-        File props = new File(home, ".josm");
-        if (props.exists())
-        {
-            mProps = new Properties();
-            try
-            {
-                FileInputStream fis = new FileInputStream(props);
-                mProps.load(fis);
-                fis.close();
-            }
-            catch (Exception e)
-            {
-                
             }
         }
-        else
-        	mProps = new Properties();
+        runSMEdit();
     }
-    
+
+    private void loadProps() {
+        File home = new File(System.getProperty("user.home"));
+        File props = new File(home, ".josm");
+        if (props.exists()) {
+            mProps = new Properties();
+            try {
+                try (FileInputStream fis = new FileInputStream(props)) {
+                    mProps.load(fis);
+                }
+            } catch (IOException e) {
+
+            }
+        } else {
+            mProps = new Properties();
+        }
+    }
+
     @SuppressWarnings("resource")
-	private void runSMEdit()
-    {
-        try
-        {
+    private void runSMEdit() {
+        try {
             File jo_smJar = new File(mStarMadeDir, "jo_sm.jar");
             URL josmURL = jo_smJar.toURI().toURL();
             File smJar = new File(mStarMadeDir, "StarMade.jar");
             URL smURL = smJar.toURI().toURL();
-            URLClassLoader smLoader = new URLClassLoader(new URL[]{josmURL,smURL}, SMEdit.class.getClassLoader());            
+            URLClassLoader smLoader = new URLClassLoader(new URL[]{josmURL, smURL}, SMEdit.class.getClassLoader());
             Class<?> rf = smLoader.loadClass("Boot");
             Method main = rf.getMethod("main", String[].class);
-            main.invoke(null, (Object)mArgs);
-        }
-        catch (Exception e)
-        {
+            main.invoke(null, (Object) mArgs);
+        } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | NoSuchMethodException | SecurityException | InvocationTargetException | MalformedURLException e) {
             e.printStackTrace();
         }
-        
+
     }
-    
-    private void updateTargets()
-    {
-        for (String[] target : mTargets)
-        {
-            try
-            {
-                URL remote = new URL(mWebRoot+target[1]);
+
+    private void updateTargets() {
+        for (String[] target : mTargets) {
+            try {
+                URL remote = new URL(mWebRoot + target[1]);
                 File local = new File(mStarMadeDir, target[0]);
-                if (local.exists())
+                if (local.exists()) {
                     local.delete();
+                }
                 File localParent = local.getParentFile();
-                if (!localParent.exists())
+                if (!localParent.exists()) {
                     localParent.mkdirs();
-                System.out.println(remote+" -> "+local);
+                }
+                System.out.println(remote + " -> " + local);
                 JDialog win = new JDialog();
                 win.setTitle("SMEdit Update");
-                JTextArea msg = new JTextArea(remote+" -> "+local);
+                JTextArea msg = new JTextArea(remote + " -> " + local);
                 msg.setEditable(false);
                 msg.setWrapStyleWord(true);
                 msg.setLineWrap(true);
                 win.getContentPane().add("Center", msg);
                 win.setSize(320, 200);
                 win.setVisible(true);
-                InputStream is = new BufferedInputStream(remote.openStream());
-                OutputStream os = new BufferedOutputStream(new FileOutputStream(local));
-                int count = 0;
-                for (;;)
-                {
-                    int ch = is.read();
-                    if (ch == -1)
-                        break;
-                    os.write(ch);
-                    count++;
+                OutputStream os;
+                int count;
+                try (InputStream is = new BufferedInputStream(remote.openStream())) {
+                    os = new BufferedOutputStream(new FileOutputStream(local));
+                    count = 0;
+                    for (;;) {
+                        int ch = is.read();
+                        if (ch == -1) {
+                            break;
+                        }
+                        os.write(ch);
+                        count++;
+                    }
                 }
-                is.close();
                 os.close();
-                System.out.println("  "+count+" bytes");
+                System.out.println("  " + count + " bytes");
                 win.setVisible(false);
                 win.dispose();
-            }
-            catch (Exception e)
-            {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
-    
-    private boolean doWeUpdate()
-    {
-        if (mRemoteDate == null)
+
+    private boolean doWeUpdate() {
+        if (mRemoteDate == null) {
             return false;
-        if (mTargets.size() == 0)
-            return false;
-        long delta = Math.abs(mLocalDate.getTimeInMillis() - mRemoteDate.getTimeInMillis());
-        System.out.println("Local: "+mLocalDate.getTime());
-        System.out.println("Remote: "+mRemoteDate.getTime());
-        System.out.println("Delta: "+delta);
-        if (delta < 2*60*1000)
-            return false;
-        int update = JOptionPane.showConfirmDialog(null, "There is a new version of SMEdit available. Shall we download it?");
-        if (update != JOptionPane.YES_OPTION)
-            return false;
-        return true;
-    }
-    
-    private boolean readRemoteFile()
-    {
-        try
-        {
-            URL u = new URL(mWebRoot+"jo_sm.date");
-            InputStream is = u.openStream();
-            InputStreamReader rdr = new InputStreamReader(is, "iso-8859-1");
-            mRemoteDate = readDate(rdr);
-            for (;;)
-            {
-                String line = readLine(rdr);
-                if (line == null)
-                    break;
-                String[] elems = line.split(",");
-                mTargets.add(elems);
-            }
-            mTargets.add(new String[] { "jo_sm.date", "jo_sm.date" });
-            rdr.close();
-            return true;
         }
-        catch (Exception e)
-        {
+        if (mTargets.isEmpty()) {
+            return false;
+        }
+        long delta = Math.abs(mLocalDate.getTimeInMillis() - mRemoteDate.getTimeInMillis());
+        System.out.println("Local: " + mLocalDate.getTime());
+        System.out.println("Remote: " + mRemoteDate.getTime());
+        System.out.println("Delta: " + delta);
+        if (delta < 2 * 60 * 1000) {
+            return false;
+        }
+        int update = JOptionPane.showConfirmDialog(null, "There is a new version of SMEdit available. Shall we download it?");
+        return update == JOptionPane.YES_OPTION;
+    }
+
+    private boolean readRemoteFile() {
+        try {
+            URL u = new URL(mWebRoot + "jo_sm.date");
+            InputStream is = u.openStream();
+            try (InputStreamReader rdr = new InputStreamReader(is, "iso-8859-1")) {
+                mRemoteDate = readDate(rdr);
+                for (;;) {
+                    String line = readLine(rdr);
+                    if (line == null) {
+                        break;
+                    }
+                    String[] elems = line.split(",");
+                    mTargets.add(elems);
+                }
+                mTargets.add(new String[]{"jo_sm.date", "jo_sm.date"});
+            }
+            return true;
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
     }
-    
-    private void readLocalDate()
-    {
+
+    private void readLocalDate() {
         mLocalDate = Calendar.getInstance();
         mLocalDate.setTimeInMillis(0);
         File localFile = new File(mStarMadeDir, "jo_sm.date");
-        if (!localFile.exists())
+        if (!localFile.exists()) {
             return;
-        try
-        {
-            FileReader rdr = new FileReader(localFile);
-            mLocalDate = readDate(rdr);
-            rdr.close();
         }
-        catch (Exception e)
-        {
+        try {
+            try (FileReader rdr = new FileReader(localFile)) {
+                mLocalDate = readDate(rdr);
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
-    private Calendar readDate(Reader rdr) throws IOException
-    {
+
+    private Calendar readDate(Reader rdr) throws IOException {
         Calendar c = Calendar.getInstance();
         String line = readLine(rdr);
         StringTokenizer st = new StringTokenizer(line, " /");
-        if (st.countTokens() != 4)
-            throw new IllegalArgumentException("Expected 4 tokens on date '"+line+"'");
+        if (st.countTokens() != 4) {
+            throw new IllegalArgumentException("Expected 4 tokens on date '" + line + "'");
+        }
         st.nextToken(); // skip day of week
         String month = st.nextToken();
         String day = st.nextToken();
@@ -224,135 +210,135 @@ public class SMEdit
         c.set(Calendar.YEAR, Integer.parseInt(year));
         line = readLine(rdr);
         st = new StringTokenizer(line, " :");
-        if (st.countTokens() != 3)
-            throw new IllegalArgumentException("Expected 4 tokens on date '"+line+"'");
+        if (st.countTokens() != 3) {
+            throw new IllegalArgumentException("Expected 4 tokens on date '" + line + "'");
+        }
         String hour = st.nextToken();
         String minute = st.nextToken();
         String ampm = st.nextToken();
-        c.set(Calendar.HOUR, Integer.parseInt(hour)%12);
+        c.set(Calendar.HOUR, Integer.parseInt(hour) % 12);
         c.set(Calendar.MINUTE, Integer.parseInt(minute));
-        if ("AM".equals(ampm))
+        if ("AM".equals(ampm)) {
             c.set(Calendar.AM_PM, Calendar.AM);
-        else
+        } else {
             c.set(Calendar.AM_PM, Calendar.PM);
+        }
         return c;
     }
-    
-    private String readLine(Reader rdr) throws IOException
-    {
-        StringBuffer line = new StringBuffer();
-        for (;;)
-        {
+
+    private String readLine(Reader rdr) throws IOException {
+        StringBuilder line = new StringBuilder();
+        for (;;) {
             int ch = rdr.read();
-            if (ch == -1)
-                if (line.length() > 0)
+            if (ch == -1) {
+                if (line.length() > 0) {
                     break;
-                else
+                } else {
                     return null;
-            if (ch == '\r')
+                }
+            }
+            if (ch == '\r') {
                 continue;
-            if (ch == '\n')
+            }
+            if (ch == '\n') {
                 break;
-            line.append((char)ch);
+            }
+            line.append((char) ch);
         }
         return line.toString();
     }
-    
-    private boolean validateCurrentDirectory()
-    {
-    	loadProps();
+
+    private boolean validateCurrentDirectory() {
+        loadProps();
         mStarMadeDir = new File(mProps.getProperty("starmade.home", ""));
-        if (isStarMadeDirectory(mStarMadeDir))
-        	return true;
+        if (isStarMadeDirectory(mStarMadeDir)) {
+            return true;
+        }
         mStarMadeDir = new File(".");
-        if (isStarMadeDirectory(mStarMadeDir))
-        {
-        	saveProps();
-        	return true;
+        if (isStarMadeDirectory(mStarMadeDir)) {
+            saveProps();
+            return true;
         }
         System.out.println("Scanning current directory");
         mStarMadeDir = null;
         String home = System.getProperty("user.dir");
         lookForStarMadeDir(new File(home));
-        if (mStarMadeDir != null)
-        {
-        	saveProps();
-        	return true;
+        if (mStarMadeDir != null) {
+            saveProps();
+            return true;
         }
         System.out.println("Scanning home directory");
         mStarMadeDir = null;
         home = System.getProperty("user.home");
         lookForStarMadeDir(new File(home));
-        if (mStarMadeDir != null)
-        {
-        	saveProps();
-        	return true;
+        if (mStarMadeDir != null) {
+            saveProps();
+            return true;
         }
-        for (;;)
-        {
-	        home = JOptionPane.showInputDialog(null, "Enter in the home directory for StarMade", home);
-	        if (home == null)
-	            return false;
-	        mStarMadeDir = new File(home);
-	        if (isStarMadeDirectory(mStarMadeDir))
-	        	break;
-	    }
-    	saveProps();
+        for (;;) {
+            home = JOptionPane.showInputDialog(null, "Enter in the home directory for StarMade", home);
+            if (home == null) {
+                return false;
+            }
+            mStarMadeDir = new File(home);
+            if (isStarMadeDirectory(mStarMadeDir)) {
+                break;
+            }
+        }
+        saveProps();
         return true;
     }
-    
-    private void lookForStarMadeDir(File root)
-    {
-    	if (isStarMadeDirectory(root))
-    	{
-    		mStarMadeDir = root;
-    		return;
-    	}
-    	File[] children = root.listFiles();
-    	if (children == null)
-    		return;
-    	for (File child : children)
-    		if (child.isDirectory())
-    		{
-    			lookForStarMadeDir(child);
-    			if (mStarMadeDir != null)
-    				return;
-    		}
-    }
-    
-    private void saveProps()
-    {
-        if (mProps == null)
+
+    private void lookForStarMadeDir(File root) {
+        if (isStarMadeDirectory(root)) {
+            mStarMadeDir = root;
             return;
-        if (mStarMadeDir != null)
-        	mProps.put("starmade.home", mStarMadeDir.toString());
+        }
+        File[] children = root.listFiles();
+        if (children == null) {
+            return;
+        }
+        for (File child : children) {
+            if (child.isDirectory()) {
+                lookForStarMadeDir(child);
+                if (mStarMadeDir != null) {
+                    return;
+                }
+            }
+        }
+    }
+
+    private void saveProps() {
+        if (mProps == null) {
+            return;
+        }
+        if (mStarMadeDir != null) {
+            mProps.put("starmade.home", mStarMadeDir.toString());
+        }
         File home = new File(System.getProperty("user.home"));
         File props = new File(home, ".josm");
-        try
-        {
-            FileWriter fos = new FileWriter(props);
-            mProps.store(fos, "StarMade Utils defaults");
-            fos.close();
-        }
-        catch (Exception e)
-        {
-            
+        try {
+            try (FileWriter fos = new FileWriter(props)) {
+                mProps.store(fos, "StarMade Utils defaults");
+            }
+        } catch (IOException e) {
+
         }
     }
-    public static boolean isStarMadeDirectory(File d)
-    {
-        if (!d.exists())
+
+    public static boolean isStarMadeDirectory(File d) {
+        if (!d.exists()) {
             return false;
+        }
         File smJar = new File(d, "StarMade.jar");
-        if (!smJar.exists())
-        	return false;
+        if (!smJar.exists()) {
+            return false;
+        }
         File crashJar = new File(d, "CrashAndBugReport.jar");
-        if (!crashJar.exists())
-        	return false;
-        return true;
+        return crashJar.exists();
     }
-    public static void main(String[] args)
-    {
+
+    public static void main(String[] args) {
         SMEdit app = new SMEdit(args);
         app.run();
     }

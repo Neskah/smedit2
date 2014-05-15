@@ -3,24 +3,21 @@ package jo.sm.plugins.planet.gen;
 import jo.sm.data.BlockTypes;
 import jo.sm.ui.act.plugin.Description;
 
+@Description(displayName = "Giant's Causeway", shortDescription = "Create a hexagonal slab like surface.")
+public class VolcanoParameters {
 
-
-@Description(displayName="Giant's Causeway", shortDescription="Create a hexagonal slab like surface.")
-public class VolcanoParameters
-{
-    @Description(displayName="", shortDescription="Planetary radius")
-    private int     mPlanetRadius;
-    @Description(displayName="", shortDescription="Tallest point above baseline (-ve for below)")
-    private int     mPlanetHeight;
-    @Description(displayName="", shortDescription="Radius of Caldera")
-    private int     mCalderaRadius;
-    @Description(displayName="", shortDescription="Depth of Caldera")
-    private int     mCalderaDepth;
-    @Description(displayName="", shortDescription="Block type to fill with")
+    @Description(displayName = "", shortDescription = "Planetary radius")
+    private int mPlanetRadius;
+    @Description(displayName = "", shortDescription = "Tallest point above baseline (-ve for below)")
+    private int mPlanetHeight;
+    @Description(displayName = "", shortDescription = "Radius of Caldera")
+    private int mCalderaRadius;
+    @Description(displayName = "", shortDescription = "Depth of Caldera")
+    private int mCalderaDepth;
+    @Description(displayName = "", shortDescription = "Block type to fill with")
     private short mFillWith;
 
-    public VolcanoParameters()
-    {
+    public VolcanoParameters() {
         mPlanetRadius = 250;
         mPlanetHeight = 127;
         mCalderaRadius = 16;
@@ -28,53 +25,43 @@ public class VolcanoParameters
         mFillWith = BlockTypes.TERRAIN_ROCK_ID;
     }
 
-    public int getPlanetRadius()
-    {
+    public int getPlanetRadius() {
         return mPlanetRadius;
     }
 
-    public void setPlanetRadius(int planetRadius)
-    {
+    public void setPlanetRadius(int planetRadius) {
         mPlanetRadius = planetRadius;
     }
 
-    public int getPlanetHeight()
-    {
+    public int getPlanetHeight() {
         return mPlanetHeight;
     }
 
-    public void setPlanetHeight(int planetHeight)
-    {
+    public void setPlanetHeight(int planetHeight) {
         mPlanetHeight = planetHeight;
     }
 
-    public int getCalderaRadius()
-    {
+    public int getCalderaRadius() {
         return mCalderaRadius;
     }
 
-    public void setCalderaRadius(int calderaRadius)
-    {
+    public void setCalderaRadius(int calderaRadius) {
         mCalderaRadius = calderaRadius;
     }
 
-    public int getCalderaDepth()
-    {
+    public int getCalderaDepth() {
         return mCalderaDepth;
     }
 
-    public void setCalderaDepth(int calderaDepth)
-    {
+    public void setCalderaDepth(int calderaDepth) {
         mCalderaDepth = calderaDepth;
     }
 
-    public short getFillWith()
-    {
+    public short getFillWith() {
         return mFillWith;
     }
 
-    public void setFillWith(short fillWith)
-    {
+    public void setFillWith(short fillWith) {
         mFillWith = fillWith;
     }
 }

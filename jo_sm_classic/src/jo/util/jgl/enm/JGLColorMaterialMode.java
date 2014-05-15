@@ -21,8 +21,8 @@
  */
 package jo.util.jgl.enm;
 
-public enum JGLColorMaterialMode 
-{
+public enum JGLColorMaterialMode {
+
     UNSET,
     EMISSION,
     AMBIENT,

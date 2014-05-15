@@ -9,12 +9,10 @@ import jo.util.jgl.obj.JGLNode;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
+public class ParticleDrawHandler extends ObjDrawHandler {
 
-public class ParticleDrawHandler extends ObjDrawHandler
-{
     @Override
-    protected Matrix4f preDraw(long tick, JGLNode obj)
-    {
+    protected Matrix4f preDraw(long tick, JGLNode obj) {
         Matrix4f m = super.preDraw(tick, obj);
         FloatBuffer mm = BufferUtils.createFloatBuffer(16);
         GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, mm);

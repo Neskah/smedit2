@@ -6,20 +6,18 @@ import jo.sm.ui.RenderFrame;
 import jo.sm.ui.act.GenericAction;
 
 @SuppressWarnings("serial")
-public class RedoAction extends GenericAction
-{
-    private RenderFrame mFrame;
-    
-    public RedoAction(RenderFrame frame)
-    {
+public class RedoAction extends GenericAction {
+
+    private final RenderFrame mFrame;
+
+    public RedoAction(RenderFrame frame) {
         mFrame = frame;
         setName("Redo");
         setToolTipText("Redo last undo");
     }
 
     @Override
-    public void actionPerformed(ActionEvent ev)
-    {
+    public void actionPerformed(ActionEvent ev) {
         mFrame.getClient().redo();
     }
 }

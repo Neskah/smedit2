@@ -17,41 +17,39 @@ import jo.sm.ui.act.GenericAction;
 import jo.sm.ui.logic.ShipSpec;
 
 @SuppressWarnings("serial")
-public class SaveAsBlueprintAction extends GenericAction
-{
-    private boolean     mDef;
-    private RenderFrame mFrame;
-    
-    public SaveAsBlueprintAction(RenderFrame frame, boolean def)
-    {
+public class SaveAsBlueprintAction extends GenericAction {
+
+    private final boolean mDef;
+    private final RenderFrame mFrame;
+
+    public SaveAsBlueprintAction(RenderFrame frame, boolean def) {
         mFrame = frame;
         mDef = def;
-        if (mDef)
-        {
+        if (mDef) {
             setName("Default Blueprint...");
             setToolTipText("Save object as a new default blueprint");
-        }
-        else
-        {
+        } else {
             setName("Blueprint...");
             setToolTipText("Save object as a new blueprint");
         }
     }
 
     @Override
-    public void actionPerformed(ActionEvent ev)
-    {
+    public void actionPerformed(ActionEvent ev) {
         ShipSpec oriSpec = StarMadeLogic.getInstance().getCurrentModel();
-        if (oriSpec == null)
+        if (oriSpec == null) {
             return;
+        }
         String name = JOptionPane.showInputDialog(mFrame, "What do you want to name it?", oriSpec.getName());
-        if (StringUtils.isTrivial(name))
+        if (StringUtils.isTrivial(name)) {
             return;
+        }
         File prints;
-        if (mDef)
+        if (mDef) {
             prints = new File(StarMadeLogic.getInstance().getBaseDir(), "blueprints-default");
-        else
+        } else {
             prints = new File(StarMadeLogic.getInstance().getBaseDir(), "blueprints");
+        }
         File dir = new File(prints, name);
         final ShipSpec spec = new ShipSpec();
         spec.setType(mDef ? ShipSpec.DEFAULT_BLUEPRINT : ShipSpec.BLUEPRINT);
@@ -59,13 +57,12 @@ public class SaveAsBlueprintAction extends GenericAction
         spec.setName(name);
         spec.setFile(dir);
         IRunnableWithProgress t = new IRunnableWithProgress() {
-			@Override
-			public void run(IPluginCallback cb)
-			{
-		        BlueprintLogic.saveBlueprint(StarMadeLogic.getModel(), spec, mDef, cb);
-	           StarMadeLogic.getInstance().setCurrentModel(spec);
-			}
-		};
-		RunnableLogic.run(mFrame, name, t);
+            @Override
+            public void run(IPluginCallback cb) {
+                BlueprintLogic.saveBlueprint(StarMadeLogic.getModel(), spec, mDef, cb);
+                StarMadeLogic.getInstance().setCurrentModel(spec);
+            }
+        };
+        RunnableLogic.run(mFrame, name, t);
     }
 }

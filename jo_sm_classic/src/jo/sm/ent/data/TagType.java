@@ -4,11 +4,10 @@ package jo.sm.ent.data;
 // Decompiler options: packimports(3) 
 // Source File Name:   SourceFile
 
+public enum TagType {
 
-public enum TagType
-{
-    FINISH,				// Af a_Af_static_fld;
-    BYTE,				// Af_b
+    FINISH, // Af a_Af_static_fld;
+    BYTE, // Af_b
     SHORT, // Af_c
     INT, // Af_d
     LONG, // Af_e

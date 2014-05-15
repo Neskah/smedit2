@@ -22,75 +22,69 @@ import jo.sm.ui.logic.ShipSpec;
 import jo.vecmath.Point3i;
 
 @SuppressWarnings("serial")
-public class SaveAction extends GenericAction
-{
-    private RenderFrame mFrame;
-    
-    public SaveAction(RenderFrame frame)
-    {
+public class SaveAction extends GenericAction {
+
+    private final RenderFrame mFrame;
+
+    public SaveAction(RenderFrame frame) {
         mFrame = frame;
         setName("Save");
         setToolTipText("Save object back to source");
     }
 
     @Override
-    public void actionPerformed(ActionEvent ev)
-    {
+    public void actionPerformed(ActionEvent ev) {
         ShipSpec spec = StarMadeLogic.getInstance().getCurrentModel();
-        if (spec == null)
+        if (spec == null) {
             return;
-        if (spec.getType() == ShipSpec.FILE)
+        }
+        if (spec.getType() == ShipSpec.FILE) {
             doSaveFile();
-        else if (spec.getType() == ShipSpec.BLUEPRINT)
+        } else if (spec.getType() == ShipSpec.BLUEPRINT) {
             doSaveBlueprint(false);
-        else if (spec.getType() == ShipSpec.DEFAULT_BLUEPRINT)
+        } else if (spec.getType() == ShipSpec.DEFAULT_BLUEPRINT) {
             doSaveBlueprint(true);
-        else if (spec.getType() == ShipSpec.ENTITY)
+        } else if (spec.getType() == ShipSpec.ENTITY) {
             doSaveEntity();
+        }
     }
-    
-    private void doSaveFile()
-    {
+
+    private void doSaveFile() {
         final ShipSpec spec = StarMadeLogic.getInstance().getCurrentModel();
         final File dataFile = spec.getFile();
         SparseMatrix<Block> grid = StarMadeLogic.getModel();
         Map<Point3i, Data> data = ShipLogic.getData(grid);
         final Point3i p = new Point3i();
         final Data d = data.get(p);
-        if (d == null)
+        if (d == null) {
             throw new IllegalArgumentException("No core element to ship!");
+        }
         IRunnableWithProgress t = new IRunnableWithProgress() {
-			@Override
-			public void run(IPluginCallback cb)
-			{
-		        try
-		        {
-		            DataLogic.writeFile(p, d, new FileOutputStream(dataFile), true, cb);
-		        }
-		        catch (IOException e)
-		        {
-		            throw new IllegalStateException("Cannot save to '"+spec.getFile()+"'", e);
-		        }
-			}
+            @Override
+            public void run(IPluginCallback cb) {
+                try {
+                    DataLogic.writeFile(p, d, new FileOutputStream(dataFile), true, cb);
+                } catch (IOException e) {
+                    throw new IllegalStateException("Cannot save to '" + spec.getFile() + "'", e);
+                }
+            }
         };
         RunnableLogic.run(mFrame, spec.getName(), t);
     }
-    
-    private void doSaveBlueprint(final boolean def)
-    {
+
+    private void doSaveBlueprint(final boolean def) {
         final ShipSpec spec = StarMadeLogic.getInstance().getCurrentModel();
         IRunnableWithProgress t = new IRunnableWithProgress() {
-			@Override
-			public void run(IPluginCallback cb)
-			{
-				BlueprintLogic.saveBlueprint(StarMadeLogic.getModel(), spec, def, cb);        
-	        };
+            @Override
+            public void run(IPluginCallback cb) {
+                BlueprintLogic.saveBlueprint(StarMadeLogic.getModel(), spec, def, cb);
+            }
+        ;
         };
         RunnableLogic.run(mFrame, spec.getName(), t);
     }
-    
-    private void doSaveEntity()
-    {
+
+    private void doSaveEntity() {
         ShipSpec spec = StarMadeLogic.getInstance().getCurrentModel();
         SparseMatrix<Block> grid = StarMadeLogic.getModel();
         final Map<Point3i, Data> data = ShipLogic.getData(grid);
@@ -98,18 +92,14 @@ public class SaveAction extends GenericAction
         String fName = spec.getEntity().getFile().getName();
         final String baseName = fName.substring(0, fName.length() - 4); // remove .ent
         IRunnableWithProgress t = new IRunnableWithProgress() {
-			@Override
-			public void run(IPluginCallback cb)
-			{
-		        try
-		        {
-		            DataLogic.writeFiles(data, baseDir, baseName, cb);
-		        }
-		        catch (IOException e)
-		        {
-		            e.printStackTrace();
-		        }        
-			}
+            @Override
+            public void run(IPluginCallback cb) {
+                try {
+                    DataLogic.writeFiles(data, baseDir, baseName, cb);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         };
         RunnableLogic.run(mFrame, baseName, t);
     }

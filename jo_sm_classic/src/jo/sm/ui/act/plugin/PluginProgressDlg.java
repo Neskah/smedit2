@@ -16,22 +16,21 @@ import jo.sm.logic.utils.StringUtils;
 import jo.sm.mods.IPluginCallback;
 
 @SuppressWarnings("serial")
-public class PluginProgressDlg extends JDialog implements IPluginCallback
-{
-    private JLabel          mMessage;
-    private JProgressBar    mProgress;
-    private JButton         mCancel;
-    
-    private String          mErrorTitle;
-    private String          mErrorDescription;
-    private Throwable       mError;
-    
-    private int             mTotalUnits;
-    private int             mUnitsDone;
-    private boolean         mPleaseCancel;
-    
-    public PluginProgressDlg(JFrame base, String title)
-    {
+public class PluginProgressDlg extends JDialog implements IPluginCallback {
+
+    private final JLabel mMessage;
+    private final JProgressBar mProgress;
+    private final JButton mCancel;
+
+    private String mErrorTitle;
+    private String mErrorDescription;
+    private Throwable mError;
+
+    private int mTotalUnits;
+    private int mUnitsDone;
+    private boolean mPleaseCancel;
+
+    public PluginProgressDlg(JFrame base, String title) {
         super(base, title, Dialog.ModalityType.DOCUMENT_MODAL);
         mMessage = new JLabel("");
         mProgress = new JProgressBar(0, 100);
@@ -48,31 +47,27 @@ public class PluginProgressDlg extends JDialog implements IPluginCallback
         //links
         mCancel.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e)
-            {
+            public void actionPerformed(ActionEvent e) {
                 mPleaseCancel = true;
             }
         });
         setSize(320, 240);
         setLocationRelativeTo(base);
     }
-    
-    private void updateProgress()
-    {
+
+    private void updateProgress() {
         mProgress.setMaximum(mTotalUnits);
-        mProgress.setValue(mUnitsDone);        
+        mProgress.setValue(mUnitsDone);
     }
 
     @Override
-    public void setStatus(String status)
-    {
+    public void setStatus(String status) {
         System.out.println(status);
         mMessage.setText(status);
     }
 
     @Override
-    public void startTask(int size)
-    {
+    public void startTask(int size) {
         mTotalUnits = size;
         mUnitsDone = 0;
         mProgress.setVisible(true);
@@ -80,61 +75,57 @@ public class PluginProgressDlg extends JDialog implements IPluginCallback
     }
 
     @Override
-    public void workTask(int amnt)
-    {
+    public void workTask(int amnt) {
         mUnitsDone += amnt;
         updateProgress();
-        if (mPleaseCancel)
+        if (mPleaseCancel) {
             throw new IllegalStateException("Operation canceled at user request");
+        }
     }
 
     @Override
-    public void endTask()
-    {
+    public void endTask() {
         mUnitsDone = mTotalUnits;
         updateProgress();
         mProgress.setVisible(false);
     }
 
-    public boolean isPleaseCancel()
-    {
+    @Override
+    public boolean isPleaseCancel() {
         return mPleaseCancel;
     }
 
-    public void setPleaseCancel(boolean pleaseCancel)
-    {
+    public void setPleaseCancel(boolean pleaseCancel) {
         mPleaseCancel = pleaseCancel;
     }
 
-    public String getErrorTitle()
-    {
+    public String getErrorTitle() {
         return mErrorTitle;
     }
 
-    public void setErrorTitle(String errorTitle)
-    {
+    @Override
+    public void setErrorTitle(String errorTitle) {
         mErrorTitle = errorTitle;
     }
 
-    public String getErrorDescription()
-    {
+    public String getErrorDescription() {
         return mErrorDescription;
     }
 
-    public void setErrorDescription(String errorDescription)
-    {
+    @Override
+    public void setErrorDescription(String errorDescription) {
         mErrorDescription = errorDescription;
     }
 
-    public Throwable getError()
-    {
+    public Throwable getError() {
         return mError;
     }
 
-    public void setError(Throwable error)
-    {
+    @Override
+    public void setError(Throwable error) {
         mError = error;
-        if (StringUtils.isTrivial(mErrorTitle))
+        if (StringUtils.isTrivial(mErrorTitle)) {
             setTitle(mError.toString());
+        }
     }
 }

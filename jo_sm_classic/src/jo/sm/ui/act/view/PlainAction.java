@@ -27,12 +27,11 @@ import jo.sm.ui.RenderFrame;
 import jo.sm.ui.act.GenericAction;
 
 @SuppressWarnings("serial")
-public class PlainAction extends GenericAction
-{
-    private RenderFrame mFrame;
-    
-    public PlainAction(RenderFrame frame)
-    {
+public class PlainAction extends GenericAction {
+
+    private final RenderFrame mFrame;
+
+    public PlainAction(RenderFrame frame) {
         mFrame = frame;
         setName("Plain");
         setToolTipText("Use plain graphics");
@@ -40,9 +39,8 @@ public class PlainAction extends GenericAction
     }
 
     @Override
-    public void actionPerformed(ActionEvent ev)
-    {
-    	mFrame.getClient().setPlainGraphics(!mFrame.getClient().isPlainGraphics());
+    public void actionPerformed(ActionEvent ev) {
+        mFrame.getClient().setPlainGraphics(!mFrame.getClient().isPlainGraphics());
         setChecked(!mFrame.getClient().isPlainGraphics());
     }
 

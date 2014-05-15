@@ -21,13 +21,10 @@
  */
 package jo.util.io;
 
-
-
 /**
- * 
+ *
  * @author SNEdit2 development team - version 1.0
  */
 public class Screenshot {
 
-	
 }

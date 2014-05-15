@@ -14,19 +14,17 @@ import javax.swing.JFileChooser;
 import jo.sm.ui.act.plugin.FilePropertyDescriptor;
 import jo.sm.ui.act.plugin.FilePropertyInfo;
 
-public class MacroRunParametersBeanInfo implements BeanInfo
-{
-    private BeanInfo mRootBeanInfo;
-    private FilePropertyInfo	mInfo;
-    
-    public MacroRunParametersBeanInfo() throws IntrospectionException
-    {
+public class MacroRunParametersBeanInfo implements BeanInfo {
+
+    private final BeanInfo mRootBeanInfo;
+    private final FilePropertyInfo mInfo;
+
+    public MacroRunParametersBeanInfo() throws IntrospectionException {
         super();
         mInfo = new FilePropertyInfo();
         mInfo.setDialogTitle("Run Javascript macro");
         mInfo.setFilters(new String[][]{
-        		{ "Javascript macro", "js" },
-        });
+            {"Javascript macro", "js"},});
         mInfo.setDialogType(JFileChooser.OPEN_DIALOG);
         mInfo.setApproveButtonText("Open");
         mInfo.setApproveButtonTooltipText("Select file to run");
@@ -34,64 +32,53 @@ public class MacroRunParametersBeanInfo implements BeanInfo
     }
 
     @Override
-    public PropertyDescriptor[] getPropertyDescriptors()
-    {
+    public PropertyDescriptor[] getPropertyDescriptors() {
         PropertyDescriptor[] props = mRootBeanInfo.getPropertyDescriptors();
-        for (int i = 0; i < props.length; i++)
-        {
-            if (props[i].getName().endsWith("ile"))
-                try
-                {
-                    props[i] = new FilePropertyDescriptor(props[i].getName(), 
+        for (int i = 0; i < props.length; i++) {
+            if (props[i].getName().endsWith("ile")) {
+                try {
+                    props[i] = new FilePropertyDescriptor(props[i].getName(),
                             props[i].getReadMethod(), props[i].getWriteMethod(), mInfo);
-                }
-                catch (IntrospectionException e)
-                {
+                } catch (IntrospectionException e) {
                     e.printStackTrace();
                 }
+            }
         }
         return props;
     }
 
     @Override
-    public BeanInfo[] getAdditionalBeanInfo()
-    {
+    public BeanInfo[] getAdditionalBeanInfo() {
         return mRootBeanInfo.getAdditionalBeanInfo();
     }
 
     @Override
-    public BeanDescriptor getBeanDescriptor()
-    {
+    public BeanDescriptor getBeanDescriptor() {
         return mRootBeanInfo.getBeanDescriptor();
     }
 
     @Override
-    public int getDefaultEventIndex()
-    {
+    public int getDefaultEventIndex() {
         return mRootBeanInfo.getDefaultEventIndex();
     }
 
     @Override
-    public int getDefaultPropertyIndex()
-    {
+    public int getDefaultPropertyIndex() {
         return mRootBeanInfo.getDefaultPropertyIndex();
     }
 
     @Override
-    public EventSetDescriptor[] getEventSetDescriptors()
-    {
+    public EventSetDescriptor[] getEventSetDescriptors() {
         return mRootBeanInfo.getEventSetDescriptors();
     }
 
     @Override
-    public Image getIcon(int flags)
-    {
+    public Image getIcon(int flags) {
         return mRootBeanInfo.getIcon(flags);
     }
 
     @Override
-    public MethodDescriptor[] getMethodDescriptors()
-    {
+    public MethodDescriptor[] getMethodDescriptors() {
         return mRootBeanInfo.getMethodDescriptors();
     }
 }
