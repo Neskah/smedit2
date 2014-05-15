@@ -37,10 +37,9 @@ import jo.sm.ship.data.Block;
 import jo.sm.ship.data.Blueprint;
 import jo.sm.ship.logic.ShipLogic;
 
-public class ShipTreeLogic
-{
-    public static DefaultMutableTreeNode getShipTree()
-    {
+public class ShipTreeLogic {
+
+    public static DefaultMutableTreeNode getShipTree() {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
         addBlueprint(root, "Blueprints", false);
         addBlueprint(root, "Default Blueprints", true);
@@ -55,58 +54,54 @@ public class ShipTreeLogic
     }
 
     private static void addBlueprint(DefaultMutableTreeNode root,
-            String title, boolean def)
-    {
+            String title, boolean def) {
         DefaultMutableTreeNode group = new DefaultMutableTreeNode(title);
         String[] options;
-        if (def)
+        if (def) {
             options = BlueprintLogic.getDefaultBlueprintNames().toArray(new String[0]);
-        else
+        } else {
             options = BlueprintLogic.getBlueprintNames().toArray(new String[0]);
-        if (options.length == 0)
+        }
+        if (options.length == 0) {
             return;
-        for (String name : options)
-        {
+        }
+        for (String name : options) {
             ShipSpec spec = getBlueprintSpec(name, def);
             DefaultMutableTreeNode option = new DefaultMutableTreeNode(spec);
-            group.add(option);            
+            group.add(option);
         }
         root.add(group);
     }
 
-	public static ShipSpec getBlueprintSpec(String name, boolean def)
-	{
-		ShipSpec spec = new ShipSpec();
-		spec.setType(def ? ShipSpec.DEFAULT_BLUEPRINT : ShipSpec.BLUEPRINT);
-		spec.setClassification(IBlocksPlugin.TYPE_SHIP);
-		spec.setName(name);
-		spec.setClassification(IBlocksPlugin.TYPE_SHIP);
-		File bpDir = new File(StarMadeLogic.getInstance().getBaseDir(), def ? "blueprints-default" : "blueprints");
-		File baseDir = new File(bpDir, name);
-		spec.setFile(baseDir);
-		return spec;
-	}
+    public static ShipSpec getBlueprintSpec(String name, boolean def) {
+        ShipSpec spec = new ShipSpec();
+        spec.setType(def ? ShipSpec.DEFAULT_BLUEPRINT : ShipSpec.BLUEPRINT);
+        spec.setClassification(IBlocksPlugin.TYPE_SHIP);
+        spec.setName(name);
+        spec.setClassification(IBlocksPlugin.TYPE_SHIP);
+        File bpDir = new File(StarMadeLogic.getInstance().getBaseDir(), def ? "blueprints-default" : "blueprints");
+        File baseDir = new File(bpDir, name);
+        spec.setFile(baseDir);
+        return spec;
+    }
 
     private static void addEntity(DefaultMutableTreeNode root,
-            String title, String typeFilter, String nameFilter)
-    {
+            String title, String typeFilter, String nameFilter) {
         DefaultMutableTreeNode group = new DefaultMutableTreeNode(title);
         boolean addedAny = false;
-        try
-        {
-            for (Entity e : EntityLogic.getEntities())
-            {
-                if ((typeFilter != null) && !e.getType().equals(typeFilter))
+        try {
+            for (Entity e : EntityLogic.getEntities()) {
+                if ((typeFilter != null) && !e.getType().equals(typeFilter)) {
                     continue;
-                if (nameFilter != null)
-                {
-                    if ("Player".equals(nameFilter))
-                    {
-                        if (!e.toString().startsWith("Ship "))
+                }
+                if (nameFilter != null) {
+                    if ("Player".equals(nameFilter)) {
+                        if (!e.toString().startsWith("Ship ")) {
                             continue;
-                    }
-                    else if (!e.getName().startsWith(nameFilter))
+                        }
+                    } else if (!e.getName().startsWith(nameFilter)) {
                         continue;
+                    }
                 }
                 ShipSpec spec = new ShipSpec();
                 spec.setType(ShipSpec.ENTITY);
@@ -117,37 +112,33 @@ public class ShipTreeLogic
                 group.add(option);
                 addedAny = true;
             }
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        if (!addedAny)
+        if (!addedAny) {
             return;
+        }
         root.add(group);
     }
 
-    private static void determineClassification(ShipSpec spec, Entity e)
-    {
+    private static void determineClassification(ShipSpec spec, Entity e) {
         String fname = e.getFile().getName();
-        if (fname.indexOf("_SHIP_") >= 0)
+        if (fname.contains("_SHIP_")) {
             spec.setClassification(IBlocksPlugin.TYPE_SHIP);
-        else if (fname.indexOf("_FLOATINGROCK_") >= 0)
+        } else if (fname.contains("_FLOATINGROCK_")) {
             spec.setClassification(IBlocksPlugin.TYPE_FLOATINGROCK);
-        else if (fname.indexOf("_SHOP_") >= 0)
+        } else if (fname.contains("_SHOP_")) {
             spec.setClassification(IBlocksPlugin.TYPE_SHOP);
-        else if (fname.indexOf("_SPACESTATION_") >= 0)
+        } else if (fname.contains("_SPACESTATION_")) {
             spec.setClassification(IBlocksPlugin.TYPE_STATION);
-        else if (fname.indexOf("_PLANET_") >= 0)
+        } else if (fname.contains("_PLANET_")) {
             spec.setClassification(IBlocksPlugin.TYPE_PLANET);
+        }
     }
 
-    public static SparseMatrix<Block> loadShip(ShipSpec spec, IPluginCallback cb)
-    {
-        try
-        {
-            if (spec.getType() == ShipSpec.BLUEPRINT)
-            {
+    public static SparseMatrix<Block> loadShip(ShipSpec spec, IPluginCallback cb) {
+        try {
+            if (spec.getType() == ShipSpec.BLUEPRINT) {
                 Blueprint blueprint = BlueprintLogic.readBlueprint(spec.getName(), cb);
                 SparseMatrix<Block> grid = ShipLogic.getBlocks(blueprint.getData());
                 //System.out.println("Original:");
@@ -157,9 +148,7 @@ public class ShipTreeLogic
                 //HeaderLogic.dump(HeaderLogic.make(grid));
                 //LogicLogic.dump(LogicLogic.make(grid), grid);
                 return grid;
-            }
-            else if (spec.getType() == ShipSpec.DEFAULT_BLUEPRINT)
-            {
+            } else if (spec.getType() == ShipSpec.DEFAULT_BLUEPRINT) {
                 Blueprint blueprint = BlueprintLogic.readDefaultBlueprint(spec.getName(), cb);
                 SparseMatrix<Block> grid = ShipLogic.getBlocks(blueprint.getData());
                 //System.out.println("Original:");
@@ -169,21 +158,17 @@ public class ShipTreeLogic
                 //HeaderLogic.dump(HeaderLogic.make(grid));
                 //LogicLogic.dump(LogicLogic.make(grid), grid);
                 return grid;
-            }
-            else if (spec.getType() == ShipSpec.ENTITY)
-            {
+            } else if (spec.getType() == ShipSpec.ENTITY) {
                 Entity e = spec.getEntity();
                 EntityLogic.readEntityData(e, cb);
                 //ShipLogic.dumpChunks(e.getData());
                 SparseMatrix<Block> grid = ShipLogic.getBlocks(e.getData());
                 e.setData(null); // conserve memory
                 return grid;
+            } else {
+                throw new IllegalArgumentException("Unknown ship type " + spec.getType());
             }
-            else
-                throw new IllegalArgumentException("Unknown ship type "+spec.getType());
-        }
-        catch (Exception e)
-        {
+        } catch (IOException | IllegalArgumentException e) {
             e.printStackTrace();
         }
         return null;

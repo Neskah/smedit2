@@ -5,68 +5,56 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyDescriptor;
 import java.beans.PropertyEditor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class FilePropertyDescriptor extends PropertyDescriptor
-{
-	private FilePropertyInfo mInfo;
-	
+public class FilePropertyDescriptor extends PropertyDescriptor {
+
+    private final FilePropertyInfo mInfo;
+
     public FilePropertyDescriptor(String propertyName, Class<?> beanClass,
             String readMethodName, String writeMethodName, FilePropertyInfo info)
-            throws IntrospectionException
-    {
+            throws IntrospectionException {
         super(propertyName, beanClass, readMethodName, writeMethodName);
         mInfo = info;
     }
 
     public FilePropertyDescriptor(String propertyName, Class<?> beanClass, FilePropertyInfo info)
-            throws IntrospectionException
-    {
+            throws IntrospectionException {
         super(propertyName, beanClass);
         mInfo = info;
     }
 
     public FilePropertyDescriptor(String propertyName, Method readMethod,
-            Method writeMethod, FilePropertyInfo info) throws IntrospectionException
-    {
+            Method writeMethod, FilePropertyInfo info) throws IntrospectionException {
         super(propertyName, readMethod, writeMethod);
         mInfo = info;
     }
 
     @Override
-    public Class<?> getPropertyEditorClass()
-    {
+    public Class<?> getPropertyEditorClass() {
         return FilePropertyEditor.class;
     }
-    
+
     @Override
-    public PropertyEditor createPropertyEditor(final Object bean)
-    {
+    public PropertyEditor createPropertyEditor(final Object bean) {
         final PropertyEditor pe = new FilePropertyEditor(bean, mInfo);
-        try
-        {
+        try {
             pe.setValue(getReadMethod().invoke(bean));
-        }
-        catch (Exception e1)
-        {
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e1) {
             e1.printStackTrace();
         }
-        pe.addPropertyChangeListener(new PropertyChangeListener() { 
+        pe.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
-            public void propertyChange(PropertyChangeEvent ev)
-            {
-                try
-                {
+            public void propertyChange(PropertyChangeEvent ev) {
+                try {
                     getWriteMethod().invoke(bean, pe.getValue());
-                }
-                catch (Exception e)
-                {
+                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                     e.printStackTrace();
                 }
             }
         });
         return pe;
     }
-    
-    
+
 }

@@ -39,29 +39,29 @@ import jo.vecmath.logic.ITransformer;
 import jo.vecmath.logic.MathUtils;
 import jo.vecmath.logic.QuadraticTransformer;
 
-public class JGLParticleSystem extends JGLGroup
-{
-    public static final int MAX_PARTICLES = 2000; 
-    
+public class JGLParticleSystem extends JGLGroup {
+
+    public static final int MAX_PARTICLES = 2000;
+
     // values for mPsysPartFlags
     // When set, particle color and alpha transition from their START settings to their END settings during the particle's lifetime. 
     // The transition is a smooth interpolation. 
-    public static final int PART_INTERP_COLOR_MASK  = 0x001;
+    public static final int PART_INTERP_COLOR_MASK = 0x001;
     //  When set, particle size/scale transitions from its START setting to its END setting during the particle's lifetime. 
     public static final int PART_INTERP_SCALE_MASK = 0x002;
-    
+
     // values for mPsysSrcPattern
     // Sprays particles outwards in a spherical area. The Initial velocity of each particle is determined by SRC_BURST_SPEED_MIN and SRC_BURST_SPEED_MAX. The EXPLODE pattern ignores the ANGLE parameters.
-    public static final int SRC_PATTERN_EXPLODE    =  0x02;
+    public static final int SRC_PATTERN_EXPLODE = 0x02;
     // Sprays particles outwards in a spherical, sub-spherical, conical or ring shaped area, as defined by the ANGLE parameters SRC_ANGLE_BEGIN and SRC_ANGLE_END. The ANGLE_CONE pattern can be used to imitate the EXPLODE pattern by explicitly setting SRC_ANGLE_BEGIN to 0.00000 and SRC_ANGLE_END to 3.14159 (or PI) (or vice versa).
-    public static final int SRC_PATTERN_ANGLE_CONE    =     0x08;
+    public static final int SRC_PATTERN_ANGLE_CONE = 0x08;
     // Sprays particles outward in a flat circular, semi-circular, arc or ray shaped areas, as defined by SRC_ANGLE_BEGIN and SRC_ANGLE_END. The circular pattern radiates outwards around the prim's local X axis line.
-    public static final int SRC_PATTERN_ANGLE  =     0x04;
+    public static final int SRC_PATTERN_ANGLE = 0x04;
     // Creates particles with no initial velocity. The DROP pattern will override any values given for SRC_BURST_RADIUS, SRC_BURST_SPEED_MIN, and SRC_BURST_SPEED_MAX, setting each to 0.00000. (All patterns will behave like the DROP pattern, if RADIUS, SPEED_MIN and SPEED_MAX are explicitly set to 0.0000.)
-    public static final int SRC_PATTERN_DROP   =  0x01;
+    public static final int SRC_PATTERN_DROP = 0x01;
     //  (incomplete implementation) acts the same as the SRC_PATTERN_DROP pattern, it is believed that the original intention for this pattern was to invert the effect of the ANGLE parameters, making them delineate an area where particles were NOT to be sprayed. (effectively the inverse or opposite of the behavior of the ANGLE_CONE pattern).
-    public static final int SRC_PATTERN_ANGLE_CONE_EMPTY     =  0x10;
-    
+    public static final int SRC_PATTERN_ANGLE_CONE_EMPTY = 0x10;
+
     private int mPartFlags;
     private int mSrcPattern;
     // Specifies the distance from the emitter where particles will be created. This rule is ignored when the PART_FOLLOW_SRC_MASK flag is set.
@@ -111,16 +111,15 @@ public class JGLParticleSystem extends JGLGroup
     // in meters per second. Note that the value of this parameter and PSYS_SRC_BURST_SPEED_MIN are internally re-ordered such that this parameter 
     // gets the larger of the two values. 
     private float mSrcBurstSpeedMax;
-    
-    private long        mNextBurst;
-    private List<JGLObjParticle>  mChildByAge;
-    private List<Long>  mChildAge;
-    
-    private static int    mTotalParticles = 0;
-    private static Random mRND = new Random();
 
-    public JGLParticleSystem()
-    {        
+    private long mNextBurst;
+    private List<JGLObjParticle> mChildByAge;
+    private List<Long> mChildAge;
+
+    private static int mTotalParticles = 0;
+    private static final Random mRND = new Random();
+
+    public JGLParticleSystem() {
         mPartMaxAge = 1.0f;
         mSrcBurstRadius = 0;
         mSrcBurstRate = 1;
@@ -129,59 +128,55 @@ public class JGLParticleSystem extends JGLGroup
         mPartEndScale = 1;
         mSrcBurstSpeedMin = 0;
         mSrcBurstSpeedMax = 0;
-        mChildAge = new ArrayList<Long>();
-        mChildByAge = new ArrayList<JGLObjParticle>();
+        mChildAge = new ArrayList<>();
+        mChildByAge = new ArrayList<>();
         mSrcAccel = new Vector3f();
-        setTransformer(new ITransformer() {            
+        setTransformer(new ITransformer() {
             @Override
-            public Matrix4f calcTransform(Matrix4f transform)
-            {
+            public Matrix4f calcTransform(Matrix4f transform) {
                 updateParticles();
                 return transform;
             }
         });
     }
-    
-    public void updateParticles()
-    {
+
+    public void updateParticles() {
         long now = System.currentTimeMillis();
         expireOldParticles(now);
-        if (mNextBurst < now)
+        if (mNextBurst < now) {
             doBurst(now);
+        }
         orderParticles(now);
     }
-    
-    private void orderParticles(long now)
-    {
-        final Map<JGLNode, Float> zorder = new HashMap<JGLNode, Float>();
-        for (JGLNode p : mChildren)
-        {
+
+    private void orderParticles(long now) {
+        final Map<JGLNode, Float> zorder = new HashMap<>();
+        for (JGLNode p : mChildren) {
             Matrix4f t = p.calcTransform(now);
             zorder.put(p, t.m23);
         }
         Collections.sort(mChildren, new Comparator<JGLNode>() {
             @Override
-            public int compare(JGLNode o1, JGLNode o2)
-            {
+            public int compare(JGLNode o1, JGLNode o2) {
                 float z1 = zorder.get(o1);
                 float z2 = zorder.get(o2);
-                return (int)Math.signum(z1 - z2);
+                return (int) Math.signum(z1 - z2);
             }
         });
     }
-    
-    private void doBurst(long now)
-    {
-        mNextBurst = now + (long)(mSrcBurstRate*1000);
-        for (int i = 0; i < mSrcBurstPartCount; i++)
+
+    private void doBurst(long now) {
+        mNextBurst = now + (long) (mSrcBurstRate * 1000);
+        for (int i = 0; i < mSrcBurstPartCount; i++) {
             addParticle(now);
+        }
     }
-    
-    private void addParticle(long now)
-    {
-        if (mTotalParticles >= MAX_PARTICLES)
+
+    private void addParticle(long now) {
+        if (mTotalParticles >= MAX_PARTICLES) {
             return;
-        long expires = now + (long)(mPartMaxAge*1000);
+        }
+        long expires = now + (long) (mPartMaxAge * 1000);
         JGLObjParticle particle = new JGLObjParticle();
         particle.setTextureID(mTextureID);
         particle.setStart(now);
@@ -190,14 +185,15 @@ public class JGLParticleSystem extends JGLGroup
         particle.setEndColor(mPartEndColor);
         QuadraticTransformer tr = new QuadraticTransformer();
         tr.setStartTime(now);
-        if (!MathUtils.epsilonEquals(mPartStartScale, mPartEndScale))
-            tr.setScaleQuad(new Point3f(0, (mPartEndScale - mPartStartScale)/mPartMaxAge, mPartStartScale));
+        if (!MathUtils.epsilonEquals(mPartStartScale, mPartEndScale)) {
+            tr.setScaleQuad(new Point3f(0, (mPartEndScale - mPartStartScale) / mPartMaxAge, mPartStartScale));
+        }
         Vector3f s = getDirectionVector();
         Vector3f u = getVelocityVector(s);
         Vector3f a = getAccelerationVector(s);
-        tr.setXQuad(new Point3f(.5f*a.x, u.x, s.x));
-        tr.setYQuad(new Point3f(.5f*a.y, u.y, s.y));
-        tr.setZQuad(new Point3f(.5f*a.z, u.z, s.z));
+        tr.setXQuad(new Point3f(.5f * a.x, u.x, s.x));
+        tr.setYQuad(new Point3f(.5f * a.y, u.y, s.y));
+        tr.setZQuad(new Point3f(.5f * a.z, u.z, s.z));
         particle.setTransformer(tr);
         add(particle);
         mChildAge.add(expires);
@@ -206,35 +202,31 @@ public class JGLParticleSystem extends JGLGroup
         //System.out.println("Add particle until "+expires);
         //System.out.println("  s="+s+", u="+u+", a="+a);
     }
-    
-    private Vector3f getDirectionVector()
-    {
+
+    private Vector3f getDirectionVector() {
         // take into account mPsysSrcPattern, only support SRC_PATTERN_EXPLODE for now
-        Vector3f v = new Vector3f(mRND.nextFloat()-.5f, mRND.nextFloat()-.5f, mRND.nextFloat()-.5f);
+        Vector3f v = new Vector3f(mRND.nextFloat() - .5f, mRND.nextFloat() - .5f, mRND.nextFloat() - .5f);
         v.normalize();
         v.scale(mSrcBurstRadius);
         return v;
     }
-    
-    private Vector3f getVelocityVector(Vector3f s)
-    {
+
+    private Vector3f getVelocityVector(Vector3f s) {
         Vector3f v = new Vector3f(s);
-        v.scale((mSrcBurstSpeedMax - mSrcBurstSpeedMin)*mRND.nextFloat() + mSrcBurstSpeedMin);
+        v.scale((mSrcBurstSpeedMax - mSrcBurstSpeedMin) * mRND.nextFloat() + mSrcBurstSpeedMin);
         return v;
     }
-    
-    private Vector3f getAccelerationVector(Vector3f s)
-    {
+
+    private Vector3f getAccelerationVector(Vector3f s) {
         return mSrcAccel;
     }
-    
-    private void expireOldParticles(long now)
-    {
-        while (mChildren.size() > 0)
-        {
+
+    private void expireOldParticles(long now) {
+        while (mChildren.size() > 0) {
             long expires = mChildAge.get(0);
-            if (expires > now)
-                 break;
+            if (expires > now) {
+                break;
+            }
             mChildren.remove(mChildByAge.get(0));
             mChildAge.remove(0);
             mChildByAge.remove(0);
@@ -242,149 +234,148 @@ public class JGLParticleSystem extends JGLGroup
             //System.out.println("Expire particle "+expires);
         }
     }
-    
-    public int getPartFlags()
-    {
+
+    public int getPartFlags() {
         return mPartFlags;
     }
-    public void setPartFlags(int partFlags)
-    {
+
+    public void setPartFlags(int partFlags) {
         mPartFlags = partFlags;
     }
-    public int getSrcPattern()
-    {
+
+    public int getSrcPattern() {
         return mSrcPattern;
     }
-    public void setSrcPattern(int srcPattern)
-    {
+
+    public void setSrcPattern(int srcPattern) {
         mSrcPattern = srcPattern;
     }
-    public float getSrcBurstRadius()
-    {
+
+    public float getSrcBurstRadius() {
         return mSrcBurstRadius;
     }
-    public void setSrcBurstRadius(float srcBurstRadius)
-    {
+
+    public void setSrcBurstRadius(float srcBurstRadius) {
         mSrcBurstRadius = srcBurstRadius;
     }
-    public float getSrcAngleBegin()
-    {
+
+    public float getSrcAngleBegin() {
         return mSrcAngleBegin;
     }
-    public void setSrcAngleBegin(float srcAngleBegin)
-    {
+
+    public void setSrcAngleBegin(float srcAngleBegin) {
         mSrcAngleBegin = srcAngleBegin;
     }
-    public float getSrcAngleEnd()
-    {
+
+    public float getSrcAngleEnd() {
         return mSrcAngleEnd;
     }
-    public void setSrcAngleEnd(float srcAngleEnd)
-    {
+
+    public void setSrcAngleEnd(float srcAngleEnd) {
         mSrcAngleEnd = srcAngleEnd;
     }
-    public Color4f getPartStartColor()
-    {
+
+    public Color4f getPartStartColor() {
         return mPartStartColor;
     }
-    public void setPartStartColor(Color4f partStartColor)
-    {
+
+    public void setPartStartColor(Color4f partStartColor) {
         mPartStartColor = partStartColor;
     }
-    public Color4f getPartEndColor()
-    {
+
+    public Color4f getPartEndColor() {
         return mPartEndColor;
     }
-    public void setPartEndColor(Color4f partEndColor)
-    {
+
+    public void setPartEndColor(Color4f partEndColor) {
         mPartEndColor = partEndColor;
     }
-    public float getPartStartScale()
-    {
+
+    public float getPartStartScale() {
         return mPartStartScale;
     }
-    public void setPartStartScale(float partStartScale)
-    {
+
+    public void setPartStartScale(float partStartScale) {
         mPartStartScale = partStartScale;
     }
-    public float getPartEndScale()
-    {
+
+    public float getPartEndScale() {
         return mPartEndScale;
     }
-    public void setPartEndScale(float partEndScale)
-    {
+
+    public void setPartEndScale(float partEndScale) {
         mPartEndScale = partEndScale;
     }
-    public int getTextureID()
-    {
+
+    public int getTextureID() {
         return mTextureID;
     }
-    public void setTextureID(int textureID)
-    {
+
+    public void setTextureID(int textureID) {
         mTextureID = textureID;
     }
-    public float getSrcMaxAge()
-    {
+
+    public float getSrcMaxAge() {
         return mSrcMaxAge;
     }
-    public void setSrcMaxAge(float srcMaxAge)
-    {
+
+    public void setSrcMaxAge(float srcMaxAge) {
         mSrcMaxAge = srcMaxAge;
     }
-    public float getPartMaxAge()
-    {
+
+    public float getPartMaxAge() {
         return mPartMaxAge;
     }
-    public void setPartMaxAge(float partMaxAge)
-    {
+
+    public void setPartMaxAge(float partMaxAge) {
         mPartMaxAge = partMaxAge;
     }
-    public float getSrcBurstRate()
-    {
+
+    public float getSrcBurstRate() {
         return mSrcBurstRate;
     }
-    public void setSrcBurstRate(float srcBurstRate)
-    {
+
+    public void setSrcBurstRate(float srcBurstRate) {
         mSrcBurstRate = srcBurstRate;
     }
-    public int getSrcBurstPartCount()
-    {
+
+    public int getSrcBurstPartCount() {
         return mSrcBurstPartCount;
     }
-    public void setSrcBurstPartCount(int srcBurstPartCount)
-    {
+
+    public void setSrcBurstPartCount(int srcBurstPartCount) {
         mSrcBurstPartCount = srcBurstPartCount;
     }
-    public Vector3f getSrcAccel()
-    {
+
+    public Vector3f getSrcAccel() {
         return mSrcAccel;
     }
-    public void setSrcAccel(Vector3f srcAccel)
-    {
+
+    public void setSrcAccel(Vector3f srcAccel) {
         mSrcAccel = srcAccel;
     }
-    public Point3f getSrcOmega()
-    {
+
+    public Point3f getSrcOmega() {
         return mSrcOmega;
     }
-    public void setSrcOmega(Point3f srcOmega)
-    {
+
+    public void setSrcOmega(Point3f srcOmega) {
         mSrcOmega = srcOmega;
     }
-    public float getSrcBurstSpeedMin()
-    {
+
+    public float getSrcBurstSpeedMin() {
         return mSrcBurstSpeedMin;
     }
-    public void setSrcBurstSpeedMin(float srcBurstSpeedMin)
-    {
+
+    public void setSrcBurstSpeedMin(float srcBurstSpeedMin) {
         mSrcBurstSpeedMin = srcBurstSpeedMin;
     }
-    public float getSrcBurstSpeedMax()
-    {
+
+    public float getSrcBurstSpeedMax() {
         return mSrcBurstSpeedMax;
     }
-    public void setSrcBurstSpeedMax(float srcBurstSpeedMax)
-    {
+
+    public void setSrcBurstSpeedMax(float srcBurstSpeedMax) {
         mSrcBurstSpeedMax = srcBurstSpeedMax;
     }
 }

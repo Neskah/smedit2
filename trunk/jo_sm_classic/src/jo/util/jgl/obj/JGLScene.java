@@ -31,34 +31,33 @@ import jo.util.jgl.enm.JGLColorMaterialMode;
 import jo.util.jgl.enm.JGLFogMode;
 import jo.util.jgl.obj.txt.JGLTextGroup;
 
-public class JGLScene
-{
+public class JGLScene {
+
     private JGLNode mNode;
     private Color4f mBackground;
     private Color4f mAmbientLight;
-    private float  mFieldOfView;
-    private float  mMinZ;
-    private float  mMaxZ;
-    private JGLColorMaterialFace    mColorMaterialFace;
-    private JGLColorMaterialMode    mColorMaterialMode;
+    private float mFieldOfView;
+    private float mMinZ;
+    private float mMaxZ;
+    private JGLColorMaterialFace mColorMaterialFace;
+    private JGLColorMaterialMode mColorMaterialMode;
     private Color4f mMaterialAmbient;
     private Color4f mMaterialDiffuse;
     private Color4f mMaterialSpecular;
     private Color4f mMaterialEmission;
-    private float  mMaterialShininess;
-    private JGLFogMode  mFogMode;
-    private float  mFogDensity;
-    private float  mFogStart;
-    private float  mFogEnd;
-    private float  mFogIndex;
+    private float mMaterialShininess;
+    private JGLFogMode mFogMode;
+    private float mFogDensity;
+    private float mFogStart;
+    private float mFogEnd;
+    private float mFogIndex;
     private Color4f mFogColor;
-    private List<Runnable>     mBetweenRenderers;
-    private List<JGLTextGroup>  mTexts;
+    private List<Runnable> mBetweenRenderers;
+    private List<JGLTextGroup> mTexts;
     private int mScreenWidth;
     private int mScreenHeight;
 
-    public JGLScene()
-    {
+    public JGLScene() {
         mFieldOfView = 45;
         mMinZ = .1f;
         mMaxZ = 450;
@@ -70,244 +69,199 @@ public class JGLScene
         mFogStart = 0;
         mFogEnd = 1;
         mFogIndex = 0;
-        mBetweenRenderers = new ArrayList<Runnable>();
-        mTexts = new ArrayList<JGLTextGroup>();
+        mBetweenRenderers = new ArrayList<>();
+        mTexts = new ArrayList<>();
     }
 
-    public void addBetweenRenderer(Runnable r)
-    {
+    public void addBetweenRenderer(Runnable r) {
         mBetweenRenderers.add(r);
     }
-    
-    public void removeBetweenRenderer(Runnable r)
-    {
+
+    public void removeBetweenRenderer(Runnable r) {
         mBetweenRenderers.remove(r);
     }
 
-    public JGLNode getNode()
-    {
+    public JGLNode getNode() {
         return mNode;
     }
-    public void setNode(JGLNode node)
-    {
+
+    public void setNode(JGLNode node) {
         mNode = node;
     }
-    public Color4f getBackground()
-    {
+
+    public Color4f getBackground() {
         return mBackground;
     }
-    public void setBackground(Color4f background)
-    {
+
+    public void setBackground(Color4f background) {
         mBackground = background;
     }
 
-    public float getFieldOfView()
-    {
+    public float getFieldOfView() {
         return mFieldOfView;
     }
 
-    public void setFieldOfView(float fieldOfView)
-    {
+    public void setFieldOfView(float fieldOfView) {
         mFieldOfView = fieldOfView;
     }
 
-    public float getMinZ()
-    {
+    public float getMinZ() {
         return mMinZ;
     }
 
-    public void setMinZ(float minZ)
-    {
+    public void setMinZ(float minZ) {
         mMinZ = minZ;
     }
 
-    public float getMaxZ()
-    {
+    public float getMaxZ() {
         return mMaxZ;
     }
 
-    public void setMaxZ(float maxZ)
-    {
+    public void setMaxZ(float maxZ) {
         mMaxZ = maxZ;
     }
 
-    public List<Runnable> getBetweenRenderers()
-    {
+    public List<Runnable> getBetweenRenderers() {
         return mBetweenRenderers;
     }
 
-    public void setBetweenRenderers(List<Runnable> betweenRenderers)
-    {
+    public void setBetweenRenderers(List<Runnable> betweenRenderers) {
         mBetweenRenderers = betweenRenderers;
     }
 
-    public Color4f getAmbientLight()
-    {
+    public Color4f getAmbientLight() {
         return mAmbientLight;
     }
 
-    public void setAmbientLight(Color4f ambientLight)
-    {
+    public void setAmbientLight(Color4f ambientLight) {
         mAmbientLight = ambientLight;
     }
 
-    public JGLColorMaterialFace getColorMaterialFace()
-    {
+    public JGLColorMaterialFace getColorMaterialFace() {
         return mColorMaterialFace;
     }
 
-    public void setColorMaterialFace(JGLColorMaterialFace colorMaterialFace)
-    {
+    public void setColorMaterialFace(JGLColorMaterialFace colorMaterialFace) {
         mColorMaterialFace = colorMaterialFace;
     }
 
-    public JGLColorMaterialMode getColorMaterialMode()
-    {
+    public JGLColorMaterialMode getColorMaterialMode() {
         return mColorMaterialMode;
     }
 
-    public void setColorMaterialMode(JGLColorMaterialMode colorMaterialMode)
-    {
+    public void setColorMaterialMode(JGLColorMaterialMode colorMaterialMode) {
         mColorMaterialMode = colorMaterialMode;
     }
 
-    public Color4f getMaterialAmbient()
-    {
+    public Color4f getMaterialAmbient() {
         return mMaterialAmbient;
     }
 
-    public void setMaterialAmbient(Color4f materialAmbient)
-    {
+    public void setMaterialAmbient(Color4f materialAmbient) {
         mMaterialAmbient = materialAmbient;
     }
 
-    public Color4f getMaterialDiffuse()
-    {
+    public Color4f getMaterialDiffuse() {
         return mMaterialDiffuse;
     }
 
-    public void setMaterialDiffuse(Color4f materialDiffuse)
-    {
+    public void setMaterialDiffuse(Color4f materialDiffuse) {
         mMaterialDiffuse = materialDiffuse;
     }
 
-    public Color4f getMaterialSpecular()
-    {
+    public Color4f getMaterialSpecular() {
         return mMaterialSpecular;
     }
 
-    public void setMaterialSpecular(Color4f materialSpecular)
-    {
+    public void setMaterialSpecular(Color4f materialSpecular) {
         mMaterialSpecular = materialSpecular;
     }
 
-    public Color4f getMaterialEmission()
-    {
+    public Color4f getMaterialEmission() {
         return mMaterialEmission;
     }
 
-    public void setMaterialEmission(Color4f materialEmission)
-    {
+    public void setMaterialEmission(Color4f materialEmission) {
         mMaterialEmission = materialEmission;
     }
 
-    public float getMaterialShininess()
-    {
+    public float getMaterialShininess() {
         return mMaterialShininess;
     }
 
-    public void setMaterialShininess(float materialShininess)
-    {
+    public void setMaterialShininess(float materialShininess) {
         mMaterialShininess = materialShininess;
     }
 
-    public JGLFogMode getFogMode()
-    {
+    public JGLFogMode getFogMode() {
         return mFogMode;
     }
 
-    public void setFogMode(JGLFogMode fogMode)
-    {
+    public void setFogMode(JGLFogMode fogMode) {
         mFogMode = fogMode;
     }
 
-    public float getFogDensity()
-    {
+    public float getFogDensity() {
         return mFogDensity;
     }
 
-    public void setFogDensity(float fogDensity)
-    {
+    public void setFogDensity(float fogDensity) {
         mFogDensity = fogDensity;
     }
 
-    public float getFogStart()
-    {
+    public float getFogStart() {
         return mFogStart;
     }
 
-    public void setFogStart(float fogStart)
-    {
+    public void setFogStart(float fogStart) {
         mFogStart = fogStart;
     }
 
-    public float getFogEnd()
-    {
+    public float getFogEnd() {
         return mFogEnd;
     }
 
-    public void setFogEnd(float fogEnd)
-    {
+    public void setFogEnd(float fogEnd) {
         mFogEnd = fogEnd;
     }
 
-    public float getFogIndex()
-    {
+    public float getFogIndex() {
         return mFogIndex;
     }
 
-    public void setFogIndex(float fogIndex)
-    {
+    public void setFogIndex(float fogIndex) {
         mFogIndex = fogIndex;
     }
 
-    public Color4f getFogColor()
-    {
+    public Color4f getFogColor() {
         return mFogColor;
     }
 
-    public void setFogColor(Color4f fogColor)
-    {
+    public void setFogColor(Color4f fogColor) {
         mFogColor = fogColor;
     }
 
-    public List<JGLTextGroup> getTexts()
-    {
+    public List<JGLTextGroup> getTexts() {
         return mTexts;
     }
 
-    public void setTexts(List<JGLTextGroup> texts)
-    {
+    public void setTexts(List<JGLTextGroup> texts) {
         mTexts = texts;
     }
 
-    public int getScreenWidth()
-    {
+    public int getScreenWidth() {
         return mScreenWidth;
     }
 
-    public void setScreenWidth(int screenWidth)
-    {
+    public void setScreenWidth(int screenWidth) {
         mScreenWidth = screenWidth;
     }
 
-    public int getScreenHeight()
-    {
+    public int getScreenHeight() {
         return mScreenHeight;
     }
 
-    public void setScreenHeight(int screenHeight)
-    {
+    public void setScreenHeight(int screenHeight) {
         mScreenHeight = screenHeight;
     }
 }

@@ -21,8 +21,8 @@
  */
 package jo.util.jgl.enm;
 
-public enum JGLColorMaterialFace 
-{
+public enum JGLColorMaterialFace {
+
     UNSET,
     FRONT,
     BACK,

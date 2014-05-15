@@ -2,79 +2,65 @@ package jo.sm.ui.act.plugin;
 
 import javax.swing.JFileChooser;
 
+public class FilePropertyInfo {
 
-public class FilePropertyInfo
-{
-	private String	   mApproveButtonText;
-	private String	   mApproveButtonTooltipText;
-	private String	   mDialogTitle;
-	private int        mDialogType;
-	private int		   mFileSelectionMode;
-	private String[][] mFilters;
+    private String mApproveButtonText;
+    private String mApproveButtonTooltipText;
+    private String mDialogTitle;
+    private int mDialogType;
+    private int mFileSelectionMode;
+    private String[][] mFilters;
 
-	public FilePropertyInfo()
-	{
-		mDialogType = JFileChooser.OPEN_DIALOG;
-		mFileSelectionMode = JFileChooser.FILES_ONLY;
-	}
-	
-	public String[][] getFilters()
-	{
-		return mFilters;
-	}
+    public FilePropertyInfo() {
+        mDialogType = JFileChooser.OPEN_DIALOG;
+        mFileSelectionMode = JFileChooser.FILES_ONLY;
+    }
 
-	public void setFilters(String[][] filters)
-	{
-		mFilters = filters;
-	}
+    public String[][] getFilters() {
+        return mFilters;
+    }
 
-	public String getApproveButtonText()
-	{
-		return mApproveButtonText;
-	}
+    public void setFilters(String[][] filters) {
+        mFilters = filters;
+    }
 
-	public void setApproveButtonText(String approveButtonText)
-	{
-		mApproveButtonText = approveButtonText;
-	}
+    public String getApproveButtonText() {
+        return mApproveButtonText;
+    }
 
-	public String getApproveButtonTooltipText()
-	{
-		return mApproveButtonTooltipText;
-	}
+    public void setApproveButtonText(String approveButtonText) {
+        mApproveButtonText = approveButtonText;
+    }
 
-	public void setApproveButtonTooltipText(String approveButtonTooltipText)
-	{
-		mApproveButtonTooltipText = approveButtonTooltipText;
-	}
+    public String getApproveButtonTooltipText() {
+        return mApproveButtonTooltipText;
+    }
 
-	public String getDialogTitle()
-	{
-		return mDialogTitle;
-	}
+    public void setApproveButtonTooltipText(String approveButtonTooltipText) {
+        mApproveButtonTooltipText = approveButtonTooltipText;
+    }
 
-	public void setDialogTitle(String dialogTitle)
-	{
-		mDialogTitle = dialogTitle;
-	}
+    public String getDialogTitle() {
+        return mDialogTitle;
+    }
 
-	public int getDialogType()
-	{
-		return mDialogType;
-	}
+    public void setDialogTitle(String dialogTitle) {
+        mDialogTitle = dialogTitle;
+    }
 
-	public void setDialogType(int dialogType)
-	{
-		mDialogType = dialogType;
-	}
+    public int getDialogType() {
+        return mDialogType;
+    }
 
-	public int getFileSelectionMode()
-	{
-		return mFileSelectionMode;
-	}
+    public void setDialogType(int dialogType) {
+        mDialogType = dialogType;
+    }
 
-	public void setFileSelectionMode(int fileSelectionMode)
-	{
-		mFileSelectionMode = fileSelectionMode;
-	}
+    public int getFileSelectionMode() {
+        return mFileSelectionMode;
+    }
+
+    public void setFileSelectionMode(int fileSelectionMode) {
+        mFileSelectionMode = fileSelectionMode;
+    }
 }

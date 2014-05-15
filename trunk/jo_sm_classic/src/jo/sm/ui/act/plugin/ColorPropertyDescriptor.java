@@ -5,64 +5,51 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyDescriptor;
 import java.beans.PropertyEditor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class ColorPropertyDescriptor extends PropertyDescriptor
-{
+public class ColorPropertyDescriptor extends PropertyDescriptor {
 
     public ColorPropertyDescriptor(String propertyName, Class<?> beanClass,
             String readMethodName, String writeMethodName)
-            throws IntrospectionException
-    {
+            throws IntrospectionException {
         super(propertyName, beanClass, readMethodName, writeMethodName);
     }
 
     public ColorPropertyDescriptor(String propertyName, Class<?> beanClass)
-            throws IntrospectionException
-    {
+            throws IntrospectionException {
         super(propertyName, beanClass);
     }
 
     public ColorPropertyDescriptor(String propertyName, Method readMethod,
-            Method writeMethod) throws IntrospectionException
-    {
+            Method writeMethod) throws IntrospectionException {
         super(propertyName, readMethod, writeMethod);
     }
 
     @Override
-    public Class<?> getPropertyEditorClass()
-    {
+    public Class<?> getPropertyEditorClass() {
         return ColorPropertyEditor.class;
     }
-    
+
     @Override
-    public PropertyEditor createPropertyEditor(final Object bean)
-    {
+    public PropertyEditor createPropertyEditor(final Object bean) {
         final PropertyEditor pe = new ColorPropertyEditor(bean);
-        try
-        {
+        try {
             pe.setValue(getReadMethod().invoke(bean));
-        }
-        catch (Exception e1)
-        {
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e1) {
             e1.printStackTrace();
         }
-        pe.addPropertyChangeListener(new PropertyChangeListener() { 
+        pe.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
-            public void propertyChange(PropertyChangeEvent ev)
-            {
-                try
-                {
+            public void propertyChange(PropertyChangeEvent ev) {
+                try {
                     getWriteMethod().invoke(bean, pe.getValue());
-                }
-                catch (Exception e)
-                {
+                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                     e.printStackTrace();
                 }
             }
         });
         return pe;
     }
-    
-    
+
 }

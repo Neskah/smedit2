@@ -15,22 +15,23 @@ import javax.swing.JFileChooser;
 import jo.sm.ui.act.plugin.FilePropertyDescriptor;
 import jo.sm.ui.act.plugin.FilePropertyInfo;
 
-public class ImageParametersBeanInfo implements BeanInfo
-{
-    private FilePropertyInfo    mInfo;
-    private BeanInfo mRootBeanInfo;
-    
-    public ImageParametersBeanInfo() throws IntrospectionException
-    {
+public class ImageParametersBeanInfo implements BeanInfo {
+
+    private final FilePropertyInfo mInfo;
+    private final BeanInfo mRootBeanInfo;
+
+    public ImageParametersBeanInfo() throws IntrospectionException {
         super();
         mRootBeanInfo = Introspector.getBeanInfo(ImageParameters.class, Introspector.IGNORE_IMMEDIATE_BEANINFO);
         mInfo = new FilePropertyInfo();
         mInfo.setDialogTitle("Image to paint with");
-        String[] suffixes = ImageIO.getReaderFileSuffixes();
-        String[] names = ImageIO.getReaderFormatNames();
-        String[][] filters = new String[names.length][2];
-        for (int i = 0; i < names.length; i++)
-        {
+        String[] suffixes;
+        suffixes = ImageIO.getReaderFileSuffixes();
+        String[] names;
+        names = ImageIO.getReaderFormatNames();
+        String[][] filters;
+        filters = new String[names.length][2];
+        for (int i = 0; i < names.length; i++) {
             filters[i][0] = names[i];
             filters[i][1] = suffixes[i];
         }
@@ -41,65 +42,55 @@ public class ImageParametersBeanInfo implements BeanInfo
     }
 
     @Override
-    public PropertyDescriptor[] getPropertyDescriptors()
-    {
-        PropertyDescriptor[] props = mRootBeanInfo.getPropertyDescriptors();
-        for (int i = 0; i < props.length; i++)
-        {
-            System.out.println("Name="+props[i].getName());
-            if (props[i].getName().equalsIgnoreCase("file"))
-                try
-                {
-                    props[i] = new FilePropertyDescriptor(props[i].getName(), 
+    public PropertyDescriptor[] getPropertyDescriptors() {
+        PropertyDescriptor[] props;
+        props = mRootBeanInfo.getPropertyDescriptors();
+        for (int i = 0; i < props.length; i++) {
+            System.out.println("Name=" + props[i].getName());
+            if (props[i].getName().equalsIgnoreCase("file")) {
+                try {
+                    props[i] = new FilePropertyDescriptor(props[i].getName(),
                             props[i].getReadMethod(), props[i].getWriteMethod(), mInfo);
-                }
-                catch (IntrospectionException e)
-                {
+                } catch (IntrospectionException e) {
                     e.printStackTrace();
                 }
+            }
         }
         return props;
     }
 
     @Override
-    public BeanInfo[] getAdditionalBeanInfo()
-    {
+    public BeanInfo[] getAdditionalBeanInfo() {
         return mRootBeanInfo.getAdditionalBeanInfo();
     }
 
     @Override
-    public BeanDescriptor getBeanDescriptor()
-    {
+    public BeanDescriptor getBeanDescriptor() {
         return mRootBeanInfo.getBeanDescriptor();
     }
 
     @Override
-    public int getDefaultEventIndex()
-    {
+    public int getDefaultEventIndex() {
         return mRootBeanInfo.getDefaultEventIndex();
     }
 
     @Override
-    public int getDefaultPropertyIndex()
-    {
+    public int getDefaultPropertyIndex() {
         return mRootBeanInfo.getDefaultPropertyIndex();
     }
 
     @Override
-    public EventSetDescriptor[] getEventSetDescriptors()
-    {
+    public EventSetDescriptor[] getEventSetDescriptors() {
         return mRootBeanInfo.getEventSetDescriptors();
     }
 
     @Override
-    public Image getIcon(int flags)
-    {
+    public Image getIcon(int flags) {
         return mRootBeanInfo.getIcon(flags);
     }
 
     @Override
-    public MethodDescriptor[] getMethodDescriptors()
-    {
+    public MethodDescriptor[] getMethodDescriptors() {
         return mRootBeanInfo.getMethodDescriptors();
     }
 }

@@ -5,17 +5,16 @@ import java.util.Random;
 import jo.vecmath.Matrix4f;
 import jo.vecmath.Point3f;
 
-public class BrownianTransformer implements ITransformer
-{
-    private Random      mRND;
-    private Point3f     mLocation;
-    private Point3f     mTarget;
-    private float       mVelocity; // per second
-    private float       mRadius;
-    private long        mLastTick;
+public class BrownianTransformer implements ITransformer {
 
-    public BrownianTransformer(float velocity, float radius)
-    {
+    private Random mRND;
+    private Point3f mLocation;
+    private Point3f mTarget;
+    private float mVelocity; // per second
+    private float mRadius;
+    private long mLastTick;
+
+    public BrownianTransformer(float velocity, float radius) {
         mVelocity = velocity;
         mRadius = radius;
         mRND = new Random();
@@ -23,28 +22,25 @@ public class BrownianTransformer implements ITransformer
         mLocation = new Point3f(0, 0, 0);
         newTarget();
     }
-    
-    private void newTarget()
-    {
+
+    private void newTarget() {
         mTarget = new Point3f(newDelta(), newDelta(), newDelta());
     }
-    
-    private float newDelta()
-    {
-        return (mRND.nextFloat() - .5f)*mRadius*2;
+
+    private float newDelta() {
+        return (mRND.nextFloat() - .5f) * mRadius * 2;
     }
 
     @Override
-    public Matrix4f calcTransform(Matrix4f transform)
-    {
+    public Matrix4f calcTransform(Matrix4f transform) {
         long now = System.currentTimeMillis();
-        float elapsed = (now - mLastTick)/1000f;
-        float traverse = elapsed*mVelocity;
-        for (;;)
-        {
+        float elapsed = (now - mLastTick) / 1000f;
+        float traverse = elapsed * mVelocity;
+        for (;;) {
             float dist = mTarget.distance(mLocation);
-            if (traverse < dist)
-                 break;
+            if (traverse < dist) {
+                break;
+            }
             traverse -= dist;
             mLocation.set(mTarget);
             newTarget();

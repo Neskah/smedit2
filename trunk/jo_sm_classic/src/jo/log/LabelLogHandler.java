@@ -9,32 +9,32 @@ import javax.swing.JLabel;
 
 public class LabelLogHandler extends Handler {
 
-	public final JLabel label = new JLabel();
-	private final Color defaultColor;
+    public final JLabel label = new JLabel();
+    private final Color defaultColor;
 
-	public LabelLogHandler() {
-		super();
-		defaultColor = label.getForeground();
-	}
+    public LabelLogHandler() {
+        super();
+        defaultColor = label.getForeground();
+    }
 
-	@Override
-	public void close() throws SecurityException {
-	}
+    @Override
+    public void close() throws SecurityException {
+    }
 
-	@Override
-	public void flush() {
-	}
+    @Override
+    public void flush() {
+    }
 
-	@Override
-	public void publish(final LogRecord record) {
-		String msg = record.getMessage();
-		if (record.getLevel().intValue() > Level.WARNING.intValue()) {
-			label.setForeground(new Color(0xcc0000));
-		} else {
-			label.setForeground(defaultColor);
-			msg += " ...";
-		}
-		label.setText(msg);
-	}
+    @Override
+    public void publish(final LogRecord record) {
+        String msg = record.getMessage();
+        if (record.getLevel().intValue() > Level.WARNING.intValue()) {
+            label.setForeground(new Color(0xcc0000));
+        } else {
+            label.setForeground(defaultColor);
+            msg += " ...";
+        }
+        label.setText(msg);
+    }
 
 }

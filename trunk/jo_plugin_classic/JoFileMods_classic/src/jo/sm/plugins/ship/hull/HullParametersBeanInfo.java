@@ -13,11 +13,11 @@ import java.util.Map;
 
 import jo.sm.ui.act.plugin.ComboPropertyDescriptor;
 
-public class HullParametersBeanInfo implements BeanInfo
-{
-    private static final Map<String,Object> COMBO_MAP = new HashMap<String, Object>();
-    static
-    {
+public class HullParametersBeanInfo implements BeanInfo {
+
+    private static final Map<String, Object> COMBO_MAP = new HashMap<String, Object>();
+
+    static {
         COMBO_MAP.put("Open Frame", HullParameters.OPEN_FRAME);
         COMBO_MAP.put("Needle", HullParameters.NEEDLE);
         COMBO_MAP.put("Cone", HullParameters.CONE);
@@ -29,74 +29,63 @@ public class HullParametersBeanInfo implements BeanInfo
         COMBO_MAP.put("Irregular", HullParameters.IRREGULAR);
         COMBO_MAP.put("Torus", HullParameters.TORUS);
     }
-    
-    private BeanInfo mRootBeanInfo;
-    
-    public HullParametersBeanInfo() throws IntrospectionException
-    {
+
+    private final BeanInfo mRootBeanInfo;
+
+    public HullParametersBeanInfo() throws IntrospectionException {
         super();
         mRootBeanInfo = Introspector.getBeanInfo(HullParameters.class, Introspector.IGNORE_IMMEDIATE_BEANINFO);
     }
 
     @Override
-    public PropertyDescriptor[] getPropertyDescriptors()
-    {
-        PropertyDescriptor[] props = mRootBeanInfo.getPropertyDescriptors();
-        for (int i = 0; i < props.length; i++)
-        {
-            if (props[i].getName().endsWith("ype"))
-                try
-                {
-                    props[i] = new ComboPropertyDescriptor(props[i].getName(), 
+    public PropertyDescriptor[] getPropertyDescriptors() {
+        PropertyDescriptor[] props;
+        props = mRootBeanInfo.getPropertyDescriptors();
+        for (int i = 0; i < props.length; i++) {
+            if (props[i].getName().endsWith("ype")) {
+                try {
+                    props[i] = new ComboPropertyDescriptor(props[i].getName(),
                             props[i].getReadMethod(), props[i].getWriteMethod(), COMBO_MAP);
-                }
-                catch (IntrospectionException e)
-                {
+                } catch (IntrospectionException e) {
                     e.printStackTrace();
                 }
+            }
         }
         return props;
     }
 
     @Override
-    public BeanInfo[] getAdditionalBeanInfo()
-    {
+    public BeanInfo[] getAdditionalBeanInfo() {
         return mRootBeanInfo.getAdditionalBeanInfo();
     }
 
     @Override
-    public BeanDescriptor getBeanDescriptor()
-    {
+    public BeanDescriptor getBeanDescriptor() {
         return mRootBeanInfo.getBeanDescriptor();
     }
 
     @Override
-    public int getDefaultEventIndex()
-    {
+    public int getDefaultEventIndex() {
         return mRootBeanInfo.getDefaultEventIndex();
     }
 
     @Override
-    public int getDefaultPropertyIndex()
-    {
+    public int getDefaultPropertyIndex() {
         return mRootBeanInfo.getDefaultPropertyIndex();
     }
 
     @Override
-    public EventSetDescriptor[] getEventSetDescriptors()
-    {
+    public EventSetDescriptor[] getEventSetDescriptors() {
         return mRootBeanInfo.getEventSetDescriptors();
     }
 
     @Override
-    public Image getIcon(int flags)
-    {
+    public Image getIcon(int flags) {
         return mRootBeanInfo.getIcon(flags);
     }
 
     @Override
-    public MethodDescriptor[] getMethodDescriptors()
-    {
+    public MethodDescriptor[] getMethodDescriptors() {
         return mRootBeanInfo.getMethodDescriptors();
     }
 }

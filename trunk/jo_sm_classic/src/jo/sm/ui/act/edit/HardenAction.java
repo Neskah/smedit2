@@ -10,23 +10,22 @@ import jo.sm.ui.RenderFrame;
 import jo.sm.ui.act.GenericAction;
 
 @SuppressWarnings("serial")
-public class HardenAction extends GenericAction
-{
-    private RenderFrame mFrame;
-    
-    public HardenAction(RenderFrame frame)
-    {
+public class HardenAction extends GenericAction {
+
+    private final RenderFrame mFrame;
+
+    public HardenAction(RenderFrame frame) {
         mFrame = frame;
         setName("Harden");
         setToolTipText("Convert all unhardened hull blocks to hardened hull blocks");
     }
 
     @Override
-    public void actionPerformed(ActionEvent ev)
-    {
+    public void actionPerformed(ActionEvent ev) {
         SparseMatrix<Block> grid = StarMadeLogic.getModel();
-        if (grid == null)
+        if (grid == null) {
             return;
+        }
         mFrame.getClient().getUndoer().checkpoint(grid);
         HullLogic.power(grid);
         StarMadeLogic.setModel(grid);

@@ -6,89 +6,85 @@ import java.util.Set;
 
 import jo.vecmath.Point3i;
 
-public class ShapeLibraryEntry
-{
-	private static int mNextUNID = 1;
-	
-	private int		mUNID;
-    private File    mShape;
-    private long    mLastRead;
-    private String  mName;
-    private String  mAuthor;
+public class ShapeLibraryEntry {
+
+    private static int mNextUNID = 1;
+
+    private int mUNID;
+    private File mShape;
+    private long mLastRead;
+    private String mName;
+    private String mAuthor;
     private Point3i mLower;
     private Point3i mUpper;
-    private Set<Integer>    mClassifications;
-    
-    public ShapeLibraryEntry()
-    {
-        mClassifications = new HashSet<Integer>();
+    private Set<Integer> mClassifications;
+
+    public ShapeLibraryEntry() {
+        mClassifications = new HashSet<>();
         mUNID = mNextUNID++;
     }
-    
-    public File getShape()
-    {
+
+    public File getShape() {
         return mShape;
     }
-    public void setShape(File shape)
-    {
+
+    public void setShape(File shape) {
         mShape = shape;
     }
-    public long getLastRead()
-    {
+
+    public long getLastRead() {
         return mLastRead;
     }
-    public void setLastRead(long lastRead)
-    {
+
+    public void setLastRead(long lastRead) {
         mLastRead = lastRead;
     }
-    public String getName()
-    {
+
+    public String getName() {
         return mName;
     }
-    public void setName(String name)
-    {
+
+    public void setName(String name) {
         mName = name;
     }
-    public String getAuthor()
-    {
+
+    public String getAuthor() {
         return mAuthor;
     }
-    public void setAuthor(String author)
-    {
+
+    public void setAuthor(String author) {
         mAuthor = author;
     }
-    public Point3i getLower()
-    {
+
+    public Point3i getLower() {
         return mLower;
     }
-    public void setLower(Point3i lower)
-    {
+
+    public void setLower(Point3i lower) {
         mLower = lower;
     }
-    public Point3i getUpper()
-    {
+
+    public Point3i getUpper() {
         return mUpper;
     }
-    public void setUpper(Point3i upper)
-    {
+
+    public void setUpper(Point3i upper) {
         mUpper = upper;
     }
-    public Set<Integer> getClassifications()
-    {
+
+    public Set<Integer> getClassifications() {
         return mClassifications;
     }
-    public void setClassifications(Set<Integer> classifications)
-    {
+
+    public void setClassifications(Set<Integer> classifications) {
         mClassifications = classifications;
     }
 
-	public int getUNID()
-	{
-		return mUNID;
-	}
+    public int getUNID() {
+        return mUNID;
+    }
 
-	public void setUNID(int uNID)
-	{
-		mUNID = uNID;
-	}
+    public void setUNID(int uNID) {
+        mUNID = uNID;
+    }
 }

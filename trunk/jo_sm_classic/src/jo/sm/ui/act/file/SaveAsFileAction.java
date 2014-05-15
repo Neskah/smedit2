@@ -24,38 +24,39 @@ import jo.sm.ui.logic.ShipSpec;
 import jo.vecmath.Point3i;
 
 @SuppressWarnings("serial")
-public class SaveAsFileAction extends GenericAction
-{
-    private RenderFrame mFrame;
-    
-    public SaveAsFileAction(RenderFrame frame)
-    {
+public class SaveAsFileAction extends GenericAction {
+
+    private final RenderFrame mFrame;
+
+    public SaveAsFileAction(RenderFrame frame) {
         mFrame = frame;
         setName("File...");
         setToolTipText("Save as smb2 file");
     }
 
     @Override
-    public void actionPerformed(ActionEvent ev)
-    {
-        if (StarMadeLogic.getInstance().getCurrentModel() == null)
+    public void actionPerformed(ActionEvent ev) {
+        if (StarMadeLogic.getInstance().getCurrentModel() == null) {
             return;
+        }
         File dir;
-        if (StarMadeLogic.getProps().contains("open.file.dir"))
+        if (StarMadeLogic.getProps().contains("open.file.dir")) {
             dir = new File(StarMadeLogic.getProps().getProperty("open.file.dir"));
-        else
+        } else {
             dir = StarMadeLogic.getInstance().getBaseDir();
+        }
         JFileChooser chooser = new JFileChooser(StarMadeLogic.getInstance().getBaseDir());
         chooser.setSelectedFile(dir);
         FileNameExtensionFilter filter1 = new FileNameExtensionFilter(
-            "Starmade Ship File", "smd2");
+                "Starmade Ship File", "smd2");
         //FileNameExtensionFilter filter2 = new FileNameExtensionFilter(
         //        "Starmade Exported Ship File", "sment");
         chooser.addChoosableFileFilter(filter1);
         //chooser.addChoosableFileFilter(filter2);
         int returnVal = chooser.showOpenDialog(mFrame);
-        if(returnVal != JFileChooser.APPROVE_OPTION)
+        if (returnVal != JFileChooser.APPROVE_OPTION) {
             return;
+        }
         final File smb2 = chooser.getSelectedFile();
         StarMadeLogic.getProps().setProperty("open.file.dir", smb2.getParent());
         StarMadeLogic.saveProps();
@@ -68,22 +69,19 @@ public class SaveAsFileAction extends GenericAction
         Map<Point3i, Data> data = ShipLogic.getData(grid);
         final Point3i p = new Point3i();
         final Data d = data.get(p);
-        if (d == null)
+        if (d == null) {
             throw new IllegalArgumentException("No core element to ship!");
+        }
         IRunnableWithProgress t = new IRunnableWithProgress() {
-			@Override
-			public void run(IPluginCallback cb)
-			{
-		        try
-		        {
-		            DataLogic.writeFile(p, d, new FileOutputStream(smb2), true, cb);
-		        }
-		        catch (IOException e)
-		        {
-		            throw new IllegalStateException("Cannot save to '"+spec.getFile()+"'", e);
-		        }
-		        StarMadeLogic.getInstance().setCurrentModel(spec);
-			}
+            @Override
+            public void run(IPluginCallback cb) {
+                try {
+                    DataLogic.writeFile(p, d, new FileOutputStream(smb2), true, cb);
+                } catch (IOException e) {
+                    throw new IllegalStateException("Cannot save to '" + spec.getFile() + "'", e);
+                }
+                StarMadeLogic.getInstance().setCurrentModel(spec);
+            }
         };
         RunnableLogic.run(mFrame, name, t);
     }

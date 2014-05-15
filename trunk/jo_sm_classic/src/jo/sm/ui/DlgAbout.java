@@ -42,25 +42,22 @@ import javax.swing.JScrollPane;
 import jo.sm.logic.utils.ResourceUtils;
 
 @SuppressWarnings("serial")
-public class DlgAbout extends JDialog
-{
-	private JEditorPane	mMessage;
-	private JScrollPane mScroller;
-    
-    public DlgAbout(JFrame base)
-    {
+public class DlgAbout extends JDialog {
+
+    private final JEditorPane mMessage;
+    private JScrollPane mScroller;
+
+    public DlgAbout(JFrame base) {
         super(base, "About SMEdit", Dialog.ModalityType.DOCUMENT_MODAL);
         // instantiate
         mMessage = new JEditorPane();
         mMessage.setContentType("text/html");
         mMessage.setEditable(false);
-        try
-		{
-			mMessage.setText(ResourceUtils.loadSystemResourceString("about.htm", DlgAbout.class));
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+        try {
+            mMessage.setText(ResourceUtils.loadSystemResourceString("about.htm", DlgAbout.class));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         mScroller = new JScrollPane(mMessage);
         JButton ok = new JButton("Close");
         JButton audio = new JButton("Audiobook");
@@ -79,65 +76,61 @@ public class DlgAbout extends JDialog
         buttonBar.add(audio);
         buttonBar.add(ebook);
         // link
-        ok.addActionListener(new ActionListener(){
+        ok.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent ev)
-            {
+            public void actionPerformed(ActionEvent ev) {
                 doOK();
-            }});
-        doc.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent ev)
-            {
-                doGoto(BegPanel.DOCUMENTATION);
-            }});
-        ebook.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent ev)
-            {
-                doGoto(BegPanel.THE_RAIDERS_LAMENT);
-            }            
+            }
         });
-        audio.addActionListener(new ActionListener(){
+        doc.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent ev)
-            {
+            public void actionPerformed(ActionEvent ev) {
+                doGoto(BegPanel.DOCUMENTATION);
+            }
+        });
+        ebook.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                doGoto(BegPanel.THE_RAIDERS_LAMENT);
+            }
+        });
+        audio.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
                 doGoto(BegPanel.THE_RAIDERS_LAMENT_AUDIO);
-            }            
+            }
         });
         setSize(640, 480);
         setLocationRelativeTo(base);
-        Thread t = new Thread() { public void run() {
-            try
-            {
-                Thread.sleep(250);
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(250);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                mScroller.getVerticalScrollBar().getModel().setValue(mScroller.getVerticalScrollBar().getModel().getMinimum());
             }
-            catch (InterruptedException e)
-            {
-                e.printStackTrace();
-            }
-            mScroller.getVerticalScrollBar().getModel().setValue(mScroller.getVerticalScrollBar().getModel().getMinimum());
-        }};
+        };
         t.start();
     }
-    
-    private void doOK()
-    {
+
+    private void doOK() {
         setVisible(false);
         dispose();
     }
-    
-    private void doGoto(String url)
-    {
+
+    private void doGoto(String url) {
         if (Desktop.isDesktopSupported()) {
             Desktop desktop = Desktop.getDesktop();
-            if (desktop.isSupported(Action.BROWSE))
+            if (desktop.isSupported(Action.BROWSE)) {
                 try {
                     desktop.browse(URI.create(url));
-                    return;
                 } catch (IOException e) {
                     // handled below
                 }
+            }
         }
     }
 }

@@ -23,11 +23,9 @@ package jo.sm.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dialog;
-import java.awt.Image;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.IOException;
 import java.util.Properties;
 
 import javax.swing.JCheckBoxMenuItem;
@@ -67,7 +65,6 @@ public class RenderFrame extends JFrame implements WindowListener {
 
     private static String[] mArgs;
     private RenderPanel mClient;
- 
 
     public RenderFrame(String[] args) {
         super("SMEdit");
@@ -121,7 +118,13 @@ public class RenderFrame extends JFrame implements WindowListener {
         menuView.addMenuListener(new PluginPopupListener(IBlocksPlugin.SUBTYPE_VIEW));
         menuModify.addMenuListener(new PluginPopupListener(IBlocksPlugin.SUBTYPE_MODIFY, IBlocksPlugin.SUBTYPE_GENERATE));
 
-        this.addWindowListener(this);
+        addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosing(final WindowEvent e) {
+                dispose();
+            }
+        });
         this.addWindowFocusListener(new WindowAdapter() {
             @Override
             public void windowGainedFocus(WindowEvent e) {
@@ -129,7 +132,7 @@ public class RenderFrame extends JFrame implements WindowListener {
             }
         });
         setSize(1024, 768);
-            setIconImage(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON));
+        setIconImage(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON));
 
         if (mClient instanceof Runnable) {
             Thread t = new Thread((Runnable) mClient);
@@ -137,27 +140,34 @@ public class RenderFrame extends JFrame implements WindowListener {
         }
     }
 
+    @Override
     public void windowClosing(WindowEvent evt) {
         this.setVisible(false);
         this.dispose();
         System.exit(0);
     }
 
+    @Override
     public void windowOpened(WindowEvent evt) {
     }
 
+    @Override
     public void windowClosed(WindowEvent evt) {
     }
 
+    @Override
     public void windowIconified(WindowEvent evt) {
     }
 
+    @Override
     public void windowDeiconified(WindowEvent evt) {
     }
 
+    @Override
     public void windowActivated(WindowEvent evt) {
     }
 
+    @Override
     public void windowDeactivated(WindowEvent evt) {
     }
 
@@ -223,7 +233,7 @@ public class RenderFrame extends JFrame implements WindowListener {
                 e.printStackTrace();
             }
         }
-        
+
         SplashScreen.close();
     }
 
@@ -237,7 +247,7 @@ public class RenderFrame extends JFrame implements WindowListener {
 
     class PluginPopupListener implements MenuListener {
 
-        private int[] mTypes;
+        private final int[] mTypes;
 
         public PluginPopupListener(int... types) {
             mTypes = types;
@@ -256,4 +266,5 @@ public class RenderFrame extends JFrame implements WindowListener {
             updatePopup((JMenu) ev.getSource(), mTypes);
         }
     }
+
 }

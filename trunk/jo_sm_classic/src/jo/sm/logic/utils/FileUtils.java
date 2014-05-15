@@ -13,79 +13,71 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class FileUtils
-{
-    public static void writeFile(byte[] data, File f) throws IOException
-    {
-        FileOutputStream fos = new FileOutputStream(f);
-        StreamUtils.writeStream(data, fos);
-        fos.close();
+public class FileUtils {
+
+    public static void writeFile(byte[] data, File f) throws IOException {
+        try (FileOutputStream fos = new FileOutputStream(f)) {
+            StreamUtils.writeStream(data, fos);
+        }
     }
 
-    public static void writeFile(String data, File f) throws IOException
-    {
-        FileWriter fw = new FileWriter(f);
-        fw.write(data);
-        fw.close();
+    public static void writeFile(String data, File f) throws IOException {
+        try (FileWriter fw = new FileWriter(f)) {
+            fw.write(data);
+        }
     }
 
-    public static byte[] readFile(String fname) throws IOException
-    {
-        FileInputStream fis = new FileInputStream(fname);
-        byte[] ret = StreamUtils.readStream(fis);
-        fis.close();
+    public static byte[] readFile(String fname) throws IOException {
+        byte[] ret;
+        try (FileInputStream fis = new FileInputStream(fname)) {
+            ret = StreamUtils.readStream(fis);
+        }
         return ret;
     }
 
-    public static byte[] readFile(String fname, int limit) throws IOException
-    {
-        FileInputStream fis = new FileInputStream(fname);
-        byte[] ret = StreamUtils.readStream(fis, limit);
-        fis.close();
+    public static byte[] readFile(String fname, int limit) throws IOException {
+        byte[] ret;
+        try (FileInputStream fis = new FileInputStream(fname)) {
+            ret = StreamUtils.readStream(fis, limit);
+        }
         return ret;
     }
 
-    public static String readFileAsString(String fname) throws IOException
-    {
+    public static String readFileAsString(String fname) throws IOException {
         return new String(readFile(fname));
     }
 
-    public static String readFileAsString(String fname, int limit) throws IOException
-    {
+    public static String readFileAsString(String fname, int limit) throws IOException {
         return new String(readFile(fname, limit));
     }
 
-    public static String readFileAsString(String fname, String charset) throws IOException
-    {
+    public static String readFileAsString(String fname, String charset) throws IOException {
         return new String(readFile(fname), charset);
     }
-    
-    public static void copy(File in, File out) throws IOException
-    {
-        InputStream is = new FileInputStream(in);
-        OutputStream os = new FileOutputStream(out);
-        StreamUtils.copy(is, os);
-        is.close();
+
+    public static void copy(File in, File out) throws IOException {
+        OutputStream os;
+        try (InputStream is = new FileInputStream(in)) {
+            os = new FileOutputStream(out);
+            StreamUtils.copy(is, os);
+        }
         os.close();
     }
 
-    public static boolean isIdentical(File file1, File file2)
-    {
-        if (file1.length() != file2.length())
+    public static boolean isIdentical(File file1, File file2) {
+        if (file1.length() != file2.length()) {
             return false;
+        }
         InputStream is1;
         InputStream is2;
-        try
-        {
+        try {
             is1 = new BufferedInputStream(new FileInputStream(file1));
             is2 = new BufferedInputStream(new FileInputStream(file2));
-            long max = Math.min(1024*16, file1.length());
-            while (max-- > 0)
-            {
+            long max = Math.min(1024 * 16, file1.length());
+            while (max-- > 0) {
                 int ch1 = is1.read();
                 int ch2 = is2.read();
-                if (ch1 != ch2)
-                {
+                if (ch1 != ch2) {
                     is1.close();
                     is2.close();
                     return false;
@@ -93,25 +85,23 @@ public class FileUtils
             }
             is1.close();
             is2.close();
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             return false;
         }
         return true;
     }
-    
-    public static void rmdir(File f)
-    {
-        if (f.isFile())
+
+    public static void rmdir(File f) {
+        if (f.isFile()) {
             f.delete();
-        else
-        {
-            if (f.getName().equals(".") || f.getName().equals(".."))
+        } else {
+            if (f.getName().equals(".") || f.getName().equals("..")) {
                 return;
+            }
             File[] children = f.listFiles();
-            for (int i = 0; i < children.length; i++)
-                rmdir(children[i]);
+            for (File children1 : children) {
+                rmdir(children1);
+            }
             f.delete();
         }
     }

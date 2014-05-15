@@ -6,22 +6,20 @@ import jo.sm.ui.RenderFrame;
 import jo.sm.ui.act.GenericAction;
 
 @SuppressWarnings("serial")
-public class QuitAction extends GenericAction
-{
-    private RenderFrame mFrame;
-    
-    public QuitAction(RenderFrame frame)
-    {
+public class QuitAction extends GenericAction {
+
+    private final RenderFrame mFrame;
+
+    public QuitAction(RenderFrame frame) {
         mFrame = frame;
         setName("Exit");
         setToolTipText("Exit Application");
     }
 
     @Override
-    public void actionPerformed(ActionEvent ev)
-    {
+    public void actionPerformed(ActionEvent ev) {
         mFrame.dispose();
         System.out.println("Exit");
         System.exit(0);
     }
- }
+}

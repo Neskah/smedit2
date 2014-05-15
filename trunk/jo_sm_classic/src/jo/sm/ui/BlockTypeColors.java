@@ -51,20 +51,20 @@ import jo.sm.logic.utils.XMLUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-public class BlockTypeColors
-{
+public class BlockTypeColors {
+
     public static final Paint HULL_RED = Color.red;
-    
-    public static final Map<Short,Color> BLOCK_FILL = new HashMap<Short, Color>();
-    static
-    {
+
+    public static final Map<Short, Color> BLOCK_FILL = new HashMap<>();
+
+    static {
         BLOCK_FILL.put(BlockTypes.SPECIAL_SELECT_XP, new Color(1.0f, 0.0f, 0.0f, 0.5f));
         BLOCK_FILL.put(BlockTypes.SPECIAL_SELECT_XM, new Color(0.5f, 0.0f, 0.0f, 0.5f));
         BLOCK_FILL.put(BlockTypes.SPECIAL_SELECT_YP, new Color(0.0f, 1.0f, 0.0f, 0.5f));
         BLOCK_FILL.put(BlockTypes.SPECIAL_SELECT_YM, new Color(0.0f, 0.5f, 0.0f, 0.5f));
         BLOCK_FILL.put(BlockTypes.SPECIAL_SELECT_ZP, new Color(0.0f, 0.0f, 1.0f, 0.5f));
         BLOCK_FILL.put(BlockTypes.SPECIAL_SELECT_ZM, new Color(0.0f, 0.0f, 0.5f, 0.5f));
-        
+
         BLOCK_FILL.put(BlockTypes.HULL_COLOR_GREY_ID, new Color(79, 73, 54));
         BLOCK_FILL.put(BlockTypes.HULL_COLOR_WEDGE_GREY_ID, new Color(79, 73, 54));
         BLOCK_FILL.put(BlockTypes.HULL_COLOR_CORNER_GREY_ID, new Color(79, 73, 54));
@@ -288,9 +288,9 @@ public class BlockTypeColors
         BLOCK_FILL.put(BlockTypes.DEATHSTAR_CORE_ID, new Color(204, 204, 192));
     }
 
-    public static final Map<Short,Color> BLOCK_OUTLINE = new HashMap<Short, Color>();
-    static
-    {
+    public static final Map<Short, Color> BLOCK_OUTLINE = new HashMap<>();
+
+    static {
         BLOCK_OUTLINE.put(BlockTypes.WEAPON_CONTROLLER_ID, Color.white);
         BLOCK_OUTLINE.put(BlockTypes.WEAPON_ID, Color.white);
         BLOCK_OUTLINE.put(BlockTypes.CORE_ID, Color.white);
@@ -549,7 +549,7 @@ public class BlockTypeColors
         BLOCK_OUTLINE.put(BlockTypes.HULL_COLOR_PENTA_GREEN_ID, Color.white);
         BLOCK_OUTLINE.put(BlockTypes.HULL_COLOR_PENTA_YELLOW_ID, Color.white);
         BLOCK_OUTLINE.put(BlockTypes.HULL_COLOR_PENTA_WHITE_ID, Color.white);
-        
+
         BLOCK_OUTLINE.put(BlockTypes.HULL_COLOR_TETRA_GREY_ID, Color.white);
         BLOCK_OUTLINE.put(BlockTypes.HULL_COLOR_TETRA_PURPLE_ID, Color.white);
         BLOCK_OUTLINE.put(BlockTypes.HULL_COLOR_TETRA_BROWN_ID, Color.white);
@@ -559,7 +559,7 @@ public class BlockTypeColors
         BLOCK_OUTLINE.put(BlockTypes.HULL_COLOR_TETRA_GREEN_ID, Color.white);
         BLOCK_OUTLINE.put(BlockTypes.HULL_COLOR_TETRA_YELLOW_ID, Color.white);
         BLOCK_OUTLINE.put(BlockTypes.HULL_COLOR_TETRA_WHITE_ID, Color.white);
-        
+
         BLOCK_OUTLINE.put(BlockTypes.HULL_COLOR_CORNER_GREY_ID, Color.white);
         BLOCK_OUTLINE.put(BlockTypes.HULL_COLOR_CORNER_PURPLE_ID, Color.white);
         BLOCK_OUTLINE.put(BlockTypes.HULL_COLOR_CORNER_BROWN_ID, Color.white);
@@ -619,40 +619,40 @@ public class BlockTypeColors
         BLOCK_OUTLINE.put(BlockTypes.LIGHT_BULB_YELLOW, Color.white);
     }
 
-    public static Color getOutlineColor(short blockType)
-    {
-        if (BLOCK_OUTLINE.containsKey(blockType))
+    public static Color getOutlineColor(short blockType) {
+        if (BLOCK_OUTLINE.containsKey(blockType)) {
             return BLOCK_OUTLINE.get(blockType);
+        }
         return Color.white;
     }
 
-    public static Color getFillColor(short blockType)
-    {
-        if (BLOCK_FILL.containsKey(blockType))
+    public static Color getFillColor(short blockType) {
+        if (BLOCK_FILL.containsKey(blockType)) {
             return BLOCK_FILL.get(blockType);
+        }
         return Color.gray;
     }
-    
-    public static final Map<Short,Short> BLOCK_HITPOINTS = new HashMap<Short, Short>();
-    public static final Map<Short,Integer> BLOCK_TEXTURE_IDS = new HashMap<Short, Integer>();
 
-    private static boolean     mBlockIconsLoaded = false;
-    private static final Map<Short,ImageIcon> mBlockIcons = new HashMap<Short, ImageIcon>();
-    private static final List<BufferedImage> mTextureMaps = new ArrayList<BufferedImage>();
-    public static int	mAllTexturesImagesPerSide;
-    public static int	mAllTexturesPixelsPerImage;
+    public static final Map<Short, Short> BLOCK_HITPOINTS = new HashMap<>();
+    public static final Map<Short, Integer> BLOCK_TEXTURE_IDS = new HashMap<>();
+
+    private static boolean mBlockIconsLoaded = false;
+    private static final Map<Short, ImageIcon> mBlockIcons = new HashMap<>();
+    private static final List<BufferedImage> mTextureMaps = new ArrayList<>();
+    public static int mAllTexturesImagesPerSide;
+    public static int mAllTexturesPixelsPerImage;
     public static BufferedImage mAllTextures;
     public static Properties mBlockTypes;
 
-    public static ImageIcon getBlockImage(short blockID)
-    {
-    	if (blockID >= BlockTypes.SPECIAL)
-    		return getSpecialBlockImage(blockID);
+    public static ImageIcon getBlockImage(short blockID) {
+        if (blockID >= BlockTypes.SPECIAL) {
+            return getSpecialBlockImage(blockID);
+        }
         loadBlockIcons();
-        if (!mBlockIcons.containsKey(blockID))
-        {
-            if (!BLOCK_TEXTURE_IDS.containsKey(blockID))
+        if (!mBlockIcons.containsKey(blockID)) {
+            if (!BLOCK_TEXTURE_IDS.containsKey(blockID)) {
                 return null;
+            }
             int textureID = BLOCK_TEXTURE_IDS.get(blockID);
             BufferedImage localBufferedImage = getTextureImage(textureID);
             mBlockIcons.put(blockID, new ImageIcon(localBufferedImage));
@@ -660,144 +660,131 @@ public class BlockTypeColors
         return mBlockIcons.get(blockID);
     }
 
-    public static BufferedImage getTextureImage(int textureID)
-    {
+    public static BufferedImage getTextureImage(int textureID) {
         int j = textureID % 256 % 16;
         int k = textureID % 256 / 16;
         BufferedImage map = mTextureMaps.get(textureID / 256);
-        int hScale = map.getWidth()/16;
-        int vScale = map.getHeight()/16;
-        BufferedImage localBufferedImage = map.getSubimage(j*hScale, k*vScale, hScale, vScale);
+        int hScale = map.getWidth() / 16;
+        int vScale = map.getHeight() / 16;
+        BufferedImage localBufferedImage = map.getSubimage(j * hScale, k * vScale, hScale, vScale);
         return localBufferedImage;
     }
 
-    public static void loadBlockIcons()
-    {
-        if (mBlockIconsLoaded)
-        	return;
-        try
-        {
+    public static void loadBlockIcons() {
+        if (mBlockIconsLoaded) {
+            return;
+        }
+        try {
             loadTextureMaps();
             mBlockTypes = new Properties();
             File propsFile = new File(StarMadeLogic.getInstance().getBaseDir(), "data/config/BlockTypes.properties");
-            InputStream is = new FileInputStream(propsFile);
-            mBlockTypes.load(is);
-            is.close();
+            try (InputStream is = new FileInputStream(propsFile)) {
+                mBlockTypes.load(is);
+            }
             File xmlFile = new File(StarMadeLogic.getInstance().getBaseDir(), "data/config/BlockConfig.xml");
             Document doc = XMLUtils.readFile(xmlFile);
-            for (Node n : XMLUtils.findAllNodesRecursive(doc, "Block"))
-            {
+            for (Node n : XMLUtils.findAllNodesRecursive(doc, "Block")) {
                 String name = XMLUtils.getAttribute(n, "name");
                 String type = XMLUtils.getAttribute(n, "type");
-                if (!mBlockTypes.containsKey(type))
-                {
-                    System.err.println("No ID found for '"+type+"', - "+name);
+                if (!mBlockTypes.containsKey(type)) {
+                    System.err.println("No ID found for '" + type + "', - " + name);
                     continue;
                 }
-                short id = ShortUtils.parseShort(mBlockTypes.get(type));                    
+                short id = ShortUtils.parseShort(mBlockTypes.get(type));
                 //int icon = IntegerUtils.parseInt(XMLUtils.getAttribute(n, "icon"));
                 int textureID = IntegerUtils.parseInt(XMLUtils.getAttribute(n, "textureId"));
                 short hitPoints = ShortUtils.parseShort(XMLUtils.getTextTag(n, "Hitpoints"));
-                
+
                 BlockTypes.BLOCK_NAMES.put(id, name);
                 BLOCK_HITPOINTS.put(id, hitPoints);
                 BLOCK_TEXTURE_IDS.put(id, textureID);
-                try
-                {
+                try {
                     Field f = BlockTypes.class.getField(type);
-                    if (f != null)
-                    {
+                    if (f != null) {
                         f.setShort(null, id);
                     }
-                }
-                catch (Exception e)
-                {
+                } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
                 }
             }
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         mBlockIconsLoaded = true;
     }
 
-	private static void loadTextureMaps() throws IOException
-	{
-		for (int i = 0; i < 256; i++)
-		{
-		    File f = new File(
-		        StarMadeLogic.getInstance().getBaseDir(),
-		        "data/textures/block/OldStyle/64/t"+StringUtils.zeroPrefix(i, 3)+".png");
-		    if (!f.exists())
-		        break;
-		    BufferedImage img = ImageIO.read(f);
-		    mTextureMaps.add(img);
-		}
-		int numTextures = 16*16*mTextureMaps.size();
-		mAllTexturesImagesPerSide = (int)Math.ceil(Math.sqrt(numTextures));
-		mAllTexturesPixelsPerImage = 1024/mAllTexturesImagesPerSide;
-		mAllTextures = new BufferedImage(1024, 1024, BufferedImage.TYPE_INT_ARGB);
-		Graphics g = mAllTextures.getGraphics();
-		for (int i = 0; i < numTextures; i++)
-		{
-			BufferedImage texture = getTextureImage(i);
-			Rectangle r = getAllTextureLocation(i);
-			g.drawImage(texture, r.x, r.y, r.x + r.width, r.y + r.height, 0, 0, texture.getWidth(), texture.getHeight(), null);
-		}
-	}
-	
-	private static Rectangle getAllTextureLocation(int textureID)
-	{
-        int j = textureID % mAllTexturesImagesPerSide;
-        int k = textureID / mAllTexturesImagesPerSide;
-        return new Rectangle(j*mAllTexturesPixelsPerImage, 1024 - k*mAllTexturesPixelsPerImage - mAllTexturesPixelsPerImage, 
-        		mAllTexturesPixelsPerImage, mAllTexturesPixelsPerImage);
-	}
+    private static void loadTextureMaps() throws IOException {
+        for (int i = 0; i < 256; i++) {
+            File f = new File(
+                    StarMadeLogic.getInstance().getBaseDir(),
+                    "data/textures/block/OldStyle/64/t" + StringUtils.zeroPrefix(i, 3) + ".png");
+            if (!f.exists()) {
+                break;
+            }
+            BufferedImage img = ImageIO.read(f);
+            mTextureMaps.add(img);
+        }
+        int numTextures = 16 * 16 * mTextureMaps.size();
+        mAllTexturesImagesPerSide = (int) Math.ceil(Math.sqrt(numTextures));
+        mAllTexturesPixelsPerImage = 1024 / mAllTexturesImagesPerSide;
+        mAllTextures = new BufferedImage(1024, 1024, BufferedImage.TYPE_INT_ARGB);
+        Graphics g = mAllTextures.getGraphics();
+        for (int i = 0; i < numTextures; i++) {
+            BufferedImage texture = getTextureImage(i);
+            Rectangle r = getAllTextureLocation(i);
+            g.drawImage(texture, r.x, r.y, r.x + r.width, r.y + r.height, 0, 0, texture.getWidth(), texture.getHeight(), null);
+        }
+    }
 
-	public static Rectangle2D.Float getAllTextureLocation(short blockID)
-	{
-		int textureID = BLOCK_TEXTURE_IDS.get(blockID);
+    private static Rectangle getAllTextureLocation(int textureID) {
         int j = textureID % mAllTexturesImagesPerSide;
         int k = textureID / mAllTexturesImagesPerSide;
-        float effectiveWidth = mAllTexturesImagesPerSide*mAllTexturesPixelsPerImage/1024f;
-        float chunk = effectiveWidth/mAllTexturesImagesPerSide;
-		Rectangle2D.Float abs = new Rectangle2D.Float(j*chunk, k*chunk, chunk, chunk);
+        return new Rectangle(j * mAllTexturesPixelsPerImage, 1024 - k * mAllTexturesPixelsPerImage - mAllTexturesPixelsPerImage,
+                mAllTexturesPixelsPerImage, mAllTexturesPixelsPerImage);
+    }
+
+    public static Rectangle2D.Float getAllTextureLocation(short blockID) {
+        int textureID = BLOCK_TEXTURE_IDS.get(blockID);
+        int j = textureID % mAllTexturesImagesPerSide;
+        int k = textureID / mAllTexturesImagesPerSide;
+        float effectiveWidth = mAllTexturesImagesPerSide * mAllTexturesPixelsPerImage / 1024f;
+        float chunk = effectiveWidth / mAllTexturesImagesPerSide;
+        Rectangle2D.Float abs = new Rectangle2D.Float(j * chunk, k * chunk, chunk, chunk);
         return abs;
-	}
-    
-    private static Map<Short,ImageIcon> SPECIAL_ICONS = new HashMap<Short, ImageIcon>();
-    
-    private static ImageIcon getSpecialBlockImage(short blockID)
-    {
-    	if (SPECIAL_ICONS.containsKey(blockID))
-    		return SPECIAL_ICONS.get(blockID);
-    	int color = 0;
-    	switch (blockID)
-    	{
-    		case BlockTypes.SPECIAL_SELECT_XP:
-    			color = 0x80FF0000;
-    			break;
-    		case BlockTypes.SPECIAL_SELECT_XM:
-    			color = 0x80800000;
-    			break;
-    		case BlockTypes.SPECIAL_SELECT_YP:
-    			color = 0x8000FF00;
-    			break;
-    		case BlockTypes.SPECIAL_SELECT_YM:
-    			color = 0x80008000;
-    			break;
-    		case BlockTypes.SPECIAL_SELECT_ZP:
-    			color = 0x800000FF;
-    			break;
-    		case BlockTypes.SPECIAL_SELECT_ZM:
-    			color = 0x80000080;
-    			break;
-    	}
+    }
+
+    private static final Map<Short, ImageIcon> SPECIAL_ICONS = new HashMap<>();
+
+    private static ImageIcon getSpecialBlockImage(short blockID) {
+        if (SPECIAL_ICONS.containsKey(blockID)) {
+            return SPECIAL_ICONS.get(blockID);
+        }
+        int color = 0;
+        switch (blockID) {
+            case BlockTypes.SPECIAL_SELECT_XP:
+                color = 0x80FF0000;
+                break;
+            case BlockTypes.SPECIAL_SELECT_XM:
+                color = 0x80800000;
+                break;
+            case BlockTypes.SPECIAL_SELECT_YP:
+                color = 0x8000FF00;
+                break;
+            case BlockTypes.SPECIAL_SELECT_YM:
+                color = 0x80008000;
+                break;
+            case BlockTypes.SPECIAL_SELECT_ZP:
+                color = 0x800000FF;
+                break;
+            case BlockTypes.SPECIAL_SELECT_ZM:
+                color = 0x80000080;
+                break;
+        }
         BufferedImage img = new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB);
-        for (int x = 0; x < 64; x++)
-            for (int y = 0; y < 64; y++)
+        for (int x = 0; x < 64; x++) {
+            for (int y = 0; y < 64; y++) {
                 img.setRGB(x, y, color);
+            }
+        }
         ImageIcon icon = new ImageIcon(img);
         SPECIAL_ICONS.put(blockID, icon);
         return icon;

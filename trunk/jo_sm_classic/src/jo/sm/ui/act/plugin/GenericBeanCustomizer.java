@@ -22,57 +22,50 @@ import jo.sm.logic.utils.StringUtils;
 import jo.sm.ui.utils.SpringUtilities;
 
 @SuppressWarnings("serial")
-public class GenericBeanCustomizer extends JPanel implements Customizer
-{
-	private DescribedBeanInfo mInfo;
-    
-    private Component[]         mControls;
+public class GenericBeanCustomizer extends JPanel implements Customizer {
+
+    private DescribedBeanInfo mInfo;
+
+    private Component[] mControls;
 
     @Override
-    public void setObject(Object bean)
-    {
-    	mInfo = new DescribedBeanInfo(bean);
+    public void setObject(Object bean) {
+        mInfo = new DescribedBeanInfo(bean);
         createUI();
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-	private void createUI()
-    {        
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private void createUI() {
         mControls = new Component[mInfo.getOrderedProps().size()];
         setLayout(new GridLayout(mInfo.getOrderedProps().size(), 2));
         setLayout(new SpringLayout());
         int rows = 0;
-        for (int i = 0; i < mInfo.getOrderedProps().size(); i++)
-        {
-        	PropertyDescriptor prop = mInfo.getOrderedProps().get(i);
-        	final PropertyEditor editor = mInfo.getEditors().get(prop.getName());
+        for (int i = 0; i < mInfo.getOrderedProps().size(); i++) {
+            PropertyDescriptor prop = mInfo.getOrderedProps().get(i);
+            final PropertyEditor editor = mInfo.getEditors().get(prop.getName());
             String name = prop.getDisplayName();
             JLabel label = new JLabel(name);
-            if (editor.isPaintable())
+            if (editor.isPaintable()) {
                 mControls[i] = editor.getCustomEditor();
-            else if (editor.getTags() != null)
-            {
+            } else if (editor.getTags() != null) {
                 final JComboBox combo = new JComboBox(editor.getTags());
                 combo.addActionListener(new ActionListener() {
                     @Override
-                    public void actionPerformed(ActionEvent ev)
-                    {
-                        String txt = (String)combo.getSelectedItem();
+                    public void actionPerformed(ActionEvent ev) {
+                        String txt = (String) combo.getSelectedItem();
                         editor.setAsText(txt);
                     }
                 });
                 String txt = editor.getAsText();
-                if (txt != null)
-                	combo.setSelectedItem(txt);
+                if (txt != null) {
+                    combo.setSelectedItem(txt);
+                }
                 mControls[i] = combo;
-            }
-            else
-            {
+            } else {
                 final JTextField field = new JTextField(editor.getAsText());
                 field.addFocusListener(new FocusAdapter() {
                     @Override
-                    public void focusLost(FocusEvent e)
-                    {
+                    public void focusLost(FocusEvent e) {
                         String txt = field.getText();
                         editor.setAsText(txt);
                     }
@@ -84,8 +77,7 @@ public class GenericBeanCustomizer extends JPanel implements Customizer
             add(mControls[i]);
             rows++;
             String desc = prop.getShortDescription();
-            if (StringUtils.nonTrivial(desc) && !name.equals(desc))
-            {
+            if (StringUtils.nonTrivial(desc) && !name.equals(desc)) {
                 JLabel spacer = new JLabel();
                 JLabel description = new JLabel(desc);
                 description.setForeground(Color.DARK_GRAY);

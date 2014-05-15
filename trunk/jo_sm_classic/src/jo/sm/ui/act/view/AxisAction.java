@@ -27,12 +27,11 @@ import jo.sm.ui.RenderFrame;
 import jo.sm.ui.act.GenericAction;
 
 @SuppressWarnings("serial")
-public class AxisAction extends GenericAction
-{
-    private RenderFrame mFrame;
-    
-    public AxisAction(RenderFrame frame)
-    {
+public class AxisAction extends GenericAction {
+
+    private final RenderFrame mFrame;
+
+    public AxisAction(RenderFrame frame) {
         mFrame = frame;
         setName("Axis");
         setToolTipText("Display Axis");
@@ -40,9 +39,8 @@ public class AxisAction extends GenericAction
     }
 
     @Override
-    public void actionPerformed(ActionEvent ev)
-    {
-    	mFrame.getClient().setAxis(!mFrame.getClient().isAxis());
+    public void actionPerformed(ActionEvent ev) {
+        mFrame.getClient().setAxis(!mFrame.getClient().isAxis());
         setChecked(!mFrame.getClient().isAxis());
     }
 

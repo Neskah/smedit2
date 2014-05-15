@@ -34,9 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,8 +42,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import jo.log.LabelLogHandler;
 import jo.log.LogOutputStream;
 import jo.log.SystemConsoleHandler;
@@ -53,8 +49,8 @@ import jo.util.io.HttpClient;
 
 /**
  * This is the main splash or load screen for the app. It handles the start up
- * of the client app logic in the config file and other areas 
- * 
+ * of the client app logic in the config file and other areas
+ *
  * @authoe SMEdit2 development team - version 1.0
  */
 public class SplashScreen extends JDialog {
@@ -89,21 +85,20 @@ public class SplashScreen extends JDialog {
             instance.dispose();
         }
     }
-    
+
     public final boolean error;
     private String taskError;
     private static SplashScreen instance = null;
     private final String[] args;
 
     public SplashScreen(final String[] args) {
-    	instance = this;
+        instance = this;
         this.args = args;
-        
+
         setModalityType(Dialog.ModalityType.MODELESS);
-        
-        
+
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        
+
         addWindowListener(new WindowAdapter() {
 
             @Override
@@ -111,7 +106,7 @@ public class SplashScreen extends JDialog {
                 System.exit(1);
             }
         });
-		setTitle(GlobalConfiguration.NAME);
+        setTitle(GlobalConfiguration.NAME);
         setIconImage(GlobalConfiguration
                 .getImage(GlobalConfiguration.Paths.Resources.ICON));
         final ImageIcon icon = new ImageIcon();
@@ -160,14 +155,13 @@ public class SplashScreen extends JDialog {
         }));
 
         log.info("Downloading Resources");
-        for (final Entry<String, File> item :
-            GlobalConfiguration.Paths.getDownloadCaches().entrySet()) {
+        for (final Entry<String, File> item
+                : GlobalConfiguration.Paths.getDownloadCaches().entrySet()) {
             try {
                 HttpClient.download(new URL(item.getKey()), item.getValue());
             } catch (final IOException ignored) {
             }
         }
-
 
         error = error == null ? taskError : error;
 
@@ -182,7 +176,7 @@ public class SplashScreen extends JDialog {
             log.severe(error);
         }
     }
-    
+
     private void extractResources() throws IOException {
         final ClassLoader loader = getClass().getClassLoader();
         final String root = GlobalConfiguration.RUNNING_FROM_JAR ? GlobalConfiguration.Paths.Resources.ROOT
@@ -192,11 +186,9 @@ public class SplashScreen extends JDialog {
         if (GlobalConfiguration.RUNNING_FROM_JAR) {
             try {
                 if (GlobalConfiguration.getCurrentOperatingSystem() == GlobalConfiguration.OperatingSystem.WINDOWS) {
-                    
-                    
+
                 } else {
-                    
-                    
+
                 }
             } catch (final Exception e) {
                 e.printStackTrace();
@@ -212,6 +204,5 @@ public class SplashScreen extends JDialog {
             }
         }
     }
-
 
 }

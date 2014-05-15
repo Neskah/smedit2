@@ -2,114 +2,112 @@ package jo.sm.plugins.ship.imp;
 
 import java.io.DataInputStream;
 
+public class BinvoxData {
 
-public class BinvoxData
-{
-    private boolean[][][]  mVoxels;
-    private int    mZSpan;
-    private int    mXSpan; 
-    private int    mYSpan;
-    private int    mSize;
+    private boolean[][][] mVoxels;
+    private int mZSpan;
+    private int mXSpan;
+    private int mYSpan;
+    private int mSize;
     private double mTX, mTY, mTZ;
     private double mScale;
     private DataInputStream mInput;
-    private boolean         mDone;
-    private int             mEndIndex;
+    private boolean mDone;
+    private int mEndIndex;
 
-    public int getZSpan()
-    {
+    public int getZSpan() {
         return mZSpan;
     }
-    public void setZSpan(int depth)
-    {
+
+    public void setZSpan(int depth) {
         mZSpan = depth;
     }
-    public int getXSpan()
-    {
+
+    public int getXSpan() {
         return mXSpan;
     }
-    public void setXSPan(int height)
-    {
+
+    public void setXSPan(int height) {
         mXSpan = height;
     }
-    public int getYSpan()
-    {
+
+    public int getYSpan() {
         return mYSpan;
     }
-    public void setYSpan(int width)
-    {
+
+    public void setYSpan(int width) {
         mYSpan = width;
     }
-    public int getSize()
-    {
+
+    public int getSize() {
         return mSize;
     }
-    public void setSize(int size)
-    {
+
+    public void setSize(int size) {
         mSize = size;
     }
-    public double getTX()
-    {
+
+    public double getTX() {
         return mTX;
     }
-    public void setTX(double tX)
-    {
+
+    public void setTX(double tX) {
         mTX = tX;
     }
-    public double getTY()
-    {
+
+    public double getTY() {
         return mTY;
     }
-    public void setTY(double tY)
-    {
+
+    public void setTY(double tY) {
         mTY = tY;
     }
-    public double getTZ()
-    {
+
+    public double getTZ() {
         return mTZ;
     }
-    public void setTZ(double tZ)
-    {
+
+    public void setTZ(double tZ) {
         mTZ = tZ;
     }
-    public double getScale()
-    {
+
+    public double getScale() {
         return mScale;
     }
-    public void setScale(double scale)
-    {
+
+    public void setScale(double scale) {
         mScale = scale;
     }
-    public boolean[][][] getVoxels()
-    {
+
+    public boolean[][][] getVoxels() {
         return mVoxels;
     }
-    public void setVoxels(boolean[][][] voxels)
-    {
+
+    public void setVoxels(boolean[][][] voxels) {
         mVoxels = voxels;
     }
-    public DataInputStream getInput()
-    {
+
+    public DataInputStream getInput() {
         return mInput;
     }
-    public void setInput(DataInputStream input)
-    {
+
+    public void setInput(DataInputStream input) {
         mInput = input;
     }
-    public boolean isDone()
-    {
+
+    public boolean isDone() {
         return mDone;
     }
-    public void setDone(boolean done)
-    {
+
+    public void setDone(boolean done) {
         mDone = done;
     }
-    public int getEndIndex()
-    {
+
+    public int getEndIndex() {
         return mEndIndex;
     }
-    public void setEndIndex(int endIndex)
-    {
+
+    public void setEndIndex(int endIndex) {
         mEndIndex = endIndex;
     }
 

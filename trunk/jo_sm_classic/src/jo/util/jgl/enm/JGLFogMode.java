@@ -21,8 +21,8 @@
  */
 package jo.util.jgl.enm;
 
-public enum JGLFogMode 
-{
+public enum JGLFogMode {
+
     UNSET,
     LINEAR,
     EXP,

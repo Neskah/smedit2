@@ -5,57 +5,55 @@ import java.util.Map;
 
 import jo.vecmath.Point3i;
 
-public class Blueprint
-{
-    private String  mName;
-    private Header  mHeader;
-    private Logic   mLogic;
-    private Meta    mMeta;
+public class Blueprint {
+
+    private String mName;
+    private Header mHeader;
+    private Logic mLogic;
+    private Meta mMeta;
     private Map<Point3i, Data> mData;
-    
-    public Blueprint()
-    {
-        mData = new HashMap<Point3i, Data>();
+
+    public Blueprint() {
+        mData = new HashMap<>();
     }
-    
-    public String getName()
-    {
+
+    public String getName() {
         return mName;
     }
-    public void setName(String name)
-    {
+
+    public void setName(String name) {
         mName = name;
     }
-    public Header getHeader()
-    {
+
+    public Header getHeader() {
         return mHeader;
     }
-    public void setHeader(Header header)
-    {
+
+    public void setHeader(Header header) {
         mHeader = header;
     }
-    public Logic getLogic()
-    {
+
+    public Logic getLogic() {
         return mLogic;
     }
-    public void setLogic(Logic logic)
-    {
+
+    public void setLogic(Logic logic) {
         mLogic = logic;
     }
-    public Meta getMeta()
-    {
+
+    public Meta getMeta() {
         return mMeta;
     }
-    public void setMeta(Meta meta)
-    {
+
+    public void setMeta(Meta meta) {
         mMeta = meta;
     }
-    public Map<Point3i, Data> getData()
-    {
+
+    public Map<Point3i, Data> getData() {
         return mData;
     }
-    public void setData(Map<Point3i, Data> data)
-    {
+
+    public void setData(Map<Point3i, Data> data) {
         mData = data;
     }
 }

@@ -11,75 +11,64 @@ import java.beans.PropertyDescriptor;
 
 import jo.sm.ui.act.plugin.ColorPropertyDescriptor;
 
-public class OmbreParametersBeanInfo implements BeanInfo
-{
-    private BeanInfo mRootBeanInfo;
-    
-    public OmbreParametersBeanInfo() throws IntrospectionException
-    {
+public class OmbreParametersBeanInfo implements BeanInfo {
+
+    private final BeanInfo mRootBeanInfo;
+
+    public OmbreParametersBeanInfo() throws IntrospectionException {
         super();
         mRootBeanInfo = Introspector.getBeanInfo(OmbreParameters.class, Introspector.IGNORE_IMMEDIATE_BEANINFO);
     }
 
     @Override
-    public PropertyDescriptor[] getPropertyDescriptors()
-    {
-        PropertyDescriptor[] props = mRootBeanInfo.getPropertyDescriptors();
-        for (int i = 0; i < props.length; i++)
-        {
-            if (props[i].getName().startsWith("color"))
-                try
-                {
-                    props[i] = new ColorPropertyDescriptor(props[i].getName(), 
+    public PropertyDescriptor[] getPropertyDescriptors() {
+        PropertyDescriptor[] props;
+        props = mRootBeanInfo.getPropertyDescriptors();
+        for (int i = 0; i < props.length; i++) {
+            if (props[i].getName().startsWith("color")) {
+                try {
+                    props[i] = new ColorPropertyDescriptor(props[i].getName(),
                             props[i].getReadMethod(), props[i].getWriteMethod());
-                }
-                catch (IntrospectionException e)
-                {
+                } catch (IntrospectionException e) {
                     e.printStackTrace();
                 }
+            }
         }
         return props;
     }
 
     @Override
-    public BeanInfo[] getAdditionalBeanInfo()
-    {
+    public BeanInfo[] getAdditionalBeanInfo() {
         return mRootBeanInfo.getAdditionalBeanInfo();
     }
 
     @Override
-    public BeanDescriptor getBeanDescriptor()
-    {
+    public BeanDescriptor getBeanDescriptor() {
         return mRootBeanInfo.getBeanDescriptor();
     }
 
     @Override
-    public int getDefaultEventIndex()
-    {
+    public int getDefaultEventIndex() {
         return mRootBeanInfo.getDefaultEventIndex();
     }
 
     @Override
-    public int getDefaultPropertyIndex()
-    {
+    public int getDefaultPropertyIndex() {
         return mRootBeanInfo.getDefaultPropertyIndex();
     }
 
     @Override
-    public EventSetDescriptor[] getEventSetDescriptors()
-    {
+    public EventSetDescriptor[] getEventSetDescriptors() {
         return mRootBeanInfo.getEventSetDescriptors();
     }
 
     @Override
-    public Image getIcon(int flags)
-    {
+    public Image getIcon(int flags) {
         return mRootBeanInfo.getIcon(flags);
     }
 
     @Override
-    public MethodDescriptor[] getMethodDescriptors()
-    {
+    public MethodDescriptor[] getMethodDescriptors() {
         return mRootBeanInfo.getMethodDescriptors();
     }
 }

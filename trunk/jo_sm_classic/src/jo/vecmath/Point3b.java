@@ -28,59 +28,54 @@
  * $Date: 2008/02/28 20:18:50 $
  * $State: Exp $
  */
-
 package jo.vecmath;
-
-import jo.vecmath.Tuple3b;
 
 
 /**
- * A 3 element point represented by signed integer x,y,z
- * coordinates.
+ * A 3 element point represented by signed integer x,y,z coordinates.
  *
  * @since vecmath 1.2
  */
- public class Point3b extends Tuple3b implements java.io.Serializable {
+public class Point3b extends Tuple3b implements java.io.Serializable {
 
     // Compatible with 1.2
     static final long serialVersionUID = 6149289077348153921L;
 
     /**
-     * Constructs and initializes a Point3i from the specified
-     * x, y, and z coordinates.
+     * Constructs and initializes a Point3i from the specified x, y, and z
+     * coordinates.
+     *
      * @param x the x coordinate
      * @param y the y coordinate
      * @param z the z coordinate
      */
-     public Point3b(byte x, byte y, byte z) {
-      super(x, y, z);
+    public Point3b(byte x, byte y, byte z) {
+        super(x, y, z);
     }
-
 
     /**
      * Constructs and initializes a Point3i from the array of length 3.
+     *
      * @param t the array of length 3 containing x, y, and z in order.
      */
-     public Point3b(byte[] t) {
-      super(t);
+    public Point3b(byte[] t) {
+        super(t);
     }
-
 
     /**
      * Constructs and initializes a Point3i from the specified Tuple3i.
-     * @param t1 the Tuple3i containing the initialization x, y, and z
-     * data.
+     *
+     * @param t1 the Tuple3i containing the initialization x, y, and z data.
      */
-     public Point3b(Tuple3b t1) {
-      super(t1);
+    public Point3b(Tuple3b t1) {
+        super(t1);
     }
-
 
     /**
      * Constructs and initializes a Point3i to (0,0,0).
      */
-     public Point3b() {
-      super();
+    public Point3b() {
+        super();
     }
 
 }

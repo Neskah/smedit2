@@ -16,25 +16,26 @@ import jo.sm.ship.data.Block;
 import jo.sm.ship.data.DockEntry;
 import jo.sm.ship.data.Meta;
 
-public class MetaLogic 
-{
-	public static Meta readFile(InputStream is, boolean close) throws IOException
-	{
-		DataInputStream dis;
-		if (is instanceof DataInputStream)
-			dis = (DataInputStream)is;
-		else
-			dis = new DataInputStream(is);
-		Meta meta = new Meta();
-		meta.setUnknown1(dis.readInt());
+public class MetaLogic {
+
+    public static Meta readFile(InputStream is, boolean close) throws IOException {
+        DataInputStream dis;
+        if (is instanceof DataInputStream) {
+            dis = (DataInputStream) is;
+        } else {
+            dis = new DataInputStream(is);
+        }
+        Meta meta = new Meta();
+        meta.setUnknown1(dis.readInt());
         meta.setUnknown2(dis.readByte());
-        if (meta.getUnknown2() == 1)
+        if (meta.getUnknown2() == 1) {
             return meta;
-        if (meta.getUnknown2() != 3)
-            throw new IllegalArgumentException("Unrecognized unknown2: "+meta.getUnknown2());
+        }
+        if (meta.getUnknown2() != 3) {
+            throw new IllegalArgumentException("Unrecognized unknown2: " + meta.getUnknown2());
+        }
         int docksNum = dis.readInt();
-        for (int i = 0; i < docksNum; i++)
-        {
+        for (int i = 0; i < docksNum; i++) {
             DockEntry entry = new DockEntry();
             entry.setSubFolder(dis.readUTF());
 //            int clen = dis.readInt();
@@ -50,22 +51,21 @@ public class MetaLogic
         meta.setUnknown3(dis.readByte());
         Tag tags = TagLogic.readFile(dis, close);
         meta.setData(tags);
-		return meta;
-	}
-    public static void writeFile(Meta meta, OutputStream os, boolean close) throws IOException
-    {
+        return meta;
+    }
+
+    public static void writeFile(Meta meta, OutputStream os, boolean close) throws IOException {
         DataOutputStream dos;
-        if (os instanceof DataOutputStream)
-            dos = (DataOutputStream)os;
-        else
+        if (os instanceof DataOutputStream) {
+            dos = (DataOutputStream) os;
+        } else {
             dos = new DataOutputStream(os);
+        }
         dos.writeInt(meta.getUnknown1());
         dos.writeByte(meta.getUnknown2());
-        if (meta.getUnknown2() == 3)
-        {
+        if (meta.getUnknown2() == 3) {
             dos.writeInt(meta.getDocks().size());
-            for (DockEntry entry : meta.getDocks())
-            {
+            for (DockEntry entry : meta.getDocks()) {
                 dos.writeUTF(entry.getSubFolder());
                 IOLogic.write(dos, entry.getPosition());
                 IOLogic.write(dos, entry.getA());
@@ -74,27 +74,29 @@ public class MetaLogic
             }
             dos.writeByte(meta.getUnknown3());
             TagLogic.writeFile(meta.getData(), dos, false);
+        } else if (meta.getUnknown2() == 1) {
+            ;//unknown
+        } else {
+            throw new IllegalArgumentException("Unrecognized unknown2: " + meta.getUnknown2());
         }
-        else if (meta.getUnknown2() == 1)
-            ;
-        else
-            throw new IllegalArgumentException("Unrecognized unknown2: "+meta.getUnknown2());
-        if (close)
+        if (close) {
             dos.close();
+        }
     }
-    public static void dump(Meta meta)
-    {
-        System.out.println("Meta (u1="+meta.getUnknown1()+", u2="+meta.getUnknown2()+", u3="+meta.getUnknown3()+")");
-        for (DockEntry entry : meta.getDocks())
-            System.out.println("    "+entry.getSubFolder()+" @"+entry.getPosition()+"/"+entry.getA()
-                    +" "+BlockTypes.BLOCK_NAMES.get(entry.getBlockID())+" ("+entry.getUnknown1()+")");
+
+    public static void dump(Meta meta) {
+        System.out.println("Meta (u1=" + meta.getUnknown1() + ", u2=" + meta.getUnknown2() + ", u3=" + meta.getUnknown3() + ")");
+        for (DockEntry entry : meta.getDocks()) {
+            System.out.println("    " + entry.getSubFolder() + " @" + entry.getPosition() + "/" + entry.getA()
+                    + " " + BlockTypes.BLOCK_NAMES.get(entry.getBlockID()) + " (" + entry.getUnknown1() + ")");
+        }
         TagUtils.dump(meta.getData(), "  ");
     }
-    public static Meta make(SparseMatrix<Block> grid)
-    {
+
+    public static Meta make(SparseMatrix<Block> grid) {
         Meta meta = new Meta();
         meta.setUnknown1(0);
-        meta.setUnknown2((byte)1);
+        meta.setUnknown2((byte) 1);
         return meta;
     }
 }

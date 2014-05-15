@@ -5,78 +5,65 @@ import java.util.List;
 
 import jo.vecmath.Point3f;
 
-public class RenderSet
-{
-	private List<RenderPoly>	mAllPolys;
-	private List<RenderPoly>	mVisiblePolys;
-	private Point3f				mUnitX;
-	private Point3f				mUnitY;
-	private Point3f				mUnitZ;
-	private Point3f				mOrigin;
-	
-	public RenderSet()
-	{
-		mAllPolys = new ArrayList<RenderPoly>();
-		mVisiblePolys = new ArrayList<RenderPoly>();
-	}
+public class RenderSet {
 
-	public List<RenderPoly> getAllPolys()
-	{
-		return mAllPolys;
-	}
+    private List<RenderPoly> mAllPolys;
+    private List<RenderPoly> mVisiblePolys;
+    private Point3f mUnitX;
+    private Point3f mUnitY;
+    private Point3f mUnitZ;
+    private Point3f mOrigin;
 
-	public void setAllPolys(List<RenderPoly> polys)
-	{
-		mAllPolys = polys;
-	}
+    public RenderSet() {
+        mAllPolys = new ArrayList<>();
+        mVisiblePolys = new ArrayList<>();
+    }
 
-	public List<RenderPoly> getVisiblePolys()
-	{
-		return mVisiblePolys;
-	}
+    public List<RenderPoly> getAllPolys() {
+        return mAllPolys;
+    }
 
-	public void setVisiblePolys(List<RenderPoly> visiblePolys)
-	{
-		mVisiblePolys = visiblePolys;
-	}
+    public void setAllPolys(List<RenderPoly> polys) {
+        mAllPolys = polys;
+    }
 
-	public Point3f getUnitX()
-	{
-		return mUnitX;
-	}
+    public List<RenderPoly> getVisiblePolys() {
+        return mVisiblePolys;
+    }
 
-	public void setUnitX(Point3f unitX)
-	{
-		mUnitX = unitX;
-	}
+    public void setVisiblePolys(List<RenderPoly> visiblePolys) {
+        mVisiblePolys = visiblePolys;
+    }
 
-	public Point3f getUnitY()
-	{
-		return mUnitY;
-	}
+    public Point3f getUnitX() {
+        return mUnitX;
+    }
 
-	public void setUnitY(Point3f unitY)
-	{
-		mUnitY = unitY;
-	}
+    public void setUnitX(Point3f unitX) {
+        mUnitX = unitX;
+    }
 
-	public Point3f getUnitZ()
-	{
-		return mUnitZ;
-	}
+    public Point3f getUnitY() {
+        return mUnitY;
+    }
 
-	public void setUnitZ(Point3f unitZ)
-	{
-		mUnitZ = unitZ;
-	}
+    public void setUnitY(Point3f unitY) {
+        mUnitY = unitY;
+    }
 
-	public Point3f getOrigin()
-	{
-		return mOrigin;
-	}
+    public Point3f getUnitZ() {
+        return mUnitZ;
+    }
 
-	public void setOrigin(Point3f origin)
-	{
-		mOrigin = origin;
-	}
+    public void setUnitZ(Point3f unitZ) {
+        mUnitZ = unitZ;
+    }
+
+    public Point3f getOrigin() {
+        return mOrigin;
+    }
+
+    public void setOrigin(Point3f origin) {
+        mOrigin = origin;
+    }
 }

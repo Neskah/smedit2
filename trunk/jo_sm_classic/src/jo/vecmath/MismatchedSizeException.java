@@ -28,30 +28,29 @@
  * $Date: 2008/02/28 20:18:50 $
  * $State: Exp $
  */
-
 package jo.vecmath;
 
 /**
- * Indicates that an operation cannot be completed properly because
- * of a mismatch in the sizes of object attributes.
+ * Indicates that an operation cannot be completed properly because of a
+ * mismatch in the sizes of object attributes.
  */
- @SuppressWarnings("serial")
-public class MismatchedSizeException extends RuntimeException{
+@SuppressWarnings("serial")
+public class MismatchedSizeException extends RuntimeException {
 
+    /**
+     * Create the exception object with default values.
+     */
+    public MismatchedSizeException() {
+    }
 
-/**
- * Create the exception object with default values.
- */
-   public MismatchedSizeException(){
-  }
+    /**
+     * Create the exception object that outputs a message.
+     *
+     * @param str the message string to be output.
+     */
+    public MismatchedSizeException(String str) {
 
-/**
- * Create the exception object that outputs a message.
- * @param str the message string to be output.
- */
-   public MismatchedSizeException(String str){
-
-    super(str);
-  }
+        super(str);
+    }
 
 }

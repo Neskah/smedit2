@@ -5,34 +5,28 @@ import java.util.List;
 
 import jo.vecmath.Point3s;
 
+public class GroupEntry {
 
-public class GroupEntry
-{
-    private short      mBlockID;
+    private short mBlockID;
     private List<Point3s> mBlocks;
-    
-    public GroupEntry()
-    {
-        mBlocks = new ArrayList<Point3s>();
+
+    public GroupEntry() {
+        mBlocks = new ArrayList<>();
     }
 
-    public short getBlockID()
-    {
+    public short getBlockID() {
         return mBlockID;
     }
 
-    public void setBlockID(short blockID)
-    {
+    public void setBlockID(short blockID) {
         mBlockID = blockID;
     }
 
-    public List<Point3s> getBlocks()
-    {
+    public List<Point3s> getBlocks() {
         return mBlocks;
     }
 
-    public void setBlocks(List<Point3s> blocks)
-    {
+    public void setBlocks(List<Point3s> blocks) {
         mBlocks = blocks;
     }
 }

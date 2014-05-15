@@ -28,89 +28,86 @@
  * $Date: 2008/02/28 20:18:50 $
  * $State: Exp $
  */
-
 package jo.vecmath;
 
 import java.util.StringTokenizer;
 
-
-
 /**
- * A 3 element point represented by signed integer x,y,z
- * coordinates.
+ * A 3 element point represented by signed integer x,y,z coordinates.
  *
  * @since vecmath 1.2
  */
- public class Point3i extends Tuple3i implements java.io.Serializable {
+public class Point3i extends Tuple3i implements java.io.Serializable {
 
     // Compatible with 1.2
     static final long serialVersionUID = 6149289077348153921L;
 
     /**
-     * Constructs and initializes a Point3i from the specified
-     * x, y, and z coordinates.
+     * Constructs and initializes a Point3i from the specified x, y, and z
+     * coordinates.
+     *
      * @param x the x coordinate
      * @param y the y coordinate
      * @param z the z coordinate
      */
-     public Point3i(int x, int y, int z) {
-      super(x, y, z);
+    public Point3i(int x, int y, int z) {
+        super(x, y, z);
     }
-
 
     /**
      * Constructs and initializes a Point3i from the array of length 3.
+     *
      * @param t the array of length 3 containing x, y, and z in order.
      */
-     public Point3i(int[] t) {
-      super(t);
+    public Point3i(int[] t) {
+        super(t);
     }
-
 
     /**
      * Constructs and initializes a Point3i from the specified Tuple3i.
-     * @param t1 the Tuple3i containing the initialization x, y, and z
-     * data.
+     *
+     * @param t1 the Tuple3i containing the initialization x, y, and z data.
      */
-     public Point3i(Tuple3i t1) {
-      super(t1);
+    public Point3i(Tuple3i t1) {
+        super(t1);
     }
-
 
     /**
      * Constructs and initializes a Point3i to (0,0,0).
      */
-     public Point3i() {
-      super();
+    public Point3i() {
+        super();
     }
 
-
-    public Point3i(Tuple3f v)
-    {
-        if (v.x < 0)
-            x = (int)(v.x - .5f);
-        else
-            x = (int)(v.x + .5f);
-        if (v.y < 0)
-            y = (int)(v.y - .5f);
-        else
-            y = (int)(v.y + .5f);
-        if (v.z < 0)
-            z = (int)(v.z - .5f);
-        else
-            z = (int)(v.z + .5f);
+    public Point3i(Tuple3f v) {
+        if (v.x < 0) {
+            x = (int) (v.x - .5f);
+        } else {
+            x = (int) (v.x + .5f);
+        }
+        if (v.y < 0) {
+            y = (int) (v.y - .5f);
+        } else {
+            y = (int) (v.y + .5f);
+        }
+        if (v.z < 0) {
+            z = (int) (v.z - .5f);
+        } else {
+            z = (int) (v.z + .5f);
+        }
     }
 
-
-    public Point3i(String txt)
-    {
+    public Point3i(String txt) {
         StringTokenizer st = new StringTokenizer(txt, ",");
-        if (st.hasMoreTokens())
+        if (st.hasMoreTokens()) {
             x = Integer.parseInt(st.nextToken());
-        if (st.hasMoreTokens())
+        }
+        if (st.hasMoreTokens()) {
             y = Integer.parseInt(st.nextToken());
-        if (st.hasMoreTokens())
+        }
+        if (st.hasMoreTokens()) {
             z = Integer.parseInt(st.nextToken());
+        }
     }
 
 }

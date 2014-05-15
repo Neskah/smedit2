@@ -9,106 +9,90 @@ import java.util.Map;
 import jo.vecmath.Point3i;
 import jo.vecmath.Point3s;
 
-public class SparseMatrixOld<T>
-{
-    private Map<Integer,Map<Integer,Map<Integer,T>>> mMatrix;
-    
-    public SparseMatrixOld()
-    {
-        mMatrix = new HashMap<Integer, Map<Integer,Map<Integer,T>>>();
+public final class SparseMatrixOld<T> {
+
+    private Map<Integer, Map<Integer, Map<Integer, T>>> mMatrix;
+
+    public SparseMatrixOld() {
+        mMatrix = new HashMap<>();
     }
-    
-    public SparseMatrixOld(SparseMatrixOld<T> original)
-    {
+
+    public SparseMatrixOld(SparseMatrixOld<T> original) {
         this();
         set(original);
     }
-    
-    public void addAll(SparseMatrixOld<T> original)
-    {
-        for (Iterator<Point3i> i = original.iteratorNonNull(); i.hasNext(); )
-        {
+
+    public void addAll(SparseMatrixOld<T> original) {
+        for (Iterator<Point3i> i = original.iteratorNonNull(); i.hasNext();) {
             Point3i p = i.next();
             set(p, original.get(p));
         }
     }
-    
-    public void set(SparseMatrixOld<T> original)
-    {
+
+    public void set(SparseMatrixOld<T> original) {
         mMatrix.clear();
         addAll(original);
     }
-    
-    public void set(int x, int y, int z, T val)
-    {
-        Map<Integer,Map<Integer,T>> xrow = mMatrix.get(x);
-        if (xrow == null)
-        {
-            xrow = new HashMap<Integer, Map<Integer,T>>();
+
+    public void set(int x, int y, int z, T val) {
+        Map<Integer, Map<Integer, T>> xrow = mMatrix.get(x);
+        if (xrow == null) {
+            xrow = new HashMap<>();
             mMatrix.put(x, xrow);
         }
-        Map<Integer,T> yrow = xrow.get(y);
-        if (yrow == null)
-        {
-            yrow = new HashMap<Integer, T>();
-            xrow.put(y,  yrow);
+        Map<Integer, T> yrow = xrow.get(y);
+        if (yrow == null) {
+            yrow = new HashMap<>();
+            xrow.put(y, yrow);
         }
-        if (val == null)
+        if (val == null) {
             yrow.remove(z);
-        else
-            yrow.put(z,  val);
+        } else {
+            yrow.put(z, val);
+        }
     }
-    
-    public T get(int x, int y, int z)
-    {
-        Map<Integer,Map<Integer,T>> xrow = mMatrix.get(x);
-        if (xrow == null)
+
+    public T get(int x, int y, int z) {
+        Map<Integer, Map<Integer, T>> xrow = mMatrix.get(x);
+        if (xrow == null) {
             return null;
-        Map<Integer,T> yrow = xrow.get(y);
-        if (yrow == null)
+        }
+        Map<Integer, T> yrow = xrow.get(y);
+        if (yrow == null) {
             return null;
-        return yrow.get(z);        
+        }
+        return yrow.get(z);
     }
-    
-    public boolean contains(int x, int y, int z)
-    {
+
+    public boolean contains(int x, int y, int z) {
         return get(x, y, z) != null;
     }
-    
-    public void set(Point3i v, T val)
-    {
+
+    public void set(Point3i v, T val) {
         set(v.x, v.y, v.z, val);
     }
-    
-    public T get(Point3i v)
-    {
+
+    public T get(Point3i v) {
         return get(v.x, v.y, v.z);
     }
-    
-    public T get(Point3s v)
-    {
+
+    public T get(Point3s v) {
         return get(v.x, v.y, v.z);
     }
-    
-    public boolean contains(Point3i v)
-    {
+
+    public boolean contains(Point3i v) {
         return get(v.x, v.y, v.z) != null;
     }
-    
-    public void getBounds(Point3i lower, Point3i upper)
-    {
+
+    public void getBounds(Point3i lower, Point3i upper) {
         boolean first = true;
-        for (Integer x : mMatrix.keySet())
-        {
-            Map<Integer,Map<Integer,T>> xrow = mMatrix.get(x);
-            for (Integer y : xrow.keySet())
-            {
-                Map<Integer,T> yrow = xrow.get(y);
-                for (Integer z : yrow.keySet())
-                    if (contains(x, y, z))
-                    {
-                        if (first)
-                        {
+        for (Integer x : mMatrix.keySet()) {
+            Map<Integer, Map<Integer, T>> xrow = mMatrix.get(x);
+            for (Integer y : xrow.keySet()) {
+                Map<Integer, T> yrow = xrow.get(y);
+                for (Integer z : yrow.keySet()) {
+                    if (contains(x, y, z)) {
+                        if (first) {
                             lower.x = x;
                             upper.x = x;
                             lower.y = y;
@@ -116,9 +100,7 @@ public class SparseMatrixOld<T>
                             lower.z = z;
                             upper.z = z;
                             first = false;
-                        }
-                        else
-                        {
+                        } else {
                             lower.x = Math.min(lower.x, x);
                             upper.x = Math.max(upper.x, x);
                             lower.y = Math.min(lower.y, y);
@@ -127,70 +109,67 @@ public class SparseMatrixOld<T>
                             upper.z = Math.max(upper.z, z);
                         }
                     }
+                }
             }
         }
     }
-    
-    public Point3i find(T val)
-    {
-        for (Integer x : mMatrix.keySet())
-        {
-            Map<Integer,Map<Integer,T>> xrow = mMatrix.get(x);
-            for (Integer y : xrow.keySet())
-            {
-                Map<Integer,T> yrow = xrow.get(y);
-                for (Integer z : yrow.keySet())
-                	if (yrow.get(z) == val)
-                		return new Point3i(x, y, z);
+
+    public Point3i find(T val) {
+        for (Integer x : mMatrix.keySet()) {
+            Map<Integer, Map<Integer, T>> xrow = mMatrix.get(x);
+            for (Integer y : xrow.keySet()) {
+                Map<Integer, T> yrow = xrow.get(y);
+                for (Integer z : yrow.keySet()) {
+                    if (yrow.get(z) == val) {
+                        return new Point3i(x, y, z);
+                    }
+                }
             }
         }
         return null;
     }
 
-    public Iterator<Point3i> iterator()
-    {
+    public Iterator<Point3i> iterator() {
         Point3i lower = new Point3i();
         Point3i upper = new Point3i();
         getBounds(lower, upper);
         return new CubeIterator(lower, upper);
     }
-    
-    public Iterator<Point3i> iteratorNonNull()
-    {
-        List<Point3i> points = new ArrayList<Point3i>();
-        for (int x : mMatrix.keySet())
-            for (int y : mMatrix.get(x).keySet())
-                for (int z : mMatrix.get(x).get(y).keySet())
+
+    public Iterator<Point3i> iteratorNonNull() {
+        List<Point3i> points = new ArrayList<>();
+        for (int x : mMatrix.keySet()) {
+            for (int y : mMatrix.get(x).keySet()) {
+                for (int z : mMatrix.get(x).get(y).keySet()) {
                     points.add(new Point3i(x, y, z));
+                }
+            }
+        }
         return points.iterator();
     }
-    
-    public int size()
-    {
+
+    public int size() {
         int size = 0;
-        for (Iterator<Point3i> i = iteratorNonNull(); i.hasNext(); i.next())
+        for (Iterator<Point3i> i = iteratorNonNull(); i.hasNext(); i.next()) {
             size++;
+        }
         return size;
     }
-    
-    class NonNullIterator implements Iterator<Point3i>
-    {
-        private Iterator<Point3i> mRootIterator;
+
+    class NonNullIterator implements Iterator<Point3i> {
+
+        private final Iterator<Point3i> mRootIterator;
         private Point3i mNext;
-        
-        public NonNullIterator()
-        {
+
+        public NonNullIterator() {
             mRootIterator = iterator();
             advance();
         }
-        
-        private void advance()
-        {
-            while (mRootIterator.hasNext())
-            {
+
+        private void advance() {
+            while (mRootIterator.hasNext()) {
                 Point3i n = mRootIterator.next();
-                if (contains(n))
-                {
+                if (contains(n)) {
                     mNext = n;
                     return;
                 }
@@ -199,23 +178,20 @@ public class SparseMatrixOld<T>
         }
 
         @Override
-        public boolean hasNext()
-        {
+        public boolean hasNext() {
             return mNext != null;
         }
 
         @Override
-        public Point3i next()
-        {
+        public Point3i next() {
             Point3i next = mNext;
             advance();
             return next;
         }
 
         @Override
-        public void remove()
-        {
+        public void remove() {
         }
-        
+
     }
 }

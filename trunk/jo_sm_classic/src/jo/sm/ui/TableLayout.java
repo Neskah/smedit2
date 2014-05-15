@@ -25,60 +25,54 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
-public class TableLayout extends GridBagLayout
-{
+public final class TableLayout extends GridBagLayout {
+
     /**
      * Comment for <code>serialVersionUID</code>
      */
     private static final long serialVersionUID = 507791756710474413L;
 
     static final String[] defaults = {
-        "gridx", "gridy", "gridwidth", "gridheight", "weightx", "weighty",
-    };
-    
+        "gridx", "gridy", "gridwidth", "gridheight", "weightx", "weighty",};
+
     GridBagConstraints defaultGBC = new GridBagConstraints();
     int currentX;
     int currentY;
-    
-    public TableLayout()
-    {
+
+    public TableLayout() {
         super();
         defaultGBC.weightx = 1;
         defaultGBC.weighty = 1;
         currentX = 0;
         currentY = 0;
     }
-    
-    public TableLayout(String defaultConstraints)
-    {
+
+    public TableLayout(String defaultConstraints) {
         super();
         java.util.StringTokenizer st = new java.util.StringTokenizer(defaultConstraints, " x,-");
         defaultGBC.weightx = 1;
         defaultGBC.weighty = 1;
-        while (st.hasMoreTokens())
-        {
+        while (st.hasMoreTokens()) {
             String tok = st.nextToken().toLowerCase();
 //            int o;
 //            String key;
 //            String val;
             parseToken(defaultGBC, "", tok);
-        }       
+        }
     }
-    
-    public void addLayoutComponent(Component comp, Object constraints)
-    {
-        if (!(constraints instanceof String))
-        {
+
+    @Override
+    public void addLayoutComponent(Component comp, Object constraints) {
+        if (!(constraints instanceof String)) {
             super.addLayoutComponent(comp, constraints);
             return;
         }
-        java.util.StringTokenizer st = new java.util.StringTokenizer((String)constraints, " x,-");
+        java.util.StringTokenizer st = new java.util.StringTokenizer((String) constraints, " x,-");
         GridBagConstraints gbc = new GridBagConstraints();
         copy(gbc, defaultGBC);
         gbc.weightx = 1;
         gbc.weighty = 1;
-        for (int i = 0; st.hasMoreTokens(); i++)
-        {
+        for (int i = 0; st.hasMoreTokens(); i++) {
             String tok = st.nextToken().toLowerCase();
 //            int o;
 //            String key;
@@ -90,101 +84,128 @@ public class TableLayout extends GridBagLayout
         super.addLayoutComponent(comp, gbc);
     }
 
-    void parseToken(GridBagConstraints gbc, String theDefault, String tok)
-    {
+    void parseToken(GridBagConstraints gbc, String theDefault, String tok) {
         int o = tok.indexOf("=");
         String key;
         String val;
-        if (o > 0)
-        {
+        if (o > 0) {
             key = tok.substring(0, o);
             val = tok.substring(o + 1);
-        }
-        else
-        {
+        } else {
             key = theDefault;
             val = tok;
         }
         parseSetting(gbc, key, val);
     }
-    
-    private void parseSetting(GridBagConstraints gbc, String key, String val)
-    {
+
+    private void parseSetting(GridBagConstraints gbc, String key, String val) {
         int v;
-        try
-        {
+        try {
             v = Integer.parseInt(val);
-        }
-        catch (NumberFormatException e)
-        {
+        } catch (NumberFormatException e) {
             v = 0;
         }
-        if (key.equals("x") || key.equals("gridx"))
-        {
-            if (val.equals("."))
-                gbc.gridx = currentX;
-            else if (val.equals("+"))
-                gbc.gridx = ++currentX;
-            else
-                gbc.gridx = v; 
-        } 
-        else if (key.equals("y") || key.equals("gridy"))
-        {
-            if (val.equals("."))
-                gbc.gridy = currentY;
-            else if (val.equals("+"))
-                gbc.gridy = ++currentY;
-            else
-               gbc.gridy = v; 
-        } 
-        else if (key.equals("gridwidth") || key.equals("width"))
-            gbc.gridwidth = v;
-        else if (key.equals("gridheight") || key.equals("height"))
-            gbc.gridheight = v;
-        else if (key.equals("weightx"))
-            gbc.weightx = v;
-        else if (key.equals("weighty"))
-            gbc.weighty = v;
-        else if (key.equals("ipadx"))
-            gbc.ipadx = v;
-        else if (key.equals("ipady"))
-            gbc.ipady = v;
-        else if (key.equals("fill"))
-        {
-            if (val.equals("none"))
+        switch (key) {
+            case "x":
+            case "gridx":
+                if (val.equals(".")) {
+                    gbc.gridx = currentX;
+                } else if (val.equals("+")) {
+                    gbc.gridx = ++currentX;
+                } else {
+                    gbc.gridx = v;
+                }   break;
+            case "y":
+            case "gridy":
+                if (val.equals(".")) {
+                    gbc.gridy = currentY;
+                } else if (val.equals("+")) {
+                    gbc.gridy = ++currentY;
+                } else {
+                    gbc.gridy = v;
+                }   break;
+            case "gridwidth":
+            case "width":
+                gbc.gridwidth = v;
+                break;
+            case "gridheight":
+            case "height":
+                gbc.gridheight = v;
+                break;
+            case "weightx":
+                gbc.weightx = v;
+                break;
+            case "weighty":
+                gbc.weighty = v;
+                break;
+            case "ipadx":
+                gbc.ipadx = v;
+                break;
+            case "ipady":
+                gbc.ipady = v;
+                break;
+            case "fill":
+        switch (val) {
+            case "none":
                 gbc.fill = GridBagConstraints.NONE;
-            else if (val.equals("horizontal") || val.equals("h"))
+                break;
+            case "horizontal":
+            case "h":
                 gbc.fill = GridBagConstraints.HORIZONTAL;
-            else if (val.equals("vertical") || val.equals("v"))
+                break;
+            case "vertical":
+            case "v":
                 gbc.fill = GridBagConstraints.VERTICAL;
-            else if (val.equals("both") || val.equals("hv"))
+                break;
+            case "both":
+            case "hv":
                 gbc.fill = GridBagConstraints.BOTH;
+                break;
         }
-        else if (key.equals("anchor"))
-        {
-            if (val.equals("center"))
+break;
+            case "anchor":
+        switch (val) {
+            case "center":
                 gbc.anchor = GridBagConstraints.CENTER;
-            else if (val.equals("north") || val.equals("n"))
+                break;
+            case "north":
+            case "n":
                 gbc.anchor = GridBagConstraints.NORTH;
-            else if (val.equals("northeast") || val.equals("ne"))
+                break;
+            case "northeast":
+            case "ne":
                 gbc.anchor = GridBagConstraints.NORTHEAST;
-            else if (val.equals("east") || val.equals("e"))
+                break;
+            case "east":
+            case "e":
                 gbc.anchor = GridBagConstraints.EAST;
-            else if (val.equals("southeast") || val.equals("se"))
+                break;
+            case "southeast":
+            case "se":
                 gbc.anchor = GridBagConstraints.SOUTHEAST;
-            else if (val.equals("south") || val.equals("s"))
+                break;
+            case "south":
+            case "s":
                 gbc.anchor = GridBagConstraints.SOUTH;
-            else if (val.equals("southwest") || val.equals("sw"))
+                break;
+            case "southwest":
+            case "sw":
                 gbc.anchor = GridBagConstraints.SOUTHWEST;
-            else if (val.equals("west") || val.equals("w"))
+                break;
+            case "west":
+            case "w":
                 gbc.anchor = GridBagConstraints.WEST;
-            else if (val.equals("northwest") || val.equals("nw"))
+                break;
+            case "northwest":
+            case "nw":
                 gbc.anchor = GridBagConstraints.NORTHWEST;
+                break;
+        }
+break;
         }
     }
-    
-    void copy(GridBagConstraints lvalue, GridBagConstraints rvalue)
-    {
+
+    void copy(GridBagConstraints lvalue, GridBagConstraints rvalue) {
         lvalue.anchor = rvalue.anchor;
         lvalue.fill = rvalue.fill;
         lvalue.gridheight = rvalue.gridheight;

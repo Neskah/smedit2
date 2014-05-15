@@ -8,8 +8,12 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.TYPE})
 public @interface Description {
+
     String displayName() default "";
+
     String shortDescription() default "";
+
     String documentation() default "";
+
     int priority() default 50;
 }

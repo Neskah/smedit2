@@ -24,37 +24,31 @@ import javax.swing.JTextArea;
 import jo.sm.logic.utils.StringUtils;
 
 @SuppressWarnings("serial")
-public class BeanEditDlg extends JDialog
-{
+public class BeanEditDlg extends JDialog {
+
     private Object mBean;
-    private Class<?> mBeanClass;
+    private final Class<?> mBeanClass;
     private BeanInfo mBeanInfo;
     private Customizer mCustomizer;
-    
-    public BeanEditDlg(JFrame base, Object bean)
-    {
+
+    public BeanEditDlg(JFrame base, Object bean) {
         super(base, "Edit Parameters", Dialog.ModalityType.DOCUMENT_MODAL);
         mBean = bean;
         mBeanClass = mBean.getClass();
-        try
-        {
+        try {
             mBeanInfo = Introspector.getBeanInfo(mBeanClass);
-        }
-        catch (IntrospectionException e)
-        {
+        } catch (IntrospectionException e) {
             e.printStackTrace();
             return;
         }
         // instantiate
         Class<?> customizerClass = mBeanInfo.getBeanDescriptor().getCustomizerClass();
-        if (customizerClass == null)
+        if (customizerClass == null) {
             customizerClass = GenericBeanCustomizer.class;
-        try
-        {
-            mCustomizer = (Customizer)customizerClass.newInstance();
         }
-        catch (Exception e)
-        {
+        try {
+            mCustomizer = (Customizer) customizerClass.newInstance();
+        } catch (IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
             return;
         }
@@ -64,25 +58,22 @@ public class BeanEditDlg extends JDialog
         JPanel innerClient = new JPanel();
         innerClient.setLayout(new BorderLayout());
         innerClient.setBorder(BorderFactory.createEmptyBorder(2, 6, 2, 6));
-        innerClient.add(BorderLayout.CENTER, new JScrollPane((Component)mCustomizer));
+        innerClient.add(BorderLayout.CENTER, new JScrollPane((Component) mCustomizer));
         Description d = mBeanClass.getAnnotation(Description.class);
-        if (d != null)
-        {
-            if (StringUtils.nonTrivial(d.displayName()))
-            {
+        if (d != null) {
+            if (StringUtils.nonTrivial(d.displayName())) {
                 JLabel name = new JLabel(d.displayName());
                 name.setFont(new Font("Dialog", Font.BOLD, 14));
                 innerClient.add(BorderLayout.NORTH, name);
             }
-            if (StringUtils.nonTrivial(d.shortDescription()))
-            {
+            if (StringUtils.nonTrivial(d.shortDescription())) {
                 JTextArea desc = new JTextArea(d.shortDescription());
                 desc.setEditable(false);
                 desc.setFont(new Font("Dialog", Font.ITALIC, 10));
                 innerClient.add(BorderLayout.SOUTH, desc);
             }
         }
-        
+
         JPanel outerClient = new JPanel();
         getContentPane().add(outerClient);
         outerClient.setLayout(new BorderLayout());
@@ -93,40 +84,37 @@ public class BeanEditDlg extends JDialog
         buttonBar.add(ok);
         buttonBar.add(cancel);
         // link
-        ok.addActionListener(new ActionListener(){
+        ok.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent ev)
-            {
+            public void actionPerformed(ActionEvent ev) {
                 doOK();
-            }});
-        cancel.addActionListener(new ActionListener(){
+            }
+        });
+        cancel.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent ev)
-            {
+            public void actionPerformed(ActionEvent ev) {
                 doCancel();
-            }});
-        
+            }
+        });
+
         mCustomizer.setObject(mBean);
         //setSize(640, 480);
         pack();
         setLocationRelativeTo(base);
     }
-    
-    private void doOK()
-    {
+
+    private void doOK() {
         setVisible(false);
         dispose();
     }
-    
-    private void doCancel()
-    {
+
+    private void doCancel() {
         mBean = null;
         setVisible(false);
         dispose();
     }
 
-    public Object getBean()
-    {
+    public Object getBean() {
         return mBean;
     }
 }

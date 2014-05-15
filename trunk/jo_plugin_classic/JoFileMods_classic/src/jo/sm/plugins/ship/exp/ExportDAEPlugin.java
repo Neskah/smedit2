@@ -20,74 +20,64 @@ import jo.util.jgl.obj.tri.JGLObj;
 import jo.vecmath.Point3f;
 import jo.vecmath.logic.Point3fLogic;
 
-public class ExportDAEPlugin implements IBlocksPlugin
-{
+public class ExportDAEPlugin implements IBlocksPlugin {
+
     public static final String NAME = "Export/DAE";
     public static final String DESC = "Export DAE file";
     public static final String AUTH = "Jo Jaquinta";
-    public static final int[][] CLASSIFICATIONS = 
-        {
-        { TYPE_SHIP, SUBTYPE_FILE, 26 },
-        { TYPE_STATION, SUBTYPE_FILE, 26 },
-        { TYPE_SHOP, SUBTYPE_FILE, 26 },
-        { TYPE_FLOATINGROCK, SUBTYPE_FILE, 26 },
-        { TYPE_PLANET, SUBTYPE_FILE, 26 },
-        };
+    public static final int[][] CLASSIFICATIONS
+            = {
+                {TYPE_SHIP, SUBTYPE_FILE, 26},
+                {TYPE_STATION, SUBTYPE_FILE, 26},
+                {TYPE_SHOP, SUBTYPE_FILE, 26},
+                {TYPE_FLOATINGROCK, SUBTYPE_FILE, 26},
+                {TYPE_PLANET, SUBTYPE_FILE, 26},};
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return NAME;
     }
 
     @Override
-    public String getDescription()
-    {
+    public String getDescription() {
         return DESC;
     }
 
     @Override
-    public String getAuthor()
-    {
+    public String getAuthor() {
         return AUTH;
     }
 
     @Override
-    public Object newParameterBean()
-    {
+    public Object newParameterBean() {
         return new ExportDAEParameters();
     }
-	@Override
-	public void initParameterBean(SparseMatrix<Block> original, Object params,
-			StarMade sm, IPluginCallback cb)
-	{
-	}
 
     @Override
-    public int[][] getClassifications()
-    {
+    public void initParameterBean(SparseMatrix<Block> original, Object params,
+            StarMade sm, IPluginCallback cb) {
+    }
+
+    @Override
+    public int[][] getClassifications() {
         return CLASSIFICATIONS;
     }
 
     @Override
     public SparseMatrix<Block> modify(SparseMatrix<Block> original,
-            Object p, StarMade sm, IPluginCallback cb)
-    {
-        ExportDAEParameters params = (ExportDAEParameters)p;        
-        try
-        {
-        	JGLGroup quads = new JGLGroup();
-        	LWJGLRenderLogic.addBlocks(quads, original, false);
+            Object p, StarMade sm, IPluginCallback cb) {
+        ExportDAEParameters params = (ExportDAEParameters) p;
+        try {
+            JGLGroup quads = new JGLGroup();
+            LWJGLRenderLogic.addBlocks(quads, original, false);
             writeFile(params.getFile(), quads);
             writeTexture(params.getFile());
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             cb.setError(e);
         }
         return null;
     }
-    
+
     private static final String TEXTUREMAPFILE = "TEXTUREMAPFILE";
     private static final String VERTEXPOSITIONS = "VERTEXPOSITIONS";
     private static final String VERTEXCOUNTBY3 = "VERTEXCOUNTBY3";
@@ -98,74 +88,72 @@ public class ExportDAEPlugin implements IBlocksPlugin
     private static final String POLYLISTVCOUNT = "POLYLISTVCOUNT";
     private static final String POLYCOUNT = "POLYCOUNT";
     private static final String POLYLISTVERTS = "POLYLISTVERTS";
-    
-    private void writeTexture(String objFile) throws IOException
-    {
-    	String pngFile = objFile.substring(0, objFile.length() - 4) + ".png";
-    	ImageIO.write(BlockTypeColors.mAllTextures, "PNG", new File(pngFile));
+
+    private void writeTexture(String objFile) throws IOException {
+        String pngFile = objFile.substring(0, objFile.length() - 4) + ".png";
+        ImageIO.write(BlockTypeColors.mAllTextures, "PNG", new File(pngFile));
     }
-    
-    private void writeFile(String objFile, JGLGroup quads) throws IOException
-    {
-    	File pngFile = new File(objFile.substring(0, objFile.length() - 4) + ".png");
+
+    private void writeFile(String objFile, JGLGroup quads) throws IOException {
+        File pngFile = new File(objFile.substring(0, objFile.length() - 4) + ".png");
         String template = ResourceUtils.loadSystemResourceString("Template.dae", ExportDAEPlugin.class);
 
-        JGLObj obj = (JGLObj)quads.getChildren().get(0);
-		int facePoints = (obj.getMode() == JGLObj.TRIANGLES) ? 3 : 4;
+        JGLObj obj = (JGLObj) quads.getChildren().get(0);
+        int facePoints = (obj.getMode() == JGLObj.TRIANGLES) ? 3 : 4;
         int vertexCount = obj.getVertices();
-        int vertexCountBy2 = vertexCount*2;
-        int vertexCountBy3 = vertexCount*3;
-        int polyCount = vertexCount/facePoints;
-		FloatBuffer verts = obj.getVertexBuffer();
-		verts.rewind();
-		StringBuffer vertexPositions = new StringBuffer();
-		StringBuffer vertexNormals = new StringBuffer();
-		StringBuffer polyListVerts = new StringBuffer();
-		for (int i = 0; i < vertexCount; i += 4)
-		{
-			Point3f v1 = new Point3f(verts.get(), verts.get(), verts.get());
-			Point3f v2 = new Point3f(verts.get(), verts.get(), verts.get());
-			Point3f v3 = new Point3f(verts.get(), verts.get(), verts.get());
-			Point3f v4 = new Point3f(verts.get(), verts.get(), verts.get());
-			vertexPositions.append(" "+v1.x+" "+v1.y+" "+v1.z);
-			vertexPositions.append(" "+v2.x+" "+v2.y+" "+v2.z);
-			vertexPositions.append(" "+v3.x+" "+v3.y+" "+v3.z);
-			if (facePoints == 4)
-				vertexPositions.append(" "+v4.x+" "+v4.y+" "+v4.z);
-			Point3f edge1 = new Point3f(v2);
-			edge1.sub(v1);
-			Point3f edge2 = new Point3f(v3);
-			edge2.sub(v1);
-			Point3f normal = Point3fLogic.cross(edge1, edge2);
-			vertexNormals.append(" "+normal.x+" "+normal.y+" "+normal.z);
-			vertexNormals.append(" "+normal.x+" "+normal.y+" "+normal.z);
-			vertexNormals.append(" "+normal.x+" "+normal.y+" "+normal.z);
-			if (facePoints == 4)
-				vertexNormals.append(" "+normal.x+" "+normal.y+" "+normal.z);
-			polyListVerts.append(" "+(i+0));
-			polyListVerts.append(" "+(i+1));
-			polyListVerts.append(" "+(i+2));
-			if (facePoints == 4)
-				polyListVerts.append(" "+(i+3));
-		}
-		FloatBuffer texts = obj.getTexturesBuffer();
-		texts.rewind();
-		StringBuffer vertexUVs = new StringBuffer();
-		if (texts != null)
-		{
-    		for (int i = 0; i < vertexCount; i++)
-    		{
-    			float u = texts.get();
-    			float v = texts.get();
-    			vertexUVs.append(" "+u+" "+v);
-    		}
-		}
-		int faceCount = obj.getIndices();
-		StringBuffer polyListVCount = new StringBuffer();
-		for (int i = 0; i < faceCount; i++)
-		{
-			polyListVCount.append(" "+facePoints);
-		}
+        int vertexCountBy2 = vertexCount * 2;
+        int vertexCountBy3 = vertexCount * 3;
+        int polyCount = vertexCount / facePoints;
+        FloatBuffer verts = obj.getVertexBuffer();
+        verts.rewind();
+        StringBuffer vertexPositions = new StringBuffer();
+        StringBuffer vertexNormals = new StringBuffer();
+        StringBuffer polyListVerts = new StringBuffer();
+        for (int i = 0; i < vertexCount; i += 4) {
+            Point3f v1 = new Point3f(verts.get(), verts.get(), verts.get());
+            Point3f v2 = new Point3f(verts.get(), verts.get(), verts.get());
+            Point3f v3 = new Point3f(verts.get(), verts.get(), verts.get());
+            Point3f v4 = new Point3f(verts.get(), verts.get(), verts.get());
+            vertexPositions.append(" ").append(v1.x).append(" ").append(v1.y).append(" ").append(v1.z);
+            vertexPositions.append(" ").append(v2.x).append(" ").append(v2.y).append(" ").append(v2.z);
+            vertexPositions.append(" ").append(v3.x).append(" ").append(v3.y).append(" ").append(v3.z);
+            if (facePoints == 4) {
+                vertexPositions.append(" ").append(v4.x).append(" ").append(v4.y).append(" ").append(v4.z);
+            }
+            Point3f edge1 = new Point3f(v2);
+            edge1.sub(v1);
+            Point3f edge2 = new Point3f(v3);
+            edge2.sub(v1);
+            Point3f normal = Point3fLogic.cross(edge1, edge2);
+            vertexNormals.append(" ").append(normal.x).append(" ").append(normal.y).append(" ").append(normal.z);
+            vertexNormals.append(" ").append(normal.x).append(" ").append(normal.y).append(" ").append(normal.z);
+            vertexNormals.append(normal.x).append(" " + " ").append(normal.y).append(" ").append(normal.z);
+            if (facePoints == 4) {
+                vertexNormals.append(" ").append(normal.x).append(" ").append(normal.y).append(" ").append(normal.z);
+            }
+            polyListVerts.append(" ").append(i + 0);
+            polyListVerts.append(" ").append(i + 1);
+            polyListVerts.append(" ").append(i + 2);
+            if (facePoints == 4) {
+                polyListVerts.append(" ").append(i + 3);
+            }
+        }
+        FloatBuffer texts = obj.getTexturesBuffer();
+        texts.rewind();
+        StringBuffer vertexUVs = new StringBuffer();
+        if (texts == null) {
+        } else {
+            for (int i = 0; i < vertexCount; i++) {
+                float u = texts.get();
+                float v = texts.get();
+                vertexUVs.append(" ").append(u).append(" ").append(v);
+            }
+        }
+        int faceCount = obj.getIndices();
+        StringBuffer polyListVCount = new StringBuffer();
+        for (int i = 0; i < faceCount; i++) {
+            polyListVCount.append(" ").append(facePoints);
+        }
 
         template = template.replace(TEXTUREMAPFILE, pngFile.getName());
         template = template.replace(VERTEXPOSITIONS, vertexPositions);

@@ -2,64 +2,59 @@ package jo.sm.ent.data;
 
 import jo.sm.ent.logic.TagLogic;
 
+public class Tag {
 
-public class Tag
-{
     private TagType mType;
     private TagType mSubType;
     private String mName;
     private Object mValue;
-    
-    public Tag()
-    {
+
+    public Tag() {
         mType = TagType.FINISH;
         mName = null;
         mValue = null;
     }
-    
-    public Tag(TagType type, String name, Object value)
-    {
+
+    public Tag(TagType type, String name, Object value) {
         mType = type;
         mName = name;
         TagLogic.setValue(this, value); // validation is here
     }
-    
-    public String toString()
-    {
-        return mName+" ("+mValue+")";
+
+    @Override
+    public String toString() {
+        return mName + " (" + mValue + ")";
     }
-    
-    public TagType getSubType()
-    {
+
+    public TagType getSubType() {
         return mSubType;
     }
 
-    public void setSubType(TagType subType)
-    {
+    public void setSubType(TagType subType) {
         mSubType = subType;
     }
-    public TagType getType()
-    {
+
+    public TagType getType() {
         return mType;
     }
-    public void setType(TagType type)
-    {
+
+    public void setType(TagType type) {
         mType = type;
     }
-    public String getName()
-    {
+
+    public String getName() {
         return mName;
     }
-    public void setName(String name)
-    {
+
+    public void setName(String name) {
         mName = name;
     }
-    public Object getValue()
-    {
+
+    public Object getValue() {
         return mValue;
     }
-    public void setValue(Object value)
-    {
+
+    public void setValue(Object value) {
         mValue = value;
     }
 }

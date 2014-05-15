@@ -85,7 +85,6 @@ public class GlobalConfiguration {
         }
 
         public static class URLs {
-            
 
             public static final String URL = "http://";
             public static final String CODE = ".googlecode.com/";
@@ -107,8 +106,7 @@ public class GlobalConfiguration {
 
         public static final String ROOT = "." + File.separator + "resources";
         public static final String VERSION = ROOT + File.separator + "version.dat";
-        
-        
+
         private static Map<String, File> downloadCache;
         /* file locations */
 
@@ -299,23 +297,23 @@ public class GlobalConfiguration {
     }
 
     public static int getVersion() {
-		try {
-			final InputStream is = RUNNING_FROM_JAR ? GlobalConfiguration.class
-					.getClassLoader().getResourceAsStream(
-							Paths.Resources.VERSION) : new FileInputStream(
-									Paths.VERSION);
+        try {
+            final InputStream is = RUNNING_FROM_JAR ? GlobalConfiguration.class
+                    .getClassLoader().getResourceAsStream(
+                            Paths.Resources.VERSION) : new FileInputStream(
+                            Paths.VERSION);
 
-							int off = 0;
-							final byte[] b = new byte[2];
-							while ((off += is.read(b, off, 2 - off)) != 2) {
-							}
+            int off = 0;
+            final byte[] b = new byte[2];
+            while ((off += is.read(b, off, 2 - off)) != 2) {
+            }
 
-							return ((0xFF & b[0]) << 8) + (0xFF & b[1]);
-		} catch (final Exception e) {
-			e.printStackTrace();
-		}
-		return -1;
-	}
+            return ((0xFF & b[0]) << 8) + (0xFF & b[1]);
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
 
     public static void registerLogging() {
         final Properties logging = new Properties();

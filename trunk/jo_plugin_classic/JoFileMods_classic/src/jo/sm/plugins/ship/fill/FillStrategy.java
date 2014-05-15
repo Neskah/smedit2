@@ -4,49 +4,45 @@ import java.util.Comparator;
 
 import jo.vecmath.Point3i;
 
-public class FillStrategy implements Comparator<Point3i>
-{
+public class FillStrategy implements Comparator<Point3i> {
+
     public static final int MINUS = 0;
     public static final int PLUS = 1;
     public static final int CENTER = 2;
     public static final int OUTSIDE = 3;
-    
+
     public static final int X = 0x01;
     public static final int Y = 0x02;
     public static final int Z = 0x04;
 
-    private int mStrategy;
-    private int mAxis;
-    private Point3i mLower;
-    private Point3i mUpper;
-    
-    public FillStrategy(int strategy, int axis, Point3i lower, Point3i upper)
-    {
+    private final int mStrategy;
+    private final int mAxis;
+    private final Point3i mLower;
+    private final Point3i mUpper;
+
+    public FillStrategy(int strategy, int axis, Point3i lower, Point3i upper) {
         mStrategy = strategy;
         mAxis = axis;
         mLower = lower;
         mUpper = upper;
     }
-    
+
 //    private Set<Point3i> done = new HashSet<Point3i>();
-    
     @Override
-    public int compare(Point3i o1, Point3i o2)
-    {
-        int weight1 = 0;
-        int weight2 = 0;
-        if ((mAxis&X) != 0)
-        {
+    public int compare(Point3i o1, Point3i o2) {
+        int weight1;
+        weight1 = 0;
+        int weight2;
+        weight2 = 0;
+        if ((mAxis & X) != 0) {
             weight1 += getWeight(o1.x, mLower.x, mUpper.x);
             weight2 += getWeight(o2.x, mLower.x, mUpper.x);
         }
-        if ((mAxis&Y) != 0)
-        {
+        if ((mAxis & Y) != 0) {
             weight1 += getWeight(o1.y, mLower.y, mUpper.y);
             weight2 += getWeight(o2.y, mLower.y, mUpper.y);
         }
-        if ((mAxis&Z) != 0)
-        {
+        if ((mAxis & Z) != 0) {
             weight1 += getWeight(o1.z, mLower.z, mUpper.z);
             weight2 += getWeight(o2.z, mLower.z, mUpper.z);
         }
@@ -64,17 +60,20 @@ public class FillStrategy implements Comparator<Point3i>
     }
 
     // the higher the value the less desirable this position is
-    private int getWeight(int v, int low, int high)
-    {
-        if (mStrategy == MINUS)
+    private int getWeight(int v, int low, int high) {
+        if (mStrategy == MINUS) {
             return v - low;
-        if (mStrategy == PLUS)
+        }
+        if (mStrategy == PLUS) {
             return high - v;
-        if (mStrategy == CENTER)
+        }
+        if (mStrategy == CENTER) {
             return Math.abs(v);
-        if (mStrategy == OUTSIDE)
+        }
+        if (mStrategy == OUTSIDE) {
             return Math.min(v - low, high - v);
+        }
         return 0;
     }
-    
+
 }

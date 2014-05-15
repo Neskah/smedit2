@@ -4,8 +4,8 @@ import jo.sm.data.SparseMatrix;
 import jo.sm.data.StarMade;
 import jo.sm.ship.data.Block;
 
-public interface IBlocksPlugin extends IStarMadePlugin
-{
+public interface IBlocksPlugin extends IStarMadePlugin {
+
     public static final int TYPE_ALL = 0;
     public static final int TYPE_SHIP = 1;
     public static final int TYPE_STATION = 2;
@@ -21,5 +21,6 @@ public interface IBlocksPlugin extends IStarMadePlugin
     public static final int SUBTYPE_VIEW = 6;
 
     public void initParameterBean(SparseMatrix<Block> original, Object params, StarMade sm, IPluginCallback cb);
+
     public SparseMatrix<Block> modify(SparseMatrix<Block> original, Object params, StarMade sm, IPluginCallback cb);
 }
