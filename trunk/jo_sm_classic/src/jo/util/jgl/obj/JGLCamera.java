@@ -22,14 +22,13 @@
 package jo.util.jgl.obj;
 
 import jo.vecmath.Matrix4f;
-
 import jo.vecmath.logic.TransformEye;
 
 public class JGLCamera extends JGLGroup {
 
     public JGLCamera() {
         super();
-        mTransform = new TransformEye(mTransform);
+        mTransform = new TransformEye(getmTransform());
     }
 
     @Override

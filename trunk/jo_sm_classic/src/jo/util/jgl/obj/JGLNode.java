@@ -23,7 +23,7 @@ package jo.util.jgl.obj;
 
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.logging.Logger;
 import jo.vecmath.Matrix3f;
 import jo.vecmath.Matrix4f;
 import jo.vecmath.Point3f;
@@ -32,10 +32,11 @@ import jo.vecmath.Vector3f;
 import jo.vecmath.logic.ITransformer;
 
 public class JGLNode {
+    private static final Logger LOG = Logger.getLogger(JGLNode.class.getName());
 
     private String mID;
-    protected Matrix4f mTransform;
-    protected Matrix3f mRotation;
+    Matrix4f mTransform;
+    private Matrix3f mRotation;
     protected Vector3f mTranslation;
     protected float mScale;
     private ITransformer mTransformer;
@@ -61,50 +62,50 @@ public class JGLNode {
     }
 
     public void decomposeTransform() {
-        mScale = mTransform.get(mRotation, mTranslation);
+        mScale = getmTransform().get(getmRotation(), mTranslation);
     }
 
     public void composeTransform() {
-        mTransform.set(mRotation, mTranslation, mScale);
+        getmTransform().set(getmRotation(), mTranslation, mScale);
     }
 
     public Vector3f getLeftDir() {
         getRotation();
         Vector3f v = new Vector3f();
-        mRotation.getColumn(0, v);
+        getmRotation().getColumn(0, v);
         return v;
     }
 
     public void setLeftDir(Tuple3f v) {
         getRotation();
-        mRotation.setColumn(0, v.x, v.y, v.z);
-        setRotation(mRotation);
+        getmRotation().setColumn(0, v.x, v.y, v.z);
+        setRotation(getmRotation());
     }
 
     public Vector3f getUpDir() {
         getRotation();
         Vector3f v = new Vector3f();
-        mRotation.getColumn(1, v);
+        getmRotation().getColumn(1, v);
         return v;
     }
 
     public void setUpDir(Tuple3f v) {
         getRotation();
-        mRotation.setColumn(1, v.x, v.y, v.z);
-        setRotation(mRotation);
+        getmRotation().setColumn(1, v.x, v.y, v.z);
+        setRotation(getmRotation());
     }
 
     public Vector3f getForwardDir() {
         getRotation();
         Vector3f v = new Vector3f();
-        mRotation.getColumn(2, v);
+        getmRotation().getColumn(2, v);
         return v;
     }
 
     public void setForwardDir(Tuple3f v) {
         getRotation();
-        mRotation.setColumn(2, v.x, v.y, v.z);
-        setRotation(mRotation);
+        getmRotation().setColumn(2, v.x, v.y, v.z);
+        setRotation(getmRotation());
     }
 
     public void setData(Object key, Object val) {
@@ -149,11 +150,11 @@ public class JGLNode {
     }
 
     public Matrix4f getTransform() {
-        return mTransform;
+        return getmTransform();
     }
 
     public void setTransform(Matrix4f transform) {
-        mTransform = transform;
+        setmTransform(transform);
     }
 
     public JGLNode getParent() {
@@ -230,11 +231,11 @@ public class JGLNode {
 
     public Matrix3f getRotation() {
         decomposeTransform();
-        return mRotation;
+        return getmRotation();
     }
 
     public void setRotation(Matrix3f rotation) {
-        mRotation = rotation;
+        setmRotation(rotation);
         composeTransform();
     }
 
@@ -256,5 +257,33 @@ public class JGLNode {
     public void setScale(float scale) {
         mScale = scale;
         composeTransform();
+    }
+
+    /**
+     * @return the mTransform
+     */
+    public Matrix4f getmTransform() {
+        return mTransform;
+    }
+
+    /**
+     * @param mTransform the mTransform to set
+     */
+    public void setmTransform(Matrix4f mTransform) {
+        this.mTransform = mTransform;
+    }
+
+    /**
+     * @return the mRotation
+     */
+    public Matrix3f getmRotation() {
+        return mRotation;
+    }
+
+    /**
+     * @param mRotation the mRotation to set
+     */
+    public void setmRotation(Matrix3f mRotation) {
+        this.mRotation = mRotation;
     }
 }

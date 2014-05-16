@@ -67,14 +67,14 @@ public class SplashScreen extends JDialog {
             @Override
             public void uncaughtException(final Thread t, final Throwable e) {
                 final String ex = "Exception", msg = t.getName() + ": ";
-                if (GlobalConfiguration.RUNNING_FROM_JAR) {
+                if (GlobalConfiguration.isRUNNING_FROM_JAR()) {
                     Logger.getLogger(ex).log(Level.SEVERE, "{0}{1}", new Object[]{msg, e.toString()});
                 } else {
                     log.logp(Level.SEVERE, ex, "", msg, e);
                 }
             }
         });
-        if (!GlobalConfiguration.RUNNING_FROM_JAR) {
+        if (!GlobalConfiguration.isRUNNING_FROM_JAR()) {
             System.setErr(new PrintStream(new LogOutputStream(Logger
                     .getLogger("STDERR"), Level.SEVERE), true));
         }
@@ -108,10 +108,10 @@ public class SplashScreen extends JDialog {
         });
         setTitle(GlobalConfiguration.NAME);
         setIconImage(GlobalConfiguration
-                .getImage(GlobalConfiguration.Paths.Resources.ICON));
+                .getImage(Resources.ICON));
         final ImageIcon icon = new ImageIcon();
         icon.setImage(GlobalConfiguration
-                .getImage(GlobalConfiguration.Paths.Resources.SPLASH));
+                .getImage(Resources.SPLASH));
         final JLabel label1 = new JLabel();
         label1.setIcon(icon);
         final LabelLogHandler handler = new LabelLogHandler();
@@ -133,9 +133,10 @@ public class SplashScreen extends JDialog {
         setVisible(true);
         setModalityType(Dialog.ModalityType.MODELESS);
         setAlwaysOnTop(true);
-        final List<Callable<Object>> tasks = new ArrayList<Callable<Object>>(8);
+        final List<Callable<Object>> tasks;
+        tasks = new ArrayList<>(8);
 
-        String error = null;
+        String err = null;
         log.info("Starting Bootstrap");
         bootstrap();
 
@@ -156,16 +157,16 @@ public class SplashScreen extends JDialog {
 
         log.info("Downloading Resources");
         for (final Entry<String, File> item
-                : GlobalConfiguration.Paths.getDownloadCaches().entrySet()) {
+                : Paths.getDownloadCaches().entrySet()) {
             try {
                 HttpClient.download(new URL(item.getKey()), item.getValue());
             } catch (final IOException ignored) {
             }
         }
 
-        error = error == null ? taskError : error;
+        err = err == null ? taskError : err;
 
-        if (error == null) {
+        if (err == null) {
             this.error = false;
             log.info("Loading Application");
             GlobalConfiguration.registerLogging();
@@ -173,19 +174,19 @@ public class SplashScreen extends JDialog {
         } else {
             this.error = true;
             progress.setIndeterminate(false);
-            log.severe(error);
+            log.severe(err);
         }
     }
 
     private void extractResources() throws IOException {
         final ClassLoader loader = getClass().getClassLoader();
-        final String root = GlobalConfiguration.RUNNING_FROM_JAR ? GlobalConfiguration.Paths.Resources.ROOT
+        final String root = GlobalConfiguration.isRUNNING_FROM_JAR() ? Resources.ROOT
                 + "/"
-                : GlobalConfiguration.Paths.ROOT + File.separator;
+                : Paths.ROOT + File.separator;
 
-        if (GlobalConfiguration.RUNNING_FROM_JAR) {
+        if (GlobalConfiguration.isRUNNING_FROM_JAR()) {
             try {
-                if (GlobalConfiguration.getCurrentOperatingSystem() == GlobalConfiguration.OperatingSystem.WINDOWS) {
+                if (GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS) {
 
                 } else {
 

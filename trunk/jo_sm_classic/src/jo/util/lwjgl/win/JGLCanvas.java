@@ -28,6 +28,7 @@ import jo.vecmath.logic.Color4fLogic;
 import jo.vecmath.logic.Matrix4fLogic;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -47,15 +48,20 @@ public class JGLCanvas extends Canvas {
     private int mHeight;
 
     private boolean mCloseRequested = false;
-    private AtomicReference<Dimension> mNewCanvasSize = new AtomicReference<Dimension>();
+    private AtomicReference<Dimension> mNewCanvasSize;
 
     private boolean[] mMouseState;
-    private List<MouseListener> mMouseListeners = new ArrayList<MouseListener>();
-    private List<MouseMotionListener> mMouseMotionListeners = new ArrayList<MouseMotionListener>();
-    private List<MouseWheelListener> mMouseWheelListeners = new ArrayList<MouseWheelListener>();
-    private List<KeyListener> mKeyListeners = new ArrayList<KeyListener>();
+    private final List<MouseListener> mMouseListeners;
+    private final List<MouseMotionListener> mMouseMotionListeners;
+    private final List<MouseWheelListener> mMouseWheelListeners;
+    private final List<KeyListener> mKeyListeners;
 
     public JGLCanvas() {
+        this.mNewCanvasSize = new AtomicReference<>();
+        this.mMouseListeners = new ArrayList<>();
+        this.mMouseWheelListeners = new ArrayList<>();
+        this.mMouseMotionListeners = new ArrayList<>();
+        this.mKeyListeners = new ArrayList<>();
         mIB16 = BufferUtils.createIntBuffer(16);
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -92,6 +98,7 @@ public class JGLCanvas extends Canvas {
 
     private void init() {
         Thread t = new Thread("Render Thread") {
+            @Override
             public void run() {
                 doRenderLoop();
             }
@@ -103,16 +110,16 @@ public class JGLCanvas extends Canvas {
         GL11.glEnable(GL11.GL_FOG);
         GL11.glFogi(GL11.GL_FOG_MODE, conv(mScene.getFogMode()));
         if (!Matrix4fLogic.epsilonEquals(mScene.getFogDensity(), 1)) {
-            GL11.glFogf(GL11.GL_FOG_DENSITY, (float) mScene.getFogDensity());
+            GL11.glFogf(GL11.GL_FOG_DENSITY, mScene.getFogDensity());
         }
         if (!Matrix4fLogic.epsilonEquals(mScene.getFogStart(), 0)) {
-            GL11.glFogf(GL11.GL_FOG_START, (float) mScene.getFogStart());
+            GL11.glFogf(GL11.GL_FOG_START, mScene.getFogStart());
         }
         if (!Matrix4fLogic.epsilonEquals(mScene.getFogEnd(), 1)) {
-            GL11.glFogf(GL11.GL_FOG_END, (float) mScene.getFogEnd());
+            GL11.glFogf(GL11.GL_FOG_END, mScene.getFogEnd());
         }
         if (!Matrix4fLogic.epsilonEquals(mScene.getFogIndex(), 0)) {
-            GL11.glFogf(GL11.GL_FOG_INDEX, (float) mScene.getFogIndex());
+            GL11.glFogf(GL11.GL_FOG_INDEX, mScene.getFogIndex());
         }
         if (mScene.getFogColor() != null) {
             GL11.glFog(GL11.GL_FOG_COLOR, Color4fLogic.toFloatBuffer(mScene.getFogColor()));
@@ -191,7 +198,7 @@ public class JGLCanvas extends Canvas {
     private void doRenderLoop() {
         try {
             while (!isDisplayable()) {
-                Thread.sleep(100);
+                Thread.sleep(50);
             }
             Display.setParent(this);
             Display.setVSyncEnabled(true);
@@ -235,12 +242,12 @@ public class JGLCanvas extends Canvas {
             }
 
             Display.destroy();
-        } catch (Exception e) {
+        } catch (InterruptedException | LWJGLException e) {
             e.printStackTrace();
         }
     }
 
-    private static final Map<Integer, Integer> KEY_LWJGL_TO_AWT = new HashMap<Integer, Integer>();
+    private static final Map<Integer, Integer> KEY_LWJGL_TO_AWT = new HashMap<>();
 
     static {
         KEY_LWJGL_TO_AWT.put(Keyboard.KEY_0, KeyEvent.VK_0);
@@ -438,7 +445,7 @@ public class JGLCanvas extends Canvas {
 
     @Override
     public synchronized void addMouseListener(MouseListener l) {
-        if (System.getProperty("os.name").indexOf("Mac") >= 0) {
+        if (System.getProperty("os.name").contains("Mac")) {
             super.addMouseListener(l);
         } else {
             mMouseListeners.add(l);
@@ -447,7 +454,7 @@ public class JGLCanvas extends Canvas {
 
     @Override
     public synchronized void addMouseMotionListener(MouseMotionListener l) {
-        if (System.getProperty("os.name").indexOf("Mac") >= 0) {
+        if (System.getProperty("os.name").contains("Mac")) {
             super.addMouseMotionListener(l);
         } else {
             mMouseMotionListeners.add(l);
@@ -456,7 +463,7 @@ public class JGLCanvas extends Canvas {
 
     @Override
     public synchronized void addMouseWheelListener(MouseWheelListener l) {
-        if (System.getProperty("os.name").indexOf("Mac") >= 0) {
+        if (System.getProperty("os.name").contains("Mac")) {
             super.addMouseWheelListener(l);
         } else {
             mMouseWheelListeners.add(l);
@@ -484,6 +491,7 @@ public class JGLCanvas extends Canvas {
         super.addKeyListener(l);
     }
 
+    @Override
     public synchronized void removeKeyListener(KeyListener l) {
         mKeyListeners.remove(l);
     }

@@ -38,14 +38,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 import java.util.logging.FileHandler;
 import java.util.logging.LogManager;
 
 import javax.imageio.ImageIO;
-import javax.swing.filechooser.FileSystemView;
 
 import jo.log.LogFormatter;
 import jo.log.SystemConsoleHandler;
@@ -59,151 +56,18 @@ import jo.log.TextAreaLogHandler;
 @SuppressWarnings({"CallToPrintStackTrace", "null"})
 public class GlobalConfiguration {
 
-    public enum OperatingSystem {
 
-        MAC, WINDOWS, LINUX, UNKNOWN
-    }
-
-    public static class Paths {
-
-        public static class Resources {
-
-            public static final String ROOT = "resources";
-            public static final String ROOT_IMG = "/" + ROOT + "/images";
-            public static final String SPLASH = ROOT_IMG + "/splash.png";
-            public static final String ICON = ROOT_IMG + "/icon.png";
-            public static final String HOME = ROOT_IMG + "/home.png";
-            public static final String PLAY = ROOT_IMG + "/play.png";
-            public static final String CUT = ROOT_IMG + "/cut.png";
-            public static final String COPY = ROOT_IMG + "/copy.png";
-            public static final String PASTE = ROOT_IMG + "/paste.png";
-            public static final String SAVE = ROOT_IMG + "/save.png";
-            public static final String UPARROW = ROOT_IMG + "/arrow_up.png";
-            public static final String DOWNLOAD = ROOT_IMG + "/download.png";
-            public static final String DOWNARROW = ROOT_IMG + "/arrow_down.png";
-            public static final String VERSION = ROOT + "/version.dat";
-        }
-
-        public static class URLs {
-
-            public static final String URL = "http://";
-            public static final String CODE = ".googlecode.com/";
-            public static final String FILE = "smedit2";
-            public static final String HOME = "smedit2";
-            public static final String LOC = "svn/trunk/resources/";
-            public static final String SVNDAT = URL + FILE + CODE + LOC;
-            public static final String SVNICON = URL + FILE + CODE + LOC + "resources/images";
-            public static final String OPENSVN = URL + HOME + CODE;
-            /* url */
-            public static final String PROJECT = URL + "code.google.com/p/smedit2/";
-            public static final String SITE = URL + "lazygamerz.org";
-            /* files */
-
-            /* icons */
-            public static final String ICON_FILE_ACCOUNT = SVNICON + "account.png";
-
-        }
-
-        public static final String ROOT = "." + File.separator + "resources";
-        public static final String VERSION = ROOT + File.separator + "version.dat";
-
-        private static Map<String, File> downloadCache;
-        /* file locations */
-
-        public static String getCacheDirectory() {
-            return Paths.getHomeDirectory() + File.separator + "Cache";
-        }
-
-        public static String getCollectDirectory() {
-            final File dir = new File(
-                    GlobalConfiguration.Paths.getPluginsDirectory(),
-                    ".jar");
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-            String path = dir.getAbsolutePath();
-            try {
-                path = URLDecoder.decode(path, "UTF-8");
-            } catch (final UnsupportedEncodingException ignored) {
-            }
-            return path;
-        }
-
-        public static Map<String, File> getDownloadCaches() {
-            if (downloadCache == null) {
-                downloadCache = new HashMap<>(8);
-                /* FILES */
-
-                /* ICONS */
-                downloadCache.put(URLs.ICON_FILE_ACCOUNT, new File(getIconDirectory(), "account.png"));
-
-            }
-            return downloadCache;
-        }
-        /* folder directories */
-
-        public static String getHomeDirectory() {
-            final String env = System.getenv(GlobalConfiguration.NAME
-                    .toUpperCase() + "_HOME");
-            if ((env == null) || env.isEmpty()) {
-                return (GlobalConfiguration.getCurrentOperatingSystem() == OperatingSystem.WINDOWS ? FileSystemView
-                        .getFileSystemView().getDefaultDirectory()
-                        .getAbsolutePath()
-                        : Paths.getUnixHome())
-                        + File.separator + GlobalConfiguration.NAME;
-            } else {
-                return env;
-            }
-        }
-
-        public static String getIconDirectory() {
-            return Paths.getHomeDirectory() + File.separator + "resources" + File.separator + "images";
-        }
-
-        public static String getLogsDirectory() {
-            return Paths.getHomeDirectory() + File.separator + "Logs";
-        }
-
-        public static String getMenuCache() {
-            return Paths.getSettingsDirectory() + File.separator + "Menu.txt";
-        }
-
-        public static String getPathCache() {
-            return Paths.getSettingsDirectory() + File.separator + "path.txt";
-        }
-
-        public static String getScreenshotsDirectory() {
-            return Paths.getHomeDirectory() + File.separator + "Screenshots";
-        }
-
-        public static String getPluginsDirectory() {
-            return Paths.getHomeDirectory() + File.separator + "Plugins";
-        }
-
-        public static String getSettingsDirectory() {
-            return Paths.getHomeDirectory() + File.separator + "Settings";
-        }
-
-        public static String getUnixHome() {
-            final String home = System.getProperty("user.home");
-            return home == null ? "~" : home;
-        }
-
-        public static String getVersionCache() {
-            return Paths.getCacheDirectory() + File.separator + "info.dat";
-        }
-    }
     public static final String NAME = "SMEdit";
     public static final String NAME_LOWERCASE = NAME.toLowerCase();
     public static final String SITE_NAME = "Lazygamerz";
     private static final OperatingSystem CURRENT_OS;
-    public static boolean RUNNING_FROM_JAR = false;
+    private static boolean RUNNING_FROM_JAR = false;
 
     static {
         final URL resource = GlobalConfiguration.class.getClassLoader()
-                .getResource(Paths.Resources.VERSION);
+                .getResource(Resources.VERSION);
         if (resource != null) {
-            GlobalConfiguration.RUNNING_FROM_JAR = true;
+            GlobalConfiguration.setRUNNING_FROM_JAR(true);
 
         }
         final String os = System.getProperty("os.name");
@@ -217,7 +81,7 @@ public class GlobalConfiguration {
             CURRENT_OS = OperatingSystem.UNKNOWN;
         }
 
-        if (GlobalConfiguration.RUNNING_FROM_JAR) {
+        if (GlobalConfiguration.isRUNNING_FROM_JAR()) {
             String path;
             path = resource.toString();
             try {
@@ -257,7 +121,7 @@ public class GlobalConfiguration {
         dirs.add(Paths.getPluginsDirectory());
         dirs.add(Paths.getCacheDirectory());
         dirs.add(Paths.getSettingsDirectory());
-        if (GlobalConfiguration.RUNNING_FROM_JAR) {
+        if (GlobalConfiguration.isRUNNING_FROM_JAR()) {
 
         }
 
@@ -292,15 +156,15 @@ public class GlobalConfiguration {
 
     public static URL getResourceURL(final String path)
             throws MalformedURLException {
-        return RUNNING_FROM_JAR ? GlobalConfiguration.class.getResource(path)
+        return isRUNNING_FROM_JAR() ? GlobalConfiguration.class.getResource(path)
                 : new File(path).toURI().toURL();
     }
 
     public static int getVersion() {
         try {
-            final InputStream is = RUNNING_FROM_JAR ? GlobalConfiguration.class
+            final InputStream is = isRUNNING_FROM_JAR() ? GlobalConfiguration.class
                     .getClassLoader().getResourceAsStream(
-                            Paths.Resources.VERSION) : new FileInputStream(
+                            Resources.VERSION) : new FileInputStream(
                             Paths.VERSION);
 
             int off = 0;
@@ -337,5 +201,19 @@ public class GlobalConfiguration {
                     new ByteArrayInputStream(logout.toByteArray()));
         } catch (final IOException | SecurityException ignored) {
         }
+    }
+
+    /**
+     * @return the RUNNING_FROM_JAR
+     */
+    public static boolean isRUNNING_FROM_JAR() {
+        return RUNNING_FROM_JAR;
+    }
+
+    /**
+     * @param aRUNNING_FROM_JAR the RUNNING_FROM_JAR to set
+     */
+    public static void setRUNNING_FROM_JAR(boolean aRUNNING_FROM_JAR) {
+        RUNNING_FROM_JAR = aRUNNING_FROM_JAR;
     }
 }

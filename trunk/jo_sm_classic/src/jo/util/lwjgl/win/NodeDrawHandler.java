@@ -58,8 +58,8 @@ public class NodeDrawHandler implements IDrawHandler {
             FloatBuffer mid = BufferLogic.createFloatBuffer(3);
             GLU.gluProject(0, 0, 0, modelView, projection, viewport, mid);
             obj.setScreen(new Point3f(mid.get(0), mid.get(1), mid.get(2)));
-            obj.setScreenLowBounds(new Point3f((float) Math.min(low.get(0), high.get(0)), (float) Math.min(low.get(1), high.get(1)), (float) Math.min(low.get(2), high.get(2))));
-            obj.setScreenHighBounds(new Point3f((float) Math.max(low.get(0), high.get(0)), (float) Math.max(low.get(1), high.get(1)), (float) Math.max(low.get(2), high.get(2))));
+            obj.setScreenLowBounds(new Point3f(Math.min(low.get(0), high.get(0)), Math.min(low.get(1), high.get(1)), Math.min(low.get(2), high.get(2))));
+            obj.setScreenHighBounds(new Point3f(Math.max(low.get(0), high.get(0)), Math.max(low.get(1), high.get(1)), Math.max(low.get(2), high.get(2))));
 //        System.out.println("modelView="+DoubleUtils.toString(modelView));
 //        System.out.println("projection="+DoubleUtils.toString(projection));
 //        System.out.println("dviewport="+DoubleUtils.toString(dviewport));

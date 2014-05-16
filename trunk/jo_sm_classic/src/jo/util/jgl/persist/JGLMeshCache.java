@@ -30,8 +30,8 @@ import jo.sm.logic.utils.ArrayUtils;
 
 public class JGLMeshCache {
 
-    private static Map<Integer, JGLMesh> mIDToMesh = new HashMap<Integer, JGLMesh>();
-    private static Set<Integer> mMRUMesh = new HashSet<Integer>();
+    private static final Map<Integer, JGLMesh> mIDToMesh = new HashMap<>();
+    private static final Set<Integer> mMRUMesh = new HashSet<>();
 
     public static void markMesh() {
         synchronized (mIDToMesh) {
@@ -59,7 +59,7 @@ public class JGLMeshCache {
     }
 
     public static int[] getUnUsedMeshes() {
-        Set<Integer> unused = new HashSet<Integer>();
+        Set<Integer> unused = new HashSet<>();
         synchronized (mIDToMesh) {
             unused.addAll(mIDToMesh.keySet());
             unused.removeAll(mMRUMesh);

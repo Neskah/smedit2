@@ -22,16 +22,17 @@
 package jo.util.jgl.obj;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
-import jo.vecmath.Color4f;
-
+import java.util.logging.Logger;
 import jo.util.jgl.enm.JGLColorMaterialFace;
 import jo.util.jgl.enm.JGLColorMaterialMode;
 import jo.util.jgl.enm.JGLFogMode;
 import jo.util.jgl.obj.txt.JGLTextGroup;
+import jo.vecmath.Color4f;
 
 public class JGLScene {
+    private static final Logger LOG = Logger.getLogger(JGLScene.class.getName());
 
     private JGLNode mNode;
     private Color4f mBackground;
@@ -122,7 +123,7 @@ public class JGLScene {
     }
 
     public List<Runnable> getBetweenRenderers() {
-        return mBetweenRenderers;
+        return Collections.unmodifiableList(mBetweenRenderers);
     }
 
     public void setBetweenRenderers(List<Runnable> betweenRenderers) {
@@ -242,7 +243,7 @@ public class JGLScene {
     }
 
     public List<JGLTextGroup> getTexts() {
-        return mTexts;
+        return Collections.unmodifiableList(mTexts);
     }
 
     public void setTexts(List<JGLTextGroup> texts) {

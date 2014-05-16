@@ -26,23 +26,23 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-
-import jo.vecmath.Point3f;
-
 import jo.util.jgl.obj.JGLGroup;
 import jo.util.jgl.obj.JGLNode;
 import jo.util.jgl.obj.tri.JGLObj;
+import jo.vecmath.Point3f;
 
 public class SceneLogic {
 
     public static Iterator<JGLNode> sceneIterator(JGLNode root) {
-        List<JGLNode> items = new ArrayList<>();
+        List<JGLNode> items;
+        items = new ArrayList<>();
         addItems(items, root, false);
         return items.iterator();
     }
 
     public static Iterator<JGLObj> objIterator(JGLNode root) {
-        List<JGLObj> items = new ArrayList<>();
+        List<JGLObj> items;
+        items = new ArrayList<>();
         addItems(items, root, true);
         return items.iterator();
     }
@@ -77,7 +77,8 @@ public class SceneLogic {
     }
 
     public static List<JGLObj> intersect(JGLNode root, float x, float y) {
-        List<JGLObj> hits = new ArrayList<>();
+        List<JGLObj> hits;
+        hits = new ArrayList<>();
         for (Iterator<JGLObj> i = objIterator(root); i.hasNext();) {
             JGLObj o = i.next();
             if (isIntersect(o, x, y)) {
@@ -87,8 +88,10 @@ public class SceneLogic {
         Collections.sort(hits, new Comparator<JGLObj>() {
             @Override
             public int compare(JGLObj lhs, JGLObj rhs) {
-                float lhsz = (float) (lhs.getScreenLowBounds().z + lhs.getScreenHighBounds().z) / 2f;
-                float rhsz = (float) (rhs.getScreenLowBounds().z + rhs.getScreenHighBounds().z) / 2f;
+                float lhsz;
+                lhsz = (lhs.getScreenLowBounds().z + lhs.getScreenHighBounds().z) / 2f;
+                float rhsz;
+                rhsz = (rhs.getScreenLowBounds().z + rhs.getScreenHighBounds().z) / 2f;
                 return (int) Math.signum(lhsz - rhsz);
             }
         });
@@ -101,14 +104,14 @@ public class SceneLogic {
         if ((lowBounds == null) || (highBounds == null)) {
             return false;
         }
-        //System.out.println(obj.getLowBounds()+"--"+obj.getHighBounds()+" -> "+lowBounds+"--"+highBounds);
-        float lowX = (float) Math.min(lowBounds.x, highBounds.x);
-        float highX = (float) Math.max(lowBounds.x, highBounds.x);
-        float lowY = (float) Math.min(lowBounds.y, highBounds.y);
-        float highY = (float) Math.max(lowBounds.y, highBounds.y);
-        if ((lowX <= x) && (x <= highX) && (lowY <= y) && (y <= highY)) {
-            return true;
-        }
-        return false;
+        float lowX;
+        lowX = Math.min(lowBounds.x, highBounds.x);
+        float highX;
+        highX = Math.max(lowBounds.x, highBounds.x);
+        float lowY;
+        lowY = Math.min(lowBounds.y, highBounds.y);
+        float highY;
+        highY = Math.max(lowBounds.y, highBounds.y);
+        return (lowX <= x) && (x <= highX) && (lowY <= y) && (y <= highY);
     }
 }

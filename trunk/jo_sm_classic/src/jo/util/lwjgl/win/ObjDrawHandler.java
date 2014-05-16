@@ -19,7 +19,7 @@ public class ObjDrawHandler extends NodeDrawHandler {
             if (obj.isWireframe()) {
                 GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
                 if (obj.getWireColor() != null) {
-                    GL11.glColor3f((float) obj.getWireColor().x, (float) obj.getWireColor().y, (float) obj.getWireColor().z);
+                    GL11.glColor3f(obj.getWireColor().x, obj.getWireColor().y, obj.getWireColor().z);
                 }
             } else {
                 GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);

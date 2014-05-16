@@ -21,10 +21,9 @@
  */
 package jo.util.jgl.obj.txt;
 
+import jo.util.jgl.obj.JGLNode;
 import jo.vecmath.Color3f;
 import jo.vecmath.Color4f;
-
-import jo.util.jgl.obj.JGLNode;
 
 public class JGLText2D {
 

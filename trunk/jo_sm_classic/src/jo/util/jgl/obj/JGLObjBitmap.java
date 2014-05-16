@@ -21,9 +21,11 @@
  */
 package jo.util.jgl.obj;
 
+import java.util.logging.Logger;
 import jo.util.jgl.obj.tri.JGLObj;
 
 public class JGLObjBitmap extends JGLObj {
+    private static final Logger LOG = Logger.getLogger(JGLObjBitmap.class.getName());
 
     private int mImageID;
     private int mLeft;

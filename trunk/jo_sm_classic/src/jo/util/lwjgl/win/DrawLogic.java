@@ -19,7 +19,7 @@ import org.lwjgl.util.glu.GLU;
 
 public class DrawLogic {
 
-    private static Map<Class<?>, IDrawHandler> mHandlers = new HashMap<Class<?>, IDrawHandler>();
+    private static final Map<Class<?>, IDrawHandler> mHandlers = new HashMap<>();
 
     static {
         mHandlers.put(JGLNode.class, new NodeDrawHandler());
@@ -68,7 +68,7 @@ public class DrawLogic {
             GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
             if (scene.getBackground() != null) {
                 Color4f bg = scene.getBackground();
-                GL11.glClearColor((float) bg.x, (float) bg.y, (float) bg.z, (float) bg.w);
+                GL11.glClearColor(bg.x, bg.y, bg.z, bg.w);
             }
             GL11.glCullFace(GL11.GL_FRONT);
             GL11.glEnable(GL11.GL_CULL_FACE);
@@ -76,7 +76,8 @@ public class DrawLogic {
 
             GL11.glMatrixMode(GL11.GL_PROJECTION);
             GL11.glLoadIdentity();
-            float aspect = (float) x / (float) y;
+            float aspect;
+            aspect = x / (float) y;
             GLU.gluPerspective(scene.getFieldOfView(), aspect, scene.getMinZ(), scene.getMaxZ());
 
             GL11.glMatrixMode(GL11.GL_MODELVIEW);

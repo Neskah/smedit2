@@ -17,8 +17,7 @@ public class RectDrawHandler extends NodeDrawHandler {
 //        gl.glEnable(GL11.GL_CULL_FACE);
 //        gl.glCullFace(GL11.GL_FRONT);
         GL11.glDisable(GL11.GL_CULL_FACE);
-        GL11.glRectf((float) rect.getUpperLeft().x, (float) rect.getUpperLeft().y,
-                (float) rect.getLowerRight().x, (float) rect.getLowerRight().y);
+        GL11.glRectf(rect.getUpperLeft().x, rect.getUpperLeft().y, rect.getLowerRight().x, rect.getLowerRight().y);
         postDraw(tick, node);
     }
 }

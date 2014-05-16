@@ -35,9 +35,37 @@ import jo.sm.ui.UpdateGUI;
 
 public class Update {
 
-    public static int update = -1;
+    private static int update = -1;
+
+    /**
+     * @return the update
+     */
+    public static int getUpdate() {
+        return update;
+    }
+
+    /**
+     * @param aUpdate the update to set
+     */
+    public static void setUpdate(int aUpdate) {
+        update = aUpdate;
+    }
+
+    /**
+     * @return the download
+     */
+    public static UpdateGUI getDownload() {
+        return download;
+    }
+
+    /**
+     * @param aDownload the download to set
+     */
+    public static void setDownload(UpdateGUI aDownload) {
+        download = aDownload;
+    }
     private final Window parent;
-    public static UpdateGUI download = null;
+    private static UpdateGUI download = null;
     private static final byte[] buffer = new byte[1024];
 
     private static int getLatestVersion() {
@@ -57,17 +85,17 @@ public class Update {
             return;
         }
         if (getLatestVersion() > GlobalConfiguration.getVersion()) {
-            update = JOptionPane.showConfirmDialog(parent,
+            setUpdate(JOptionPane.showConfirmDialog(parent,
                     "A newer version of the application is available.\n\n"
-                    + "Do you wish to update?\n\n"
-                    + "Choosing not to update may result\n"
-                    + "in problems running the client...",
-                    "Update Found", JOptionPane.YES_NO_OPTION);
-            if (update != 0) {
+                            + "Do you wish to update?\n\n"
+                            + "Choosing not to update may result\n"
+                            + "in problems running the client...",
+                    "Update Found", JOptionPane.YES_NO_OPTION));
+            if (getUpdate() != 0) {
                 return;
             }
             try {
-                if (update == 0) {
+                if (getUpdate() == 0) {
                     updateApp();
                 }
             } catch (final Exception e) {

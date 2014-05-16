@@ -65,6 +65,8 @@ import jo.sm.ui.logic.ShipSpec;
 import jo.sm.ui.logic.ShipTreeLogic;
 import jo.sm.ui.lwjgl.LWJGLRenderPanel;
 import jo.util.GlobalConfiguration;
+import jo.util.Paths;
+import jo.util.Resources;
 import jo.util.SplashScreen;
 
 @SuppressWarnings("serial")
@@ -121,10 +123,10 @@ public class RenderFrame extends JFrame {
         getContentPane().add(BorderLayout.CENTER, mClient);
         getContentPane().add(BorderLayout.SOUTH, new StatusPanel());
         // link
-        menuFile.addMenuListener(new PluginPopupListener(IBlocksPlugin.SUBTYPE_FILE));
-        menuEdit.addMenuListener(new PluginPopupListener(IBlocksPlugin.SUBTYPE_EDIT));
-        menuView.addMenuListener(new PluginPopupListener(IBlocksPlugin.SUBTYPE_VIEW));
-        menuModify.addMenuListener(new PluginPopupListener(IBlocksPlugin.SUBTYPE_MODIFY, IBlocksPlugin.SUBTYPE_GENERATE));
+        menuFile.addMenuListener(new PluginPopupListener(this, IBlocksPlugin.SUBTYPE_FILE));
+        menuEdit.addMenuListener(new PluginPopupListener(this, IBlocksPlugin.SUBTYPE_EDIT));
+        menuView.addMenuListener(new PluginPopupListener(this, IBlocksPlugin.SUBTYPE_VIEW));
+        menuModify.addMenuListener(new PluginPopupListener(this, IBlocksPlugin.SUBTYPE_MODIFY, IBlocksPlugin.SUBTYPE_GENERATE));
 
         addWindowListener(new WindowAdapter() {
 
@@ -142,7 +144,7 @@ public class RenderFrame extends JFrame {
             }
         });
         setSize(1024, 768);
-        setIconImage(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON));
+        setIconImage(GlobalConfiguration.getImage(Resources.ICON));
 
         EventQueue.invokeLater(new Runnable() {
 
@@ -157,7 +159,7 @@ public class RenderFrame extends JFrame {
 
     }
 
-    private void updatePopup(JMenu menu, int... subTypes) {
+    public void updatePopup(JMenu menu, int... subTypes) {
         MenuLogic.clearPluginMenus(menu);
         ShipSpec spec = StarMadeLogic.getInstance().getCurrentModel();
         if (spec == null) {
@@ -231,35 +233,15 @@ public class RenderFrame extends JFrame {
         mClient = client;
     }
 
-    class PluginPopupListener implements MenuListener {
-
-        private final int[] mTypes;
-
-        public PluginPopupListener(int... types) {
-            mTypes = types;
-        }
-
-        @Override
-        public void menuCanceled(MenuEvent ev) {
-        }
-
-        @Override
-        public void menuDeselected(MenuEvent ev) {
-        }
-
-        @Override
-        public void menuSelected(MenuEvent ev) {
-            updatePopup((JMenu) ev.getSource(), mTypes);
-        }
-    }
 
     private void trayIcon() {
         if (SystemTray.isSupported()) {
             final SystemTray tray = SystemTray.getSystemTray();
             final Image icon = GlobalConfiguration
-                    .getImage(GlobalConfiguration.Paths.Resources.ICON);
+                    .getImage(Resources.ICON);
             final ActionListener exitListener = new ActionListener() {
 
+                @Override
                 public void actionPerformed(final ActionEvent e) {
                     System.exit(0);
                 }
@@ -267,6 +249,7 @@ public class RenderFrame extends JFrame {
 
             final ActionListener rightClickListener = new ActionListener() {
 
+                @Override
                 public void actionPerformed(final ActionEvent e) {
                     final String msg = "You have controled the view of the client by\n"
                             + "right clicking on the system tray icon,\n"
@@ -281,6 +264,7 @@ public class RenderFrame extends JFrame {
 
             final ActionListener clickListener = new ActionListener() {
 
+                @Override
                 public void actionPerformed(final ActionEvent e) {
 
                     final String msg = "You have controled the view of the client by,\n"

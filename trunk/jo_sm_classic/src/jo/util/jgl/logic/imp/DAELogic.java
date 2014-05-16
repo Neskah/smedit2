@@ -27,9 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-
-import jo.vecmath.Point3f;
-import jo.vecmath.Point4f;
 import jo.sm.logic.utils.FloatUtils;
 import jo.sm.logic.utils.IntegerUtils;
 import jo.sm.logic.utils.StringUtils;
@@ -37,7 +34,8 @@ import jo.sm.logic.utils.XMLUtils;
 import jo.util.jgl.obj.JGLGroup;
 import jo.util.jgl.obj.JGLNode;
 import jo.util.jgl.obj.tri.JGLObj;
-
+import jo.vecmath.Point3f;
+import jo.vecmath.Point4f;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -66,9 +64,12 @@ public class DAELogic {
                     System.out.println("no color");
                     color = new Point4f(.9f, .9f, .9f, .9f);
                 }
-                Map<Integer, String> offsetToSemantic = new HashMap<>();
-                Map<String, List<Short>> semanticToTriangles = new HashMap<>();
-                Map<String, List<Point3f>> semanticToFloats = new HashMap<>();
+                Map<Integer, String> offsetToSemantic;
+                offsetToSemantic = new HashMap<>();
+                Map<String, List<Short>> semanticToTriangles;
+                semanticToTriangles = new HashMap<>();
+                Map<String, List<Point3f>> semanticToFloats;
+                semanticToFloats = new HashMap<>();
                 for (Node input : XMLUtils.findNodes(t, "input")) {
                     String semantic = XMLUtils.getAttribute(input, "semantic");
                     int offset = IntegerUtils.parseInt(XMLUtils.getAttribute(input, "offset"));
