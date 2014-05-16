@@ -21,12 +21,13 @@
  */
 package jo.util.jgl.obj;
 
-import jo.vecmath.Color3f;
-
+import java.util.logging.Logger;
 import jo.util.jgl.JGLUtils;
 import jo.util.jgl.obj.tri.JGLObj;
+import jo.vecmath.Color3f;
 
 public final class JGLObjMesh extends JGLObj {
+    private static final Logger LOG = Logger.getLogger(JGLObjMesh.class.getName());
 
     private int mMeshID;
     private Color3f mBaseColor;

@@ -48,9 +48,9 @@ public class JGLUtils {
 
     public static Color3f rndColor(Random r, Color3f baseColor, Color3f deltaColor) {
         Color3f color = new Color3f();
-        color.x = JGLUtils.rndColor(r, (float) baseColor.x, (float) deltaColor.x);
-        color.y = JGLUtils.rndColor(r, (float) baseColor.y, (float) deltaColor.y);
-        color.z = JGLUtils.rndColor(r, (float) baseColor.z, (float) deltaColor.z);
+        color.x = JGLUtils.rndColor(r, baseColor.x, deltaColor.x);
+        color.y = JGLUtils.rndColor(r, baseColor.y, deltaColor.y);
+        color.z = JGLUtils.rndColor(r, baseColor.z, deltaColor.z);
         return color;
     }
 
@@ -70,9 +70,9 @@ public class JGLUtils {
         float[] colorArray = new float[vertexCount * 4];
         Random r = new Random();
         for (int i = 0; i < colorArray.length; i += 4) {
-            colorArray[i + 0] = rndColorf(r, (float) baseColor.x, (float) deltaColor.x);
-            colorArray[i + 1] = rndColorf(r, (float) baseColor.y, (float) deltaColor.y);
-            colorArray[i + 2] = rndColorf(r, (float) baseColor.z, (float) deltaColor.z);
+            colorArray[i + 0] = rndColorf(r, baseColor.x, deltaColor.x);
+            colorArray[i + 1] = rndColorf(r, baseColor.y, deltaColor.y);
+            colorArray[i + 2] = rndColorf(r, baseColor.z, deltaColor.z);
             colorArray[i + 3] = 1;
         }
         return colorArray;

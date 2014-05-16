@@ -37,20 +37,15 @@ import java.util.Map.Entry;
 import java.util.TimeZone;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
-
 import jo.util.GlobalConfiguration;
-import jo.util.GlobalConfiguration.OperatingSystem;
+import jo.util.OperatingSystem;
 
-/**
- *
- * @author Paris @ RSBot development for the powerbot.org client - version 1.0
- * @author Runedev development team - version 1.1
- */
+
 public class HttpClient {
 
     private static final Logger log = Logger.getLogger(HttpClient.class
             .getName());
-    static String httpUserAgent = null;
+    private static String httpUserAgent = null;
 
     public static String getHttpUserAgent() {
         if (httpUserAgent == null) {
@@ -310,5 +305,15 @@ public class HttpClient {
             e.printStackTrace();
             return data;
         }
+    }
+
+    /**
+     * @param aHttpUserAgent the httpUserAgent to set
+     */
+    public static void setHttpUserAgent(String aHttpUserAgent) {
+        httpUserAgent = aHttpUserAgent;
+    }
+
+    private HttpClient() {
     }
 }

@@ -22,6 +22,7 @@
 package jo.util.jgl.persist;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -42,10 +43,14 @@ public class JGLMesh {
 
     public JGLMesh(InputStream is) {
         this();
-        List<Float> coords = new ArrayList<Float>();
-        List<Short> icoords = new ArrayList<Short>();
-        List<Float> ncoords = new ArrayList<Float>();
-        List<Float> tcoords = new ArrayList<Float>();
+        List<Float> coords;
+        coords = new ArrayList<>();
+        List<Short> icoords;
+        icoords = new ArrayList<>();
+        List<Float> ncoords;
+        ncoords = new ArrayList<>();
+        List<Float> tcoords;
+        tcoords = new ArrayList<>();
         try {
             BufferedReader rdr = new BufferedReader(new InputStreamReader(is, "utf-8"));
             for (;;) {
@@ -58,35 +63,40 @@ public class JGLMesh {
                     continue;
                 }
                 String cmd = st.nextToken();
-                if ("v".equals(cmd)) {
-                    coords.add(Float.parseFloat(st.nextToken()));
-                    coords.add(Float.parseFloat(st.nextToken()));
-                    coords.add(Float.parseFloat(st.nextToken()));
-                } else if ("n".equals(cmd)) {
-                    ncoords.add(Float.parseFloat(st.nextToken()));
-                    ncoords.add(Float.parseFloat(st.nextToken()));
-                    ncoords.add(Float.parseFloat(st.nextToken()));
-                } else if ("u0".equals(cmd)) {
-                    tcoords.add(Float.parseFloat(st.nextToken()));
-                    tcoords.add(Float.parseFloat(st.nextToken()));
-                } else if ("i".equals(cmd)) {
-                    short p1 = Short.parseShort(st.nextToken());
-                    if (p1 == 3) {
-                        short p2 = Short.parseShort(st.nextToken());
-                        short p3 = Short.parseShort(st.nextToken());
-                        short p4 = Short.parseShort(st.nextToken());
-                        icoords.add(p2);
-                        icoords.add(p3);
-                        icoords.add(p4);
-                    } else {
-                        System.out.println("Unknown i command '" + line + "'");
+                if (null != cmd) {
+                    switch (cmd) {
+                        case "v":
+                            coords.add(Float.parseFloat(st.nextToken()));
+                            coords.add(Float.parseFloat(st.nextToken()));
+                            coords.add(Float.parseFloat(st.nextToken()));
+                            break;
+                        case "n":
+                            ncoords.add(Float.parseFloat(st.nextToken()));
+                            ncoords.add(Float.parseFloat(st.nextToken()));
+                            ncoords.add(Float.parseFloat(st.nextToken()));
+                            break;
+                        case "u0":
+                            tcoords.add(Float.parseFloat(st.nextToken()));
+                            tcoords.add(Float.parseFloat(st.nextToken()));
+                            break;
+                        case "i":
+                            short p1 = Short.parseShort(st.nextToken());
+                            if (p1 == 3) {
+                                short p2 = Short.parseShort(st.nextToken());
+                                short p3 = Short.parseShort(st.nextToken());
+                                short p4 = Short.parseShort(st.nextToken());
+                                icoords.add(p2);
+                                icoords.add(p3);
+                                icoords.add(p4);
+                            } else {
+                                System.out.println("Unknown i command '" + line + "'");
+                            }   break;
                     }
-                }
 //                else
 //                    System.out.println("Unknown command '"+line+"'");
-            }
+                }            }
             is.close();
-        } catch (Exception xppe) {
+        } catch (IOException | NumberFormatException xppe) {
             xppe.printStackTrace();
         }
         mData.setVertices(coords);

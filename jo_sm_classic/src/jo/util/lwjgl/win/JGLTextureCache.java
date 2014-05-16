@@ -19,9 +19,9 @@ import org.lwjgl.opengl.GL11;
 
 public class JGLTextureCache {
 
-    private static final Map<Integer, JGLTextureSpec> mSpecCache = new HashMap<Integer, JGLTextureSpec>();
-    private static final Map<Integer, Integer> mLoadedCache = new HashMap<Integer, Integer>();
-    private static Set<Integer> mMRULoaded = new HashSet<Integer>();
+    private static final Map<Integer, JGLTextureSpec> mSpecCache = new HashMap<>();
+    private static final Map<Integer, Integer> mLoadedCache = new HashMap<>();
+    private static final Set<Integer> mMRULoaded = new HashSet<>();
 
     public static void register(int id, JGLTextureSpec spec) {
         mSpecCache.put(id, spec);
@@ -41,11 +41,11 @@ public class JGLTextureCache {
 
     public static void register(int id, String fileName, int left, int top, int width, int height) {
         JGLTextureSpec spec = new JGLTextureSpec();
-        spec.setFileName(fileName);;
-        spec.setLeft(left);;
-        spec.setTop(top);;
-        spec.setWidth(width);;
-        spec.setHeight(height);;
+        spec.setFileName(fileName);
+        spec.setLeft(left);
+        spec.setTop(top);
+        spec.setWidth(width);
+        spec.setHeight(height);
         register(id, spec);
     }
 
@@ -86,7 +86,7 @@ public class JGLTextureCache {
     }
 
     public static int[] getUnUsedTextures() {
-        Set<Integer> unused = new HashSet<Integer>();
+        Set<Integer> unused = new HashSet<>();
         synchronized (mMRULoaded) {
             unused.addAll(mLoadedCache.keySet());
             unused.removeAll(mMRULoaded);
@@ -163,7 +163,7 @@ public class JGLTextureCache {
                 int pix = img.getRGB(j, i);
                 texBuf.put((byte) ((pix >> 16) & 0xff));// red
                 texBuf.put((byte) ((pix >> 8) & 0xff)); // green
-                texBuf.put((byte) ((pix >> 0) & 0xff)); // blue
+                texBuf.put((byte) ((pix) & 0xff)); // blue
                 if (storeAlphaChannel) {
                     texBuf.put((byte) ((pix >> 24) & 0xff));// alpha
                 }
@@ -212,86 +212,5 @@ public class JGLTextureCache {
          */
     }
 
-    public static class JGLTextureSpec {
 
-        private String mFileName;
-        private int mLeft;
-        private int mTop;
-        private int mWidth;
-        private int mHeight;
-        private BufferedImage mImage;
-
-        public String getFileName() {
-            return mFileName;
-        }
-
-        public void setFileName(String fileName) {
-            mFileName = fileName;
-        }
-
-        public int getLeft() {
-            return mLeft;
-        }
-
-        public void setLeft(int left) {
-            mLeft = left;
-        }
-
-        public int getTop() {
-            return mTop;
-        }
-
-        public void setTop(int top) {
-            mTop = top;
-        }
-
-        public int getWidth() {
-            return mWidth;
-        }
-
-        public void setWidth(int width) {
-            mWidth = width;
-        }
-
-        public int getHeight() {
-            return mHeight;
-        }
-
-        public void setHeight(int height) {
-            mHeight = height;
-        }
-
-        public BufferedImage getImage() {
-            return mImage;
-        }
-
-        public void setImage(BufferedImage image) {
-            mImage = image;
-        }
-    }
-
-    public static class Texture {
-
-        private ByteBuffer pixels;
-        private int width;
-        private int height;
-
-        public Texture(ByteBuffer pixels, int width, int height) {
-            this.height = height;
-            this.pixels = pixels;
-            this.width = width;
-        }
-
-        public int getHeight() {
-            return height;
-        }
-
-        public ByteBuffer getPixels() {
-            return pixels;
-        }
-
-        public int getWidth() {
-            return width;
-        }
-    }
 }

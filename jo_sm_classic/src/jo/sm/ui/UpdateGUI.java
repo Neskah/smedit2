@@ -15,6 +15,8 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import jo.util.GlobalConfiguration;
+import jo.util.Paths;
+import jo.util.Resources;
 
 public class UpdateGUI extends JFrame {
 
@@ -35,7 +37,7 @@ public class UpdateGUI extends JFrame {
         } catch (final ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
         }
         setIconImage(GlobalConfiguration
-                .getImage(GlobalConfiguration.Paths.Resources.ICON));
+                .getImage(Resources.ICON));
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
 
@@ -55,7 +57,7 @@ public class UpdateGUI extends JFrame {
         panel.setLayout(new GridBagLayout());
 
         jLabel1.setIcon(new ImageIcon(GlobalConfiguration
-                .getImage(GlobalConfiguration.Paths.Resources.DOWNLOAD)));
+                .getImage(Resources.DOWNLOAD)));
         gc = new GridBagConstraints();
         gc.insets = new Insets(5, 20, 5, 20);
         panel.add(jLabel1, gc);

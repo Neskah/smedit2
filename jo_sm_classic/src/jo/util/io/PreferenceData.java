@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 import jo.util.GlobalConfiguration;
+import jo.util.Paths;
 
 /**
  * @author RSBot development for the powerbot.org client - version 1.1
@@ -38,7 +39,7 @@ public final class PreferenceData {
 
     public PreferenceData(final int type) {
         this.type = type;
-        file = new File(GlobalConfiguration.Paths.getSettingsDirectory()
+        file = new File(Paths.getSettingsDirectory()
                 + File.separator + "pref" + type + ".dat");
         try {
             if (!file.exists()) {

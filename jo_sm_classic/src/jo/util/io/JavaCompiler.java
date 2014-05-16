@@ -33,7 +33,8 @@ import java.net.URLEncoder;
 import javax.tools.ToolProvider;
 
 import jo.util.GlobalConfiguration;
-import jo.util.GlobalConfiguration.OperatingSystem;
+import jo.util.OperatingSystem;
+import jo.util.Paths;
 
 /**
  * @author RSBot development for the powerbot.org client - version 1.0
@@ -49,7 +50,7 @@ public class JavaCompiler {
         final FileOutputStream[] out = new FileOutputStream[2];
         for (int i = 0; i < 2; i++) {
             out[i] = new FileOutputStream(new File(
-                    GlobalConfiguration.Paths.getCollectDirectory(), "compile."
+                    Paths.getCollectDirectory(), "compile."
                     + Integer.toString(i) + ".txt"));
         }
         return javac.run(source, out[0], out[1], JAVACARGS, "-cp", classPath);
