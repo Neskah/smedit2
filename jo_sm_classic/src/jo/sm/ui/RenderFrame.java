@@ -23,9 +23,16 @@ package jo.sm.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dialog;
+import java.awt.EventQueue;
+import java.awt.Image;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
+import java.awt.SystemTray;
+import java.awt.TrayIcon;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.Properties;
 
 import javax.swing.JCheckBoxMenuItem;
@@ -61,10 +68,11 @@ import jo.util.GlobalConfiguration;
 import jo.util.SplashScreen;
 
 @SuppressWarnings("serial")
-public class RenderFrame extends JFrame implements WindowListener {
+public class RenderFrame extends JFrame {
 
     private static String[] mArgs;
     private RenderPanel mClient;
+    private TrayIcon trayIcon;
 
     public RenderFrame(String[] args) {
         super("SMEdit");
@@ -121,11 +129,13 @@ public class RenderFrame extends JFrame implements WindowListener {
         addWindowListener(new WindowAdapter() {
 
             @Override
-            public void windowClosing(final WindowEvent e) {
+            public void windowClosing(WindowEvent evt) {
+                setVisible(false);
                 dispose();
+                System.exit(0);
             }
         });
-        this.addWindowFocusListener(new WindowAdapter() {
+        addWindowFocusListener(new WindowAdapter() {
             @Override
             public void windowGainedFocus(WindowEvent e) {
                 mClient.requestFocusInWindow();
@@ -134,41 +144,17 @@ public class RenderFrame extends JFrame implements WindowListener {
         setSize(1024, 768);
         setIconImage(GlobalConfiguration.getImage(GlobalConfiguration.Paths.Resources.ICON));
 
-        if (mClient instanceof Runnable) {
-            Thread t = new Thread((Runnable) mClient);
-            t.start();
-        }
-    }
+        EventQueue.invokeLater(new Runnable() {
 
-    @Override
-    public void windowClosing(WindowEvent evt) {
-        this.setVisible(false);
-        this.dispose();
-        System.exit(0);
-    }
+            @Override
+            public void run() {
+                trayIcon();
+                Thread t = new Thread((Runnable) mClient);
+                t.start();
+                
+            }
+        });
 
-    @Override
-    public void windowOpened(WindowEvent evt) {
-    }
-
-    @Override
-    public void windowClosed(WindowEvent evt) {
-    }
-
-    @Override
-    public void windowIconified(WindowEvent evt) {
-    }
-
-    @Override
-    public void windowDeiconified(WindowEvent evt) {
-    }
-
-    @Override
-    public void windowActivated(WindowEvent evt) {
-    }
-
-    @Override
-    public void windowDeactivated(WindowEvent evt) {
     }
 
     private void updatePopup(JMenu menu, int... subTypes) {
@@ -265,6 +251,72 @@ public class RenderFrame extends JFrame implements WindowListener {
         public void menuSelected(MenuEvent ev) {
             updatePopup((JMenu) ev.getSource(), mTypes);
         }
+    }
+
+    private void trayIcon() {
+        if (SystemTray.isSupported()) {
+            final SystemTray tray = SystemTray.getSystemTray();
+            final Image icon = GlobalConfiguration
+                    .getImage(GlobalConfiguration.Paths.Resources.ICON);
+            final ActionListener exitListener = new ActionListener() {
+
+                public void actionPerformed(final ActionEvent e) {
+                    System.exit(0);
+                }
+            };
+
+            final ActionListener rightClickListener = new ActionListener() {
+
+                public void actionPerformed(final ActionEvent e) {
+                    final String msg = "You have controled the view of the client by\n"
+                            + "right clicking on the system tray icon,\n"
+                            + "and chosing the control client view option.\n"
+                            + "To again toggle the view state of the client,\n"
+                            + "simply click the system tray icon again.";
+                    trayIcon.displayMessage("Controling, " + getTitle(), msg,
+                            TrayIcon.MessageType.INFO);
+                    setVisible(!isVisible());
+                }
+            };
+
+            final ActionListener clickListener = new ActionListener() {
+
+                public void actionPerformed(final ActionEvent e) {
+
+                    final String msg = "You have controled the view of the client by,\n"
+                            + "clicking on the system tray icon.\n"
+                            + "To again toggle the view state of the client,\n"
+                            + "simply click the system tray icon again.";
+                    trayIcon.displayMessage("Controling, " + getTitle(), msg,
+                            TrayIcon.MessageType.INFO);
+                    setVisible(!isVisible());
+
+                }
+            };
+
+            final PopupMenu popup = new PopupMenu();
+            final MenuItem exitOption = new MenuItem("Exit Client");
+            exitOption.addActionListener(exitListener);
+            final MenuItem hideTaskBarIcon = new MenuItem("Control Client View");
+            hideTaskBarIcon.addActionListener(rightClickListener);
+
+            popup.add(hideTaskBarIcon);
+            popup.add(exitOption);
+
+            trayIcon = new TrayIcon(icon, getTitle(), popup);
+            trayIcon.setImageAutoSize(true);
+            trayIcon.addActionListener(clickListener);
+
+            try {
+                tray.add(trayIcon);
+            } catch (final Exception e) {
+                //
+            }
+        } else {
+            //
+
+        }
+
     }
 
 }

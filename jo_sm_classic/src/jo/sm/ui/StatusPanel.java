@@ -24,6 +24,7 @@ package jo.sm.ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -34,6 +35,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import jo.log.TextAreaLogHandler;
 
 import jo.sm.logic.StarMadeLogic;
 
@@ -43,23 +46,29 @@ public class StatusPanel extends JPanel {
     private final JProgressBar mMemory;
     private JLabel mStatus;
     private final JButton mAbout;
-
+    public JScrollPane textScroll;
     private final Color mNormal;
 
     public StatusPanel() {
         // instantiate
-        mStatus = new JLabel("");
-        setBackground(Color.cyan);
+        
         mAbout = new JButton("About");
         mMemory = new JProgressBar(0, (int) (Runtime.getRuntime().maxMemory() / 1024L / 1024L));
         mMemory.setStringPainted(true);
         mMemory.setIndeterminate(true);
         mNormal = mMemory.getBackground();
+        
+        textScroll = new JScrollPane(TextAreaLogHandler.TEXT_AREA,
+				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		textScroll.setBorder(null);
+                textScroll.setPreferredSize(new Dimension(1024, 120));
+		textScroll.setVisible(true);
         // layout
         setLayout(new BorderLayout());
-        add("Center", mStatus);
-        add("East", mAbout);
-        add("West", mMemory);
+        add(mAbout, BorderLayout.EAST);
+        add(mMemory, BorderLayout.WEST);
+        //add(textScroll, BorderLayout.SOUTH);
         mAbout.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ev) {
@@ -84,10 +93,6 @@ public class StatusPanel extends JPanel {
     }
 
     private void doTicker() {
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-        }
         mMemory.setIndeterminate(false);
         for (;;) {
             int free = (int) (Runtime.getRuntime().freeMemory() / 1024L / 1024L);
@@ -105,7 +110,7 @@ public class StatusPanel extends JPanel {
                 mStatus.setText(StarMadeLogic.getInstance().getStatusMessage());
             }
             try {
-                Thread.sleep(5000);
+                Thread.sleep(10000);
             } catch (InterruptedException e) {
             }
         }

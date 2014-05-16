@@ -2,17 +2,17 @@
     <filter title="All" description="Show all blocks" priority="10">
         <block id=""/>
     </filter>
-    <filter title="Power and Tanks" description="View power and tank blocks only" priority="20">
+    <filter title="Power/Both" description="View power and tank blocks only" priority="20">
         <block type="POWER_COIL_ID"/>
         <block type="POWER_ID"/>
         <block type="CORE_ID"/>
     </filter>
-    <filter title="Power" description="View power blocks only" priority="21">
-        <block type="POWER_COIL_ID"/>
+    <filter title="Power/Power" description="View power blocks only" priority="21">
+        <block type="POWER_ID"/>
         <block type="CORE_ID"/>
     </filter>
-    <filter title="Power Tank" description="View power tank blocks only" priority="21">
-        <block type="POWER_ID"/>
+    <filter title="Power/Power Tank" description="View power tank blocks only" priority="21">
+        <block type="POWER_COIL_ID"/>
         <block type="CORE_ID"/>
     </filter>
     <filter title="Antimater Cannon" description="View antimatter cannons blocks only" priority="21">
