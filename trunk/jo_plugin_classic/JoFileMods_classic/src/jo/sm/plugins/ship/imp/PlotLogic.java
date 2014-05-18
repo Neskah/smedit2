@@ -1,5 +1,6 @@
 package jo.sm.plugins.ship.imp;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,6 +39,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 public class PlotLogic {
+    private static short[] HULL_IDS = null;
+    private static int[] HULL_RGBS = null;
+    private static long mLastRead = 0;
 
     public static void mapHull(SparseMatrix<Block> modified, Hull3f hull,
             Point3f scale, Point3i lowerGrid, Point3i upperGrid, IPluginCallback cb) {
@@ -205,17 +209,19 @@ public class PlotLogic {
         return scale;
     }
 
-    private static short HULL_IDS[] = null;
-    private static int HULL_RGBS[] = null;
-    private static long mLastRead = 0;
 
-    private static int distance(int rgb1, int rgb2) {
-        int delta;
-        delta = 0;
-        delta += Math.abs(((rgb1) & 0xff) - ((rgb2) & 0xff));
-        delta += Math.abs(((rgb1 >> 8) & 0xff) - ((rgb2 >> 8) & 0xff));
-        delta += Math.abs(((rgb1 >> 16) & 0xff) - ((rgb2 >> 16) & 0xff));
-        return delta;
+    public static int distance(int rgb1, int rgb2) {
+        float [] buffer1 = new float[3];
+        float [] buffer2 = new float[3];
+        Color c1 = new Color(rgb1);
+        Color c2 = new Color(rgb2);
+        c1.getRGBColorComponents(buffer1);
+        c2.getRGBColorComponents(buffer2);
+        int distSquare = 0;
+        for (int i = 0; i < 3; i++) {
+            distSquare += (buffer1[i] - buffer2[i]) * (buffer1[i] - buffer2[i]);
+        }
+        return distSquare;
     }
 
     private static void loadColors() {

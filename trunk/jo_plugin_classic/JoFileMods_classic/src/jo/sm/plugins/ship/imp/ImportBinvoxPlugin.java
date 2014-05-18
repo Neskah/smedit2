@@ -8,6 +8,7 @@ import jo.sm.data.SparseMatrix;
 import jo.sm.data.StarMade;
 import jo.sm.mods.IBlocksPlugin;
 import jo.sm.mods.IPluginCallback;
+import static jo.sm.plugins.ship.imp.BinvoxLogic.getVoxel;
 import jo.sm.plugins.ship.move.MovePlugin;
 import jo.sm.ship.data.Block;
 import jo.sm.ship.logic.ShipLogic;
@@ -106,16 +107,16 @@ public class ImportBinvoxPlugin implements IBlocksPlugin {
             cb.workTask(1);
             for (int z = 0; z < hull.getZSpan(); z++) {
                 for (int y = 0; y < hull.getYSpan(); y++) {
-                    if (BinvoxLogic.getVoxel(hull, x, y, z) == false) {
+                    if (getVoxel(hull, x, y, z) == false) {
                         continue;
                     }
                     // if surrounded, skip
-                    if (BinvoxLogic.getVoxel(hull, x - 1, y, z)
-                            && BinvoxLogic.getVoxel(hull, x + 1, y, z)
-                            && BinvoxLogic.getVoxel(hull, x, y - 1, z)
-                            && BinvoxLogic.getVoxel(hull, x, y + 1, z)
-                            && BinvoxLogic.getVoxel(hull, x, y, z - 1)
-                            && BinvoxLogic.getVoxel(hull, x, y, z + 1)) {
+                    if (getVoxel(hull, x - 1, y, z)
+                            && getVoxel(hull, x + 1, y, z)
+                            && getVoxel(hull, x, y - 1, z)
+                            && getVoxel(hull, x, y + 1, z)
+                            && getVoxel(hull, x, y, z - 1)
+                            && getVoxel(hull, x, y, z + 1)) {
                         continue;
                     }
                     Block b = new Block();
