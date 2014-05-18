@@ -90,7 +90,7 @@ public class ScalePlugin implements IBlocksPlugin {
                             Block newB;
                             newB = new Block(b);
                             if (BlockTypes.isController(newB.getBlockID())) {
-                                newB.setBlockID(BlockTypes.CONTROLLER_IDS.get(newB.getBlockID()));
+                                newB.setBlockID(BlockTypes.getCONTROLLER_IDS().get(newB.getBlockID()));
                             }
                             set(fPoint, x, y, z, modified, newB);
                         }

@@ -1,12 +1,17 @@
 package jo.sm.ui.act.file;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.showConfirmDialog;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import jo.sm.data.SparseMatrix;
@@ -33,6 +38,12 @@ public class SaveAsFileAction extends GenericAction {
         setName("File...");
         setToolTipText("Save as smb2 file");
     }
+    
+    
+    
+    
+    
+    
 
     @Override
     public void actionPerformed(ActionEvent ev) {
@@ -48,16 +59,27 @@ public class SaveAsFileAction extends GenericAction {
         JFileChooser chooser = new JFileChooser(StarMadeLogic.getInstance().getBaseDir());
         chooser.setSelectedFile(dir);
         FileNameExtensionFilter filter1 = new FileNameExtensionFilter(
-                "Starmade Ship File", "smd2");
+                "Ship File", "smd2");
         //FileNameExtensionFilter filter2 = new FileNameExtensionFilter(
         //        "Starmade Exported Ship File", "sment");
         chooser.addChoosableFileFilter(filter1);
         //chooser.addChoosableFileFilter(filter2);
-        int returnVal = chooser.showOpenDialog(mFrame);
+        int returnVal = chooser.showSaveDialog(mFrame);
+        File selFile = chooser.getSelectedFile();
         if (returnVal != JFileChooser.APPROVE_OPTION) {
-            return;
-        }
-        final File smb2 = chooser.getSelectedFile();
+        } else 
+            if (returnVal == JFileChooser.APPROVE_OPTION && selFile!=null) {
+                if (!selFile.getName().endsWith("smd2")) selFile = new File(selFile.getPath()+".smd2");
+                if (selFile.exists()) {
+                    int n;
+                    n = showConfirmDialog(mFrame,
+                            "File " + selFile.getPath() + " already exists. Overwrite?",
+                            "Question",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE);
+                    if (n==1) {actionPerformed(ev); return;}
+                }
+            final File smb2 = chooser.getSelectedFile();
         StarMadeLogic.getProps().setProperty("open.file.dir", smb2.getParent());
         StarMadeLogic.saveProps();
         String name = smb2.getName();
@@ -84,5 +106,9 @@ public class SaveAsFileAction extends GenericAction {
             }
         };
         RunnableLogic.run(mFrame, name, t);
+            
+        }
+        
+        
     }
 }

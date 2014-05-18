@@ -43,7 +43,8 @@ import jo.sm.logic.StarMadeLogic;
 @SuppressWarnings("serial")
 public class StatusPanel extends JPanel {
 
-    private final JProgressBar mMemory;
+    //private final JProgressBar mMemory;
+    private final MemProgressBar mMemory;
     private JLabel mStatus;
     private final JButton mAbout;
     public JScrollPane textScroll;
@@ -53,7 +54,7 @@ public class StatusPanel extends JPanel {
         // instantiate
         
         mAbout = new JButton("About");
-        mMemory = new JProgressBar(0, (int) (Runtime.getRuntime().maxMemory() / 1024L / 1024L));
+        mMemory = new MemProgressBar();
         mMemory.setStringPainted(true);
         mMemory.setIndeterminate(true);
         mNormal = mMemory.getBackground();
