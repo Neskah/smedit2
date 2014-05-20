@@ -216,4 +216,6 @@ public class GlobalConfiguration {
     public static void setRUNNING_FROM_JAR(boolean aRUNNING_FROM_JAR) {
         RUNNING_FROM_JAR = aRUNNING_FROM_JAR;
     }
+    
+    
 }

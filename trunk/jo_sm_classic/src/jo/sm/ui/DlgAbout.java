@@ -25,9 +25,12 @@ import java.awt.BorderLayout;
 import java.awt.Desktop;
 import java.awt.Desktop.Action;
 import java.awt.Dialog;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.URI;
 
@@ -38,6 +41,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 
 import jo.sm.logic.utils.ResourceUtils;
 
@@ -46,10 +51,20 @@ public class DlgAbout extends JDialog {
 
     private final JEditorPane mMessage;
     private JScrollPane mScroller;
+    
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextArea jTextArea1;
 
     public DlgAbout(JFrame base) {
-        super(base, "About SMEdit", Dialog.ModalityType.DOCUMENT_MODAL);
-        // instantiate
+        super(base);
+        initComponents();
+        setLocationRelativeTo(base);
         mMessage = new JEditorPane();
         mMessage.setContentType("text/html");
         mMessage.setEditable(false);
@@ -59,17 +74,18 @@ public class DlgAbout extends JDialog {
             e.printStackTrace();
         }
         mScroller = new JScrollPane(mMessage);
+        
+        
         JButton ok = new JButton("Close");
         JButton audio = new JButton("Audiobook");
         JButton ebook = new JButton("E-book");
-        JButton doc = new JButton("Documentation");
+        JButton doc = new JButton("java docks");
         JPanel client = new JPanel();
         getContentPane().add(client);
         client.setLayout(new BorderLayout());
-        client.add(BorderLayout.NORTH, new JLabel("About SMEdit"));
-        client.add(BorderLayout.CENTER, mScroller);
+        
         JPanel buttonBar = new JPanel();
-        client.add(BorderLayout.SOUTH, buttonBar);
+        getContentPane().add(buttonBar, BorderLayout.SOUTH);
         buttonBar.setLayout(new FlowLayout());
         buttonBar.add(ok);
         buttonBar.add(doc);
@@ -100,8 +116,8 @@ public class DlgAbout extends JDialog {
                 doGoto(BegPanel.THE_RAIDERS_LAMENT_AUDIO);
             }
         });
-        setSize(640, 480);
-        setLocationRelativeTo(base);
+        
+        
         Thread t = new Thread() {
             @Override
             public void run() {
@@ -114,6 +130,55 @@ public class DlgAbout extends JDialog {
             }
         };
         t.start();
+    }
+    
+    private void initComponents() {
+        jTabbedPane1 = new JTabbedPane();
+        jPanel1 = new JPanel();
+        jLabel1 = new JLabel();
+        jPanel2 = new JPanel();
+        jScrollPane1 = new JScrollPane();
+        jTextArea1 = new JTextArea();
+        jPanel3 = new JPanel();
+        jLabel2 = new JLabel();
+
+        setTitle("About SMEdit");
+        setResizable(false);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent evt) {
+                doOK();
+            }
+        });
+
+        jTabbedPane1.setPreferredSize(new Dimension(450, 500));
+
+        jPanel1.setPreferredSize(new Dimension(300, 300));
+        jPanel1.add(jLabel1);
+        jLabel1.getAccessibleContext().setAccessibleName("jLabel1");
+
+        jTabbedPane1.addTab("  About  ", jPanel1);
+
+        jPanel2.setLayout(new BorderLayout());
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setFont(new java.awt.Font("Monospaced", 0, 12));
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
+
+        jPanel2.add(jScrollPane1, BorderLayout.CENTER);
+
+        jTabbedPane1.addTab("  License  ", jPanel2);
+
+        jPanel3.add(jLabel2);
+
+        jTabbedPane1.addTab("  Authors  ", jPanel3);
+
+        getContentPane().add(jTabbedPane1, BorderLayout.CENTER);
+        
+        
+
+        pack();
     }
 
     private void doOK() {

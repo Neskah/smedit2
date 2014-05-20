@@ -17,13 +17,15 @@ public class URLs {
     public static final String HOME = "smedit2";
     public static final String LOC = "svn/trunk/resources/";
     public static final String SVNDAT = URL + FILE + CODE + LOC;
-    public static final String SVNICON = URL + FILE + CODE + LOC + "resources/images";
+    public static final String SVNICON = SVNDAT + "/images/";
     public static final String OPENSVN = URL + HOME + CODE;
     /* url */
-    public static final String PROJECT = URL + "code.google.com/p/smedit2/";
+    public static final String PROJECT = URL + "smedit2.lazygamerz.org/";
     public static final String SITE = URL + "lazygamerz.org";
     /* files */
     /* icons */
     public static final String ICON_FILE_ACCOUNT = SVNICON + "account.png";
+    public static final String ICON_FILE_HOME = SVNICON + "home.png";
+    public static final String ICON_FILE_PLUGINS = SVNICON + "plugins.png";
     
 }

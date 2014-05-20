@@ -23,10 +23,9 @@ package jo.sm.ui;
 
 import java.awt.Component;
 import java.awt.KeyEventDispatcher;
+import java.awt.Window;
 import java.awt.event.KeyEvent;
-
-import javax.swing.JFrame;
-
+import java.util.logging.Logger;
 import jo.sm.data.SparseMatrix;
 import jo.sm.logic.GridLogic;
 import jo.sm.logic.StarMadeLogic;
@@ -47,6 +46,7 @@ public class RenderPanelKeyEventDispatcher implements KeyEventDispatcher {
     private static final int SELECTION_MOVE_UPPER = 0x40;
     private static final int SELECTION_MOVE_LOWER = 0x80;
     private static final int SELECTION_NUDGE = 0x200;
+    private static final Logger LOG = Logger.getLogger(RenderPanelKeyEventDispatcher.class.getName());
 
     private final AWTRenderPanel mPanel;
 
@@ -153,8 +153,8 @@ public class RenderPanelKeyEventDispatcher implements KeyEventDispatcher {
 
     private boolean isFocused() {
         for (Component c = mPanel; c != null; c = c.getParent()) {
-            if (c instanceof JFrame) {
-                if (((JFrame) c).isActive()) {
+            if (c instanceof Window) {
+                if (((Window) c).isActive()) {
                     return true;
                 }
             }
