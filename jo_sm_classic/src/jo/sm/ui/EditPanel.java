@@ -30,8 +30,8 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.swing.BoxLayout;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -42,6 +42,11 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+
+import static javax.swing.GroupLayout.DEFAULT_SIZE;
+import static javax.swing.GroupLayout.PREFERRED_SIZE;
+import static javax.swing.LayoutStyle.ComponentPlacement.RELATED;
+import static javax.swing.LayoutStyle.ComponentPlacement.UNRELATED;
 
 import jo.sm.data.BlockTypes;
 import jo.sm.data.CubeIterator;
@@ -60,72 +65,33 @@ public class EditPanel extends JPanel {
 
     private final RenderPanel mRenderer;
 
-    private final JLabel mCurrent;
-    private final JButton mGrey;
-    private final JButton mBlack;
-    private final JButton mRed;
-    private final JButton mPurple;
-    private final JButton mBlue;
-    private final JButton mGreen;
-    private final JButton mBrown;
-    private final JButton mYellow;
-    private final JButton mWhite;
-    private final JButton mClear;
-    private final JSpinner mRadius;
-    private final JButton mAll;
-    private final JButton mPlugins;
-    private final JCheckBox mXSymmetry;
-    private final JCheckBox mYSymmetry;
-    private final JCheckBox mZSymmetry;
+    private JLabel mSymLabel;
+
+    private JLabel mColor;
+    private JLabel mCurrent;
+    private JLabel mChoice;
+    private JButton mGrey;
+    private JButton mBlack;
+    private JButton mRed;
+    private JButton mPurple;
+    private JButton mBlue;
+    private JButton mGreen;
+    private JButton mBrown;
+    private JButton mYellow;
+    private JButton mWhite;
+    private JButton mClear;
+    private JSpinner mRadius;
+    private JLabel mRaLabel;
+    private JButton mAll;
+    private JButton mPlugins;
+    private JCheckBox mXSymmetry;
+    private JCheckBox mYSymmetry;
+    private JCheckBox mZSymmetry;
 
     public EditPanel(RenderPanel renderer) {
         mRenderer = renderer;
-        // instantiate
-        mCurrent = new JLabel("blank");
-        mGrey = newButton(BlockTypes.HULL_COLOR_GREY_ID);
-        mBlack = newButton(BlockTypes.HULL_COLOR_BLACK_ID);
-        mRed = newButton(BlockTypes.HULL_COLOR_RED_ID);
-        mPurple = newButton(BlockTypes.HULL_COLOR_PURPLE_ID);
-        mBlue = newButton(BlockTypes.HULL_COLOR_BLUE_ID);
-        mGreen = newButton(BlockTypes.HULL_COLOR_GREEN_ID);
-        mBrown = newButton(BlockTypes.HULL_COLOR_BROWN_ID);
-        mYellow = newButton(BlockTypes.HULL_COLOR_YELLOW_ID);
-        mWhite = newButton(BlockTypes.HULL_COLOR_WHITE_ID);
-        mRadius = new JSpinner(new SpinnerNumberModel(1, 1, 64, 1));
-        mXSymmetry = new JCheckBox("X Symmetry");
-        mXSymmetry.setToolTipText("Mirror paint port/starboard");
-        mYSymmetry = new JCheckBox("Y Symmetry");
-        mYSymmetry.setToolTipText("Mirror paint dorsal/ventral");
-        mZSymmetry = new JCheckBox("Z Symmetry");
-        mZSymmetry.setToolTipText("Mirror paint fore/aft");
-        mClear = new JButton("Clear");
-        mClear.setToolTipText("Stop painting");
-        mAll = new JButton("All");
-        mAll.setToolTipText("Set all hulls to current color");
-        mPlugins = new JButton("Mods");
-        mPlugins.setToolTipText("Invoke a mod");
-        // layout
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        add(new JLabel("Paint:"));
-        add(mCurrent);
-        add(new JLabel("Choose:"));
-        add(mGrey);
-        add(mBlack);
-        add(mRed);
-        add(mPurple);
-        add(mBlue);
-        add(mGreen);
-        add(mBrown);
-        add(mYellow);
-        add(mWhite);
-        add(new JLabel("Radius:"));
-        add(mRadius);
-        add(mXSymmetry);
-        add(mYSymmetry);
-        add(mZSymmetry);
-        add(mClear);
-        add(mAll);
-        add(mPlugins);
+        initComponents();
+
         // link
         MouseAdapter ma = new MouseAdapter() {
             @Override
@@ -176,9 +142,120 @@ public class EditPanel extends JPanel {
         });
     }
 
+    @SuppressWarnings("unchecked")
+
+    private void initComponents() {
+
+        mColor = new JLabel("Current Color:");
+        mCurrent = new JLabel("None");
+        mChoice = new JLabel("Color Choices:");
+        mGrey = newButton(BlockTypes.HULL_COLOR_GREY_ID);
+        mBlack = newButton(BlockTypes.HULL_COLOR_BLACK_ID);
+        mRed = newButton(BlockTypes.HULL_COLOR_RED_ID);
+        mPurple = newButton(BlockTypes.HULL_COLOR_PURPLE_ID);
+        mBlue = newButton(BlockTypes.HULL_COLOR_BLUE_ID);
+        mGreen = newButton(BlockTypes.HULL_COLOR_GREEN_ID);
+        mBrown = newButton(BlockTypes.HULL_COLOR_BROWN_ID);
+        mYellow = newButton(BlockTypes.HULL_COLOR_YELLOW_ID);
+        mWhite = newButton(BlockTypes.HULL_COLOR_WHITE_ID);
+        mRadius = new JSpinner(new SpinnerNumberModel(1, 1, 64, 1));
+        mSymLabel = new JLabel("Paint Symmetry:");
+        mRaLabel = new JLabel("Paint Radius:");
+        mXSymmetry = new JCheckBox("X");
+        mXSymmetry.setToolTipText("paint port/starboard");
+        mYSymmetry = new JCheckBox("Y");
+        mYSymmetry.setToolTipText("paint dorsal/ventral");
+        mZSymmetry = new JCheckBox("Z");
+        mZSymmetry.setToolTipText("paint fore/aft");
+        mClear = new JButton("Clear");
+        mClear.setToolTipText("Stop painting");
+        mAll = new JButton("Paint All");
+        mAll.setToolTipText("Set all hulls to current color");
+        mPlugins = new JButton("Mods");
+        mPlugins.setToolTipText("Invoke a mod");
+        
+        GroupLayout layout = new GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(mXSymmetry)
+                        .addPreferredGap(UNRELATED)
+                        .addComponent(mYSymmetry)
+                        .addPreferredGap(UNRELATED)
+                        .addComponent(mZSymmetry))
+                    .addGroup(layout.createParallelGroup(Alignment.LEADING, false)
+                        .addComponent(mColor)
+                        .addComponent(mCurrent)
+                        .addComponent(mChoice)
+                        .addComponent(mGrey)
+                        .addComponent(mBlack)
+                        .addComponent(mRed)
+                        .addComponent(mPurple)
+                        .addComponent(mBlue)
+                        .addComponent(mGreen)
+                        .addComponent(mBrown)
+                        .addComponent(mYellow)
+                        .addComponent(mWhite))
+                    .addComponent(mRadius, PREFERRED_SIZE, 93, PREFERRED_SIZE)
+                    .addComponent(mClear)
+                    .addComponent(mAll)
+                    .addComponent(mSymLabel)
+                    .addComponent(mRaLabel))
+                .addContainerGap(10, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(mColor)
+                .addGap(18, 18, 18)
+                .addComponent(mCurrent)
+                .addPreferredGap(RELATED, 18, Short.MAX_VALUE)
+                .addComponent(mChoice)
+                .addPreferredGap(UNRELATED)
+                .addComponent(mGrey)
+                .addPreferredGap(RELATED)
+                .addComponent(mBlack)
+                .addPreferredGap(RELATED)
+                .addComponent(mRed)
+                .addPreferredGap(RELATED)
+                .addComponent(mPurple)
+                .addPreferredGap(RELATED)
+                .addComponent(mBlue)
+                .addPreferredGap(RELATED)
+                .addComponent(mGreen)
+                .addPreferredGap(RELATED)
+                .addComponent(mBrown)
+                .addPreferredGap(RELATED)
+                .addComponent(mYellow)
+                .addPreferredGap(RELATED)
+                .addComponent(mWhite)
+                .addGap(18, 18, 18)
+                .addComponent(mRaLabel)
+                .addPreferredGap(RELATED)
+                .addComponent(mRadius, PREFERRED_SIZE, DEFAULT_SIZE, PREFERRED_SIZE)
+                .addPreferredGap(RELATED)
+                .addComponent(mSymLabel)
+                .addPreferredGap(RELATED)
+                .addGroup(layout.createParallelGroup(Alignment.BASELINE)
+                    .addComponent(mXSymmetry)
+                    .addComponent(mYSymmetry)
+                    .addComponent(mZSymmetry))
+                .addPreferredGap(UNRELATED)
+                .addComponent(mClear)
+                .addPreferredGap(RELATED)
+                .addComponent(mAll)
+                .addContainerGap())
+        );
+    }// </editor-fold> 
+
     private JButton newButton(final short blockID) {
         ImageIcon rawImage = BlockTypeColors.getBlockImage(blockID);
-        Image image = rawImage.getImage().getScaledInstance(32, 32,
+        Image image = rawImage.getImage().getScaledInstance(26, 26,
                 Image.SCALE_DEFAULT);
         final JButton btn = new JButton(new ImageIcon(image));
         btn.addActionListener(new ActionListener() {
@@ -191,12 +268,13 @@ public class EditPanel extends JPanel {
     }
 
     private void doPlugin() {
+        JPopupMenu popup = new JPopupMenu();
         int classification = StarMadeLogic.getInstance().getCurrentModel().getClassification();
         List<IBlocksPlugin> plugins = StarMadeLogic.getBlocksPlugins(classification, IBlocksPlugin.SUBTYPE_PAINT);
         if (plugins.isEmpty()) {
-            return;
+            popup.add("no plugins");
         }
-        JPopupMenu popup = new JPopupMenu();
+
         for (IBlocksPlugin plugin : plugins) {
             BlocksPluginAction action = new BlocksPluginAction(mRenderer, plugin);
             JMenuItem men = new JMenuItem(action);
@@ -210,7 +288,7 @@ public class EditPanel extends JPanel {
         StarMadeLogic.getInstance().setSelectedBlockType(blockID);
         if (StarMadeLogic.getInstance().getSelectedBlockType() == -1) {
             mCurrent.setIcon(null);
-            mCurrent.setText("blank");
+            mCurrent.setText("None");
         } else {
             mCurrent.setIcon(color);
             mCurrent.setText("");

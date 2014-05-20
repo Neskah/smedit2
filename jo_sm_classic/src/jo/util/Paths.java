@@ -49,6 +49,8 @@ public class Paths {
             /* FILES */
             /* ICONS */
             downloadCache.put(URLs.ICON_FILE_ACCOUNT, new File(getIconDirectory(), "account.png"));
+            downloadCache.put(URLs.ICON_FILE_HOME, new File(getIconDirectory(), "home.png"));
+            downloadCache.put(URLs.ICON_FILE_PLUGINS, new File(getIconDirectory(), "plugins.png"));
         }
         return Collections.unmodifiableMap(downloadCache);
     }

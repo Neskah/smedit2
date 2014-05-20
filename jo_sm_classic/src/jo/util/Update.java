@@ -28,9 +28,6 @@ package jo.util;
  */
 import java.awt.Window;
 import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-
 import jo.sm.ui.UpdateGUI;
 
 public class Update {
@@ -77,10 +74,6 @@ public class Update {
     }
 
     public void checkUpdate(final boolean checkup) {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (final ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
-        }
         if (GlobalConfiguration.getVersion() >= getLatestVersion()) {
             return;
         }

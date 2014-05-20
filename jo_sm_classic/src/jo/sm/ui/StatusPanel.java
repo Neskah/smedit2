@@ -23,22 +23,92 @@ package jo.sm.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
+import java.awt.Graphics;
+import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
+
+
+/**
+ * StatusBar displayed at the bottom of the GUI for status text. 
+ */
+public class StatusPanel extends JPanel {
+    
+    private final JLabel leftStatusLabel;
+    private final JPanel contentPanel;
+
+    
+    /** Creates a new instance of StatusBar */
+    public StatusPanel() {
+        setLayout(new BorderLayout());
+        setPreferredSize(new Dimension(10, 23));
+
+        JPanel rightPanel = new JPanel(new BorderLayout());
+        rightPanel.add(new JLabel(new TriangleSquareWindowsCornerIcon()), BorderLayout.SOUTH);
+        rightPanel.setOpaque(false);
+
+        add(rightPanel, BorderLayout.EAST);
+        
+        contentPanel = new JPanel();
+        contentPanel.setLayout(new BorderLayout());
+        contentPanel.setOpaque(false);
+        add(contentPanel, BorderLayout.CENTER);
+        
+        // setMainLeftComponent
+        leftStatusLabel = new JLabel();
+        contentPanel.add(leftStatusLabel, BorderLayout.WEST);
+    }
+
+    public void setLabelText(String text, Icon icon) {
+        leftStatusLabel.setText(text);
+        leftStatusLabel.setIcon(icon);
+    }
+    
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        int y = 0;
+        g.setColor(new Color(156, 154, 140));
+        g.drawLine(0, y, getWidth(), y);
+        y++;
+        g.setColor(new Color(196, 194, 183));
+        g.drawLine(0, y, getWidth(), y);
+        y++;
+        g.setColor(new Color(218, 215, 201));
+        g.drawLine(0, y, getWidth(), y);
+        y++;
+        g.setColor(new Color(233, 231, 217));
+        g.drawLine(0, y, getWidth(), y);
+
+        y = getHeight() - 3;
+        g.setColor(new Color(233, 232, 218));
+        g.drawLine(0, y, getWidth(), y);
+        y++;
+        g.setColor(new Color(233, 231, 216));
+        g.drawLine(0, y, getWidth(), y);
+        y = getHeight() - 1;
+        g.setColor(new Color(221, 221, 220));
+        g.drawLine(0, y, getWidth(), y);
+
+    }
+}
+
+
+
+
+/*
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import jo.log.TextAreaLogHandler;
 
-import jo.sm.logic.StarMadeLogic;
 
 @SuppressWarnings("serial")
 public class StatusPanel extends JPanel {
@@ -56,7 +126,6 @@ public class StatusPanel extends JPanel {
         mAbout = new JButton("About");
         mMemory = new MemProgressBar();
         mMemory.setStringPainted(true);
-        mMemory.setIndeterminate(true);
         mNormal = mMemory.getBackground();
         
         textScroll = new JScrollPane(TextAreaLogHandler.TEXT_AREA,
@@ -67,62 +136,8 @@ public class StatusPanel extends JPanel {
 		textScroll.setVisible(true);
         // layout
         setLayout(new BorderLayout());
-        add(mAbout, BorderLayout.EAST);
         add(mMemory, BorderLayout.WEST);
         //add(textScroll, BorderLayout.SOUTH);
-        mAbout.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ev) {
-                DlgAbout dlg = new DlgAbout(getFrame());
-                dlg.setVisible(true);
-            }
-        });
-        StarMadeLogic.getInstance().addPropertyChangeListener("statusMessage", new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent ev) {
-                mStatus.setText((String) ev.getNewValue());
-            }
-        });
-        Thread t = new Thread("mem_ticker") {
-            @Override
-            public void run() {
-                doTicker();
-            }
-        };
-        t.setDaemon(true);
-        t.start();
     }
+}*/
 
-    private void doTicker() {
-        mMemory.setIndeterminate(false);
-        for (;;) {
-            int free = (int) (Runtime.getRuntime().freeMemory() / 1024L / 1024L);
-            int total = (int) (Runtime.getRuntime().totalMemory() / 1024L / 1024L);
-            int max = (int) (Runtime.getRuntime().maxMemory() / 1024L / 1024L);
-            free += (max - total);
-            mMemory.setValue(free);
-            mMemory.setString(free + "M");
-            mMemory.setToolTipText("Free=" + free + ", max=" + max + ", total=" + total);
-            if (free * 100 / max < 5) {
-                mMemory.setBackground(Color.red);
-                mStatus.setText("LOW ON MEMORY");
-            } else {
-                mMemory.setBackground(mNormal);
-                mStatus.setText(StarMadeLogic.getInstance().getStatusMessage());
-            }
-            try {
-                Thread.sleep(10000);
-            } catch (InterruptedException e) {
-            }
-        }
-    }
-
-    private JFrame getFrame() {
-        for (Component c = this; c != null; c = c.getParent()) {
-            if (c instanceof JFrame) {
-                return (JFrame) c;
-            }
-        }
-        return null;
-    }
-}

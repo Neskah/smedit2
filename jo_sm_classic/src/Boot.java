@@ -30,7 +30,7 @@ public class Boot {
                 .getLocation().getPath();
         location = URLDecoder.decode(location, "UTF-8").replaceAll("\\\\", "/");
         final String os = System.getProperty("os.name").toLowerCase();
-        final String flags = "-Xmx1326m";
+        final String flags = "-Xmx2g";
 
         if (os.contains("windows")) {
             Runtime.getRuntime().exec(
