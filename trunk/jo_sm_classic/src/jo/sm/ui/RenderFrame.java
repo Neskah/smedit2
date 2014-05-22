@@ -68,7 +68,6 @@ import jo.sm.ui.act.file.QuitAction;
 import jo.sm.ui.act.file.SaveAction;
 import jo.sm.ui.act.file.SaveAsBlueprintAction;
 import jo.sm.ui.act.file.SaveAsFileAction;
-import jo.sm.ui.act.help.AboutAction;
 import jo.sm.ui.act.plugin.BlocksPluginAction;
 import jo.sm.ui.act.view.AxisAction;
 import jo.sm.ui.act.view.DontDrawAction;
@@ -81,14 +80,12 @@ import jo.util.GlobalConfiguration;
 import jo.util.Paths;
 import jo.util.Resources;
 import jo.util.SplashScreen;
-import jo.util.Update;
+
 
 @SuppressWarnings("serial")
 public class RenderFrame extends JFrame {
 
     private static String[] mArgs;
-    private static RenderFrame gui;
-    private static Update updater = new Update(gui);
 
     public static void preLoad() {
         Properties props = StarMadeLogic.getProps();
@@ -108,7 +105,6 @@ public class RenderFrame extends JFrame {
     }
 
     public static void main(String[] args) {
-        updater.checkUpdate(true);
         SplashScreen splash = new SplashScreen(args);
         preLoad();
         final RenderFrame f = new RenderFrame(args);
@@ -210,11 +206,6 @@ public class RenderFrame extends JFrame {
         setOuterToolBar(new JToolBar());
         setInnerToolBar(new JToolBar());
 
-        JButton projectButton;
-        final ImageIcon h = new ImageIcon(Paths.getIconDirectory()+ "/home.png");
-        projectButton = getDefaultButton(new GoToProject(), "Visit the SMEdit Project", h);
-        outerToolBar.add(projectButton);
-        
         final ImageIcon p = new ImageIcon(Paths.getIconDirectory()+ "/plugins.png");
         mPlugins = getDefaultActionlessButton("List of avalable plugins", p);
         outerToolBar.add(mPlugins);
@@ -230,6 +221,11 @@ public class RenderFrame extends JFrame {
         mem.setMaximumSize(new Dimension(300, 22));
         outerToolBar.add(Box.createHorizontalGlue());
         outerToolBar.add(mem);
+        
+        JButton projectButton;
+        final ImageIcon h = new ImageIcon(Paths.getIconDirectory()+ "/home.png");
+        projectButton = getDefaultButton(new GoToProject(), "Visit the SMEdit Project", h);
+        outerToolBar.add(projectButton);
     }
 
     private void setupMenus() {
@@ -274,7 +270,6 @@ public class RenderFrame extends JFrame {
         menuView.add(viewFileStart);
         menuBar.add(menuModify);
         menuBar.add(menuHelp);
-        menuHelp.add(new AboutAction(this));
         /*link*/
         menuFile.addMenuListener(new PluginPopupListener(this, IBlocksPlugin.SUBTYPE_FILE));
         menuEdit.addMenuListener(new PluginPopupListener(this, IBlocksPlugin.SUBTYPE_EDIT));
@@ -366,13 +361,6 @@ public class RenderFrame extends JFrame {
      */
     public void setClient(RenderPanel client) {
         mClient = client;
-    }
-
-    /**
-     *
-     */
-    public void About_ActionPerformed() {
-        new About(this, true).setVisible(true);
     }
 
     private void trayIcon() {
