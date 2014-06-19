@@ -20,21 +20,44 @@
  *
  */
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.util.Properties;
 
 public class Boot {
+    
+    private static Properties mProps;
+    
+    public static void loadProps() {
+        File home = new File(System.getProperty("user.home"));
+        File props = new File(home, ".josm");
+        if (props.exists()) {
+            mProps = new Properties();
+            try {
+                try (FileInputStream fis = new FileInputStream(props)) {
+                    mProps.load(fis);
+                }
+            } catch (IOException e) {
+
+            }
+        } else {
+            mProps = new Properties();
+        }
+    }
 
     public static void main(final String[] args) throws IOException {
-        String location = Boot.class.getProtectionDomain().getCodeSource()
-                .getLocation().getPath();
+        loadProps();
+        String location = Boot.class.getProtectionDomain().getCodeSource().getLocation().getPath();
         location = URLDecoder.decode(location, "UTF-8").replaceAll("\\\\", "/");
         final String os = System.getProperty("os.name").toLowerCase();
-        final String flags = "-Xmx2g";
+        final String flags = "-Xmx" + mProps.getProperty("memory", "") + "g";        
+        //final String flags = "-Xmx2g";
 
         if (os.contains("windows")) {
             Runtime.getRuntime().exec(
-                    "javaw " + flags + " -classpath \"" + location
+                    "java " + flags + " -classpath \"" + location
                     + "\" jo.sm.ui.RenderFrame");
         } else if (os.contains("mac")) {
             Runtime.getRuntime().exec(
@@ -42,7 +65,7 @@ public class Boot {
                         "/bin/sh",
                         "-c",
                         "java " + flags + " -Xdock:name=\"SMEdit_Classic\""
-                        + " -Xdock:icon=jo/sm/ui/utils/icon64.png"
+                        + " -Xdock:icon=resources/images/icon.png"
                         + " -classpath \"" + location
                         + "\" jo.sm.ui.RenderFrame"});
         } else {
