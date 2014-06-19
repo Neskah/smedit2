@@ -643,6 +643,24 @@ public class BlockTypeColors {
     public static int mAllTexturesPixelsPerImage;
     public static BufferedImage mAllTextures;
     public static Properties mBlockTypes;
+    private static Properties mProps;
+    
+    public static void loadProps() {
+        File home = new File(System.getProperty("user.home"));
+        File props = new File(home, ".josm");
+        if (props.exists()) {
+            mProps = new Properties();
+            try {
+                try (FileInputStream fis = new FileInputStream(props)) {
+                    mProps.load(fis);
+                }
+            } catch (IOException e) {
+
+            }
+        } else {
+            mProps = new Properties();
+        }
+    }
 
     public static ImageIcon getBlockImage(short blockID) {
         if (blockID >= BlockTypes.SPECIAL) {
@@ -713,10 +731,11 @@ public class BlockTypeColors {
     }
 
     private static void loadTextureMaps() throws IOException {
+        loadProps();
         for (int i = 0; i < 256; i++) {
             File f = new File(
                     StarMadeLogic.getInstance().getBaseDir(),
-                    "data/textures/block/OldStyle/64/t" + StringUtils.zeroPrefix(i, 3) + ".png");
+                    "data/textures/block/" + mProps.getProperty("texture", "") + "/64/t" + StringUtils.zeroPrefix(i, 3) + ".png");
             if (!f.exists()) {
                 break;
             }
