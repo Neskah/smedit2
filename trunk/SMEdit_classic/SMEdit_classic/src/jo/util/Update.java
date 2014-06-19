@@ -109,11 +109,11 @@ public class Update {
         if (download == null) {
             download = new UpdateGUI();
         }
-        final String jarNew = GlobalConfiguration.NAME + "_1." + getLatestVersion() + "_Classic.jar";
+        final String jarNew = GlobalConfiguration.NAME + "_1." + getLatestVersion() / 100 + "_Classic.jar";
         download(URLs.DOWNSTART, jarNew);
         final Runtime run = Runtime.getRuntime();
         try {
-            run.exec("java -jar " + jarNew);
+            run.exec("javaw -jar " + jarNew);
             System.exit(0);
         } catch (final IOException e) {
             log.log(Level.INFO, "Jar failed! {0}", e.getMessage());
