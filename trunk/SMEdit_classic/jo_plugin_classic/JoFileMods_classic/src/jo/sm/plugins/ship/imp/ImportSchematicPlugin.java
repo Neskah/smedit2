@@ -22,6 +22,7 @@ import jo.sm.plugins.ship.imp.nbt.Tag;
 import jo.sm.ship.data.Block;
 import jo.sm.ship.logic.ShipLogic;
 import jo.sm.ui.BlockTypeColors;
+import jo.util.Paths;
 import jo.vecmath.Point3i;
 
 import org.w3c.dom.Document;
@@ -152,10 +153,9 @@ public class ImportSchematicPlugin implements IBlocksPlugin {
     }
 
     private void readData(StarMade sm) {
-        File jo_plugins;
-        jo_plugins = new File(sm.getBaseDir(), "jo_plugins");
+        File plugins = new File(Paths.getPluginsDirectory());
         File minecraftTypes;
-        minecraftTypes = new File(jo_plugins, "schematic_map.xml");
+        minecraftTypes = new File(plugins, "schematic_map.xml");
         if (minecraftTypes.exists()) {
             if (minecraftTypes.lastModified() <= mLastRead) {
                 return;

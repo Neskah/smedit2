@@ -23,6 +23,7 @@ import jo.sm.mods.IPluginCallback;
 import jo.sm.ship.data.Block;
 import jo.sm.ship.logic.ShipLogic;
 import jo.sm.ui.BlockTypeColors;
+import jo.util.Paths;
 import jo.vecmath.Color3f;
 import jo.vecmath.Point2f;
 import jo.vecmath.Point3f;
@@ -225,10 +226,9 @@ public class PlotLogic {
     }
 
     private static void loadColors() {
-        File jo_plugins;
-        jo_plugins = new File(StarMadeLogic.getInstance().getBaseDir(), "jo_plugins");
+        File plugins = new File(Paths.getPluginsDirectory());
         File colorMap;
-        colorMap = new File(jo_plugins, "color_map.xml");
+        colorMap = new File(plugins, "color_map.xml");
         if (colorMap.exists()) {
             if (colorMap.lastModified() <= mLastRead) {
                 return;
