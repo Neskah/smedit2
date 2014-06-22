@@ -14,6 +14,7 @@ import jo.sm.logic.utils.XMLUtils;
 import jo.sm.mods.IStarMadePlugin;
 import jo.sm.mods.IStarMadePluginFactory;
 import jo.sm.ui.BlockTypeColors;
+import jo.util.Paths;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -40,8 +41,8 @@ public class VegetationFactory implements IStarMadePluginFactory {
     }
 
     private void loadDefinitions() {
-        File jo_plugins = new File(StarMadeLogic.getInstance().getBaseDir(), "jo_plugins");
-        File viewFilters = new File(jo_plugins, "SurfaceVegetation.xml");
+        File plugins = new File(Paths.getPluginsDirectory());
+        File viewFilters = new File(plugins, "SurfaceVegetation.xml");
         Document xml;
         if (viewFilters.exists()) {
             xml = XMLUtils.readFile(viewFilters);

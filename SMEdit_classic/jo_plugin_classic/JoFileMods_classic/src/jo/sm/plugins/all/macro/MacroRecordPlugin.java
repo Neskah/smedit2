@@ -15,6 +15,7 @@ import jo.sm.ship.data.Block;
 import jo.sm.ui.act.plugin.BlocksPluginAction;
 import jo.sm.ui.act.plugin.DescribedBeanInfo;
 import jo.sm.ui.act.plugin.IPluginInvocationListener;
+import jo.util.Paths;
 
 public class MacroRecordPlugin implements IBlocksPlugin, IPluginInvocationListener {
 
@@ -92,8 +93,8 @@ public class MacroRecordPlugin implements IBlocksPlugin, IPluginInvocationListen
             return;
         }
         mMacro.append("grid\n"); // final return value
-        File jo_plugins = new File(sm.getBaseDir(), "jo_plugins");
-        File macroDir = new File(jo_plugins, "macros");
+        File plugins = new File(Paths.getPluginsDirectory());
+        File macroDir = new File(plugins, "macros");
         StringBuilder macroName = new StringBuilder();
         for (char c : mParams.getName().toCharArray()) {
             if (Character.isJavaIdentifierPart(c)) {

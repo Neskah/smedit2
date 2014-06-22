@@ -12,6 +12,7 @@ import jo.sm.logic.utils.StringUtils;
 import jo.sm.mods.IBlocksPlugin;
 import jo.sm.mods.IStarMadePlugin;
 import jo.sm.mods.IStarMadePluginFactory;
+import jo.util.Paths;
 
 public class MacroFactory implements IStarMadePluginFactory {
 
@@ -39,8 +40,8 @@ public class MacroFactory implements IStarMadePluginFactory {
 
     private void updateDefinitions() {
         if (mMacroDir == null) {
-            File jo_plugins = new File(StarMadeLogic.getInstance().getBaseDir(), "jo_plugins");
-            mMacroDir = new File(jo_plugins, "macros");
+            File plugins = new File(Paths.getPluginsDirectory());
+            mMacroDir = new File(plugins, "macros");
         }
         if (mMacroDir.lastModified() < mLastLoad) {
             return;
