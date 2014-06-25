@@ -33,6 +33,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.Box;
@@ -83,12 +84,12 @@ import jo.util.Paths;
 import jo.util.Resources;
 import jo.util.SplashScreen;
 
-
 @SuppressWarnings("serial")
 public class RenderFrame extends JFrame {
 
     private static final Logger log = Logger.getLogger(RenderFrame.class.getName());
     private static String[] mArgs;
+    private static boolean debugLogging = true;
 
     public static void preLoad() {
         Properties props = StarMadeLogic.getProps();
@@ -126,11 +127,25 @@ public class RenderFrame extends JFrame {
                     RunnableLogic.run(f, "Loading...", t);
                 }
             } catch (Exception e) {
-                //e.printStackTrace();
+                log.log(Level.WARNING, "Ship load failed!", e);
             }
         }
         SplashScreen.close();
         log.config("Main application started: " + GlobalConfiguration.NAME);
+    }
+
+    /**
+     * @return the debugLogging
+     */
+    public static boolean isDebugLogging() {
+        return debugLogging;
+    }
+
+    /**
+     * @param aDebugLogging the debugLogging to set
+     */
+    public static void setDebugLogging(boolean aDebugLogging) {
+        debugLogging = aDebugLogging;
     }
 
     private boolean compactToolbars = true;
@@ -179,9 +194,10 @@ public class RenderFrame extends JFrame {
 
             @Override
             public void windowClosing(WindowEvent evt) {
-                setVisible(false);
-                dispose();
-                System.exit(0);
+                if (safeClose()) {
+                    dispose();
+                    System.exit(0);
+                }
             }
         });
         addWindowFocusListener(new WindowAdapter() {
@@ -190,6 +206,12 @@ public class RenderFrame extends JFrame {
                 mClient.requestFocusInWindow();
             }
         });
+    }
+
+    public static void debug(String s) {
+        if (isDebugLogging()) {
+            log.info(s);
+        }
     }
 
     private void setupToolbars() {
@@ -233,9 +255,9 @@ public class RenderFrame extends JFrame {
         final ImageIcon r = new ImageIcon(Paths.getIconDirectory() + "/redo.png");
         redoButton = getDefaultButton(new RedoActionButton(this), "Redo last action", r);
         outerToolBar.add(redoButton);
-        
+
         outerToolBar.add(Box.createHorizontalGlue());
-        
+
         final ImageIcon p = new ImageIcon(Paths.getIconDirectory() + "/plugins.png");
         mPlugins = getDefaultActionlessButton("Plugins", "List of avalable plugins", p);
         outerToolBar.add(mPlugins);
@@ -251,8 +273,7 @@ public class RenderFrame extends JFrame {
         final ImageIcon c = new ImageIcon(Paths.getIconDirectory() + "/cpu.png");
         memButton = getProgressButton(new memRefresh(), "Click to refresh Memory use", c);
         outerToolBar.add(memButton);
-        
-        
+
     }
 
     private void setupMenus() {
@@ -359,7 +380,7 @@ public class RenderFrame extends JFrame {
      * @return a shiny new JButton
      *
      */
-    private JButton getProgressButton(final Action a, final String tip, final ImageIcon i ) {
+    private JButton getProgressButton(final Action a, final String tip, final ImageIcon i) {
         MemProgressBar mem = new MemProgressBar();
         mem.setMaximumSize(new Dimension(250, 32));
         final JButton button = new JButton(a);
@@ -402,7 +423,7 @@ public class RenderFrame extends JFrame {
             lastModIndex = menu.getItemCount();
         }
     }
-    
+
     public void doPlugin() {
         JPopupMenu popup = new JPopupMenu();
         int classification = StarMadeLogic.getInstance().getCurrentModel().getClassification();
@@ -418,6 +439,15 @@ public class RenderFrame extends JFrame {
         }
         Dimension d = mPlugins.getSize();
         popup.show(mPlugins, d.width, d.height);
+    }
+
+    private boolean safeClose() {
+        boolean pass;
+        final int result = JOptionPane.showConfirmDialog(this,
+                "Are you sure you would like to quit?", "Close",
+                JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION);
+        pass = result == JOptionPane.YES_OPTION;
+        return pass;
     }
 
     /**
