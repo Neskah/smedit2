@@ -1,0 +1,1 @@
+A continued development of the SMEdit support program for the StarMade game
